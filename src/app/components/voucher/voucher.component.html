@@ -1,0 +1,203 @@
+<mat-toolbar><div style="width: 100%; text-align: center;">Voucher</div></mat-toolbar>
+<div class="painel-principal" style="padding: 10px;">
+    <div fxLayout="column">
+        <form #formulario="ngForm" fxLayout="column">
+            <div fxLayout="row" fxFlex="100" fxLayoutAlign="space-around center" style="padding: 20px;">
+                <div fxLayout="column" fxFlex="20">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: center;">Código do Voucher</div>
+                    </mat-toolbar>
+
+                    <div fxFlex="100">
+                        <mat-form-field fxFlex="100">
+                            <input matInput 
+                                   name= "codigo"
+                                   placeholder="Código do Voucher" 
+                                   [(ngModel)]="filtro.codigo">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div fxLayout="column" fxFlex="40" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: center;">Período de geração do cartão</div>
+                    </mat-toolbar>
+
+                    <div fxFlex="100">
+                        <mat-form-field fxFlex= "50">
+                            <input matInput 
+                                   name= "dataInicio"
+                                   [matDatepicker]="pickerDataInicioGerado" 
+                                   placeholder="Data Início" 
+                                   [(ngModel)]="filtro.dataInicioGerado"
+                                   (input)="onMascaraDataInput($event)">
+                            <mat-datepicker-toggle matSuffix [for]="pickerDataInicioGerado"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerDataInicioGerado></mat-datepicker>
+                        </mat-form-field>
+                    
+                        <mat-form-field fxFlex= "50" [ngStyle]="{'padding-left.px': 10}" >
+                            <input matInput name="dataFim"
+                                   [matDatepicker]="pickerDataFimGerado" 
+                                   placeholder="Data Fim" 
+                                   [(ngModel)]="filtro.dataFimGerado"
+                                   (input)="onMascaraDataInput($event)">
+                            <mat-datepicker-toggle matSuffix [for]="pickerDataFimGerado"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerDataFimGerado></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div fxLayout="column" fxFlex="20" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: center;">Ativo</div>
+                    </mat-toolbar>
+
+                    <div fxFlex="100">
+                        <mat-form-field fxFlex="90" >
+                            <mat-label>Ativo</mat-label>
+                            <mat-select [(ngModel)]="filtro.ativo" name="ativo">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let m of sim_nao" [value]="m.flag">
+                                    {{m.tipo}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                
+                <div fxLayout="column" fxFlex="20" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: center;">Utilizado</div>
+                    </mat-toolbar>
+
+                    <div fxFlex="100">
+                        <mat-form-field fxFlex="100">
+                            <mat-label>Utilizado ?</mat-label>
+                            <mat-select [(ngModel)]="filtro.utilizado" name="utilizado">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let m of sim_nao" [value]="m.flag">
+                                    {{m.tipo}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div fxLayout="row" fxFlex="100" fxLayoutAlign="end end"
+                 class="botoes" fxLayoutGap="20px" 
+                 style="padding-top: 20px; padding-bottom: 20px;" fxFlexFill>
+                <button mat-raised-button fxFlex="150px" (click)="gerarVouchers()" style="background-color: green; color: white;" [disabled]="formulario.invalid || !perfilAcesso.insere">
+                    GERAR VOUCHER
+                </button>
+
+                <button mat-raised-button fxFlex="150px" (click)="consultar()" [disabled]="formulario.invalid">
+                    CONSULTAR
+                </button>
+            </div>
+        </form>
+
+
+        <div fxLayout="row" fxFlex="100" fxLayoutAlign="start start"class="botoes" *ngIf="habilitarExclusaoEmLote()">
+            <button mat-raised-button fxFlex="150px" (click)="excluirEmLote()" *ngIf="perfilAcesso.deleta">
+                EXCLUIR EM LOTE
+                <mat-icon style="display: inherit;">delete_sweep</mat-icon>
+            </button>
+
+            <button mat-raised-button fxFlex="150px" (click)="exportar()" style="margin-left: 20px;" *ngIf="perfilAcesso.insere">
+                EXPORTAR
+                <mat-icon style="display: inherit;">file_download</mat-icon>
+            </button>
+        </div>
+
+        <table [fxHide]="!mostrarTabela" matSort matSortDisableClear mat-table [dataSource]="dataSource">
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef style="width: 25px">
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()"
+                                  (change)="$event ? selection.toggle(row) : null"
+                                  [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+                        
+            <ng-container matColumnDef="codigo" >
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Voucher</th>
+                <td mat-cell *matCellDef="let element"> {{element.codigo }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="descricaoPromocao" >
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Descrição</th>
+                <td mat-cell *matCellDef="let element"> {{element.descricaoPromocao }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="porcentagem" >
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Porcentagem</th>
+                <td mat-cell *matCellDef="let element"> {{element.porcentagem}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ativo">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Ativo</th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{'utilizado': !element.ativo}"> {{element.ativo ? 'Sim' : 'Não'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="utilizado">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Utilizado</th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{'utilizado': element.utilizado}"> {{element.utilizado ? 'Sim' : 'Não'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dataCriacao">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Data da Criação</th>
+                <td mat-cell *matCellDef="let element"> {{element.dataCriacao | dataComHora }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dataValidade">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef >Data de Validade</th>
+                <td mat-cell *matCellDef="let element"> {{element.dataValidade | dataSimples }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dataUtilizacao">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Data da Utilização</th>
+                <td mat-cell *matCellDef="let element"> {{element.dataUtilizacao | dataComHora }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nomePessoaUlilizacao">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Quem utilizou</th>
+                <td mat-cell *matCellDef="let element"> {{element.nomePessoaUlilizacao}} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="acoes" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef> Ações </th>
+                <td mat-cell *matCellDef="let element">
+                    <button *ngIf="perfilAcesso.deleta" [disabled]="element.dataUtilizacao" mat-button (click)="deletar(element)">
+                        <mat-icon style="color: red">delete_forever</mat-icon>
+                    </button>
+                    <button *ngIf="perfilAcesso.consulta" mat-button (click)="atualizar(element)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+        </table>
+        <div [hidden]="!mostrarTabela" style="margin-top: 20px;">
+            <mat-paginator #paginator [pageSizeOptions]="[200, 300, 400, 500, 1000]" showFirstLastButtons></mat-paginator>
+        </div>
+        
+        <div fxLayout="row" fxLayoutAlign="center center" style="padding-top: 20px"
+                [fxHide]="mostrarTabela" >
+            {{msg}}
+        </div>       
+
+    </div>
+</div>

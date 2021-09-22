@@ -1,0 +1,30 @@
+<div ngModelGroup="mgGrupoAcesso" 
+     fxFlex="100%" 
+     fxLayoutGap="20px" 
+     fxFlexOffset="20px" style="margin-top: 15px;">
+
+    <div ngModelGroup="grupoAcesso" fxFlex="100%" fxLayoutGap="20px" fxFlexOffset="20px">
+        <combo-pesquisavel #campoGrupoAcesso
+                           nome="cbGrupoAcesso" 
+                           [itens]="gruposAcesso" 
+                           itemDescricao="nomeGrupoAcesso"
+                           itemId="id"
+                           [showDisplayId]="false" 
+                           [obrigatorio]="true"
+                           placeholder="Grupo de Acesso"
+                           label="Grupo de Acesso"
+                           [(valor)]="filtro.grupoAcesso"
+                           (valorChange)="onValorChangeGrupoAcesso($event)">
+        </combo-pesquisavel>
+    </div>
+</div>
+
+<div fxFlex="10%" style="margin-top: 18px;margin-left: 26px;" >
+    <button mat-icon-button 
+            *ngIf="perfilAcesso.deleta" 
+            (click)="deletar()"
+            style="padding: 0px;">
+        <mat-icon style="color: red">delete_forever</mat-icon>
+    </button>                                
+</div>
+

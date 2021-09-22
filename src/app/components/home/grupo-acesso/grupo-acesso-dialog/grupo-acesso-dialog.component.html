@@ -1,0 +1,87 @@
+<mat-toolbar><div style="width: 100%; text-align: center;">Grupo de Acesso</div></mat-toolbar>
+
+
+<mat-dialog-content fxLayout="column">
+
+    <form #formulario="ngForm" style="padding-top: 20px; overflow: scroll;">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" fxFlexFill>
+            <mat-form-field fxFlex="100%" fxFlexOffset="20px">
+                <mat-label>Descrição do grupo de acesso</mat-label>
+                <input maxlength="200" 
+                       matInput name="grupoAcesso" 
+                       required
+                       [(ngModel)]="grupoAcesso.nomeGrupoAcesso">
+            </mat-form-field>
+        </div>
+        
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" fxFlexFill style="padding-bottom: 20px;">
+            <div ngModelGroup="comboPerfilAcesso" fxFlex="100%" fxLayoutGap="20px" fxFlexOffset="20px">
+                <combo-pesquisavel #comboPerfilAcesso 
+                                    nome="perfilAcesso" 
+                                    [itens]="perfilAcessos" 
+                                    itemDescricao="descricaoPerfilAcesso"
+                                    itemId="id"
+                                    [showDisplayId]="false" 
+                                    [obrigatorio]="true"
+                                    label="Perfil de Acesso"
+                                    placeholder="Perfil de Acesso"
+                                    [(valor)]="grupoAcesso.perfilAcesso">
+                </combo-pesquisavel>
+            </div>
+        </div>
+
+
+        <mat-toolbar style="height: 33px; background: #d76d36;"><span>Acessos</span></mat-toolbar>
+        <div fxLayout="column" fxLayoutGap="50px" style="margin-top: 10px; margin-bottom: 10px;" fxFlexFill>
+            <div ngModelGroup="grupoAcesso" style="max-height: 300px !important; overflow-x: scroll;">
+                <div *ngFor="let grupo of grupoAcesso.gruposAcessoModulos; let index = index">
+                    <formulario-modulo [grupo]="grupo" 
+                                        [index]="index"
+                                        [grupos]="grupoAcesso.gruposAcessoModulos"  
+                                        [modulos]="modulos" 
+                                        [perfilAcesso]="perfilAcesso">
+                    </formulario-modulo>
+                </div>
+            </div>
+            <div *ngIf="perfilAcesso.insere" fxLayoutAlign="start center" 
+                 fxLayoutGap="16px" style="padding-top: 10px; padding-left: 20px;">
+                <div>
+                    <button matTooltip="Novo" mat-mini-fab style="background-color: #d76d36" 
+                            (click)="addGrupoAcessoModulo()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+            </div>                
+        </div>
+
+    </form>
+    
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+
+    <div fxLayout="row" fxLayoutGap="50px" 
+        style="margin-top: 30px; margin-bottom: 10px;" 
+        fxFlexFill>
+
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    style="width: 240px; background-color: #d76d36;"
+                    [disabled]="formulario.invalid"
+                    (click)="salvar()"  
+                    matTooltip="Fechar">
+                Salvar
+            </button>
+        </div>
+        
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    style="width: 240px; background-color: #d76d36;"
+                    (click)="cancelar()"  
+                    matTooltip="Fechar">
+                Fechar
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>
+

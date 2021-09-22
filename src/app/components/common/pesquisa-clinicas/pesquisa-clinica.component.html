@@ -1,0 +1,113 @@
+
+<div class="espaco" >
+    <div fxLayout="column" fxLayoutAlign="center center" >        
+        <img [src]="getLogoSemFundoCartaoAmigo()" class="imagem" [ngStyle]="{'width.px': 300}" [ngStyle.xs]="{'width.px':200}"/>        
+
+        <label style="color: #d76d36; font-weight: bold; text-align: center; margin-top: 20px;"
+               [ngStyle]="{'font-size.px': 31}" [ngStyle.xs]="{'font-size.px': 19}">
+            Encontre em nossa rede credenciada a clínica mais próxima de você.
+        </label>
+    </div>
+      
+    <form #formulario="ngForm">
+        <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" 
+             style="margin-top: 45px; margin-bottom: 10px;" >
+
+            <div ngModelGroup="mdComboEspecialidade" fxFlex="50%" style="padding-left: 10px">
+                <combo-pesquisavel-outline  [itens]="tipoEspecialidadesCombo" 
+                                            itemDescricao="nome"
+                                            label="Especialidade"
+                                            itemId="id"
+                                            [showDisplayId]="false" 
+                                            [obrigatorio]="false"
+                                            placeholder="Especialidade"
+                                            [(valor)]="filtro.tipoEspecialidade">
+                </combo-pesquisavel-outline>
+            </div>
+
+
+            <div fxFlex="20%" style="padding-left: 10px">
+                <mat-form-field fxFlex="100%" appearance="outline">
+                    <mat-label>UF</mat-label>
+                    <mat-select name="uf" [(ngModel)]="filtro.uf" (selectionChange)="onCarregarCidades($event)">
+                        <mat-option *ngFor="let e of ufs" [value]="e">
+                            {{e}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>  
+            </div>
+
+            <div ngModelGroup="mdComboCidade" fxFlex="30%" style="padding-left: 10px">
+                <combo-pesquisavel-outline  [itens]="cidades" 
+                                            itemDescricao="descricao"
+                                            label="Cidade"
+                                            itemId="id"
+                                            [showDisplayId]="false" 
+                                            [obrigatorio]="false"
+                                            placeholder="Cidade"
+                                            [(valor)]="filtro.cidade">
+                </combo-pesquisavel-outline>
+            </div>
+
+        </div>
+    </form>
+
+    <div style="padding-left: 10px" >
+        <button style="height: 47px; margin-top: 5px; border-radius: 20px; background: #d76d36;" 
+                [ngStyle.xs]="{'width.%': 100}"
+                [ngStyle.sm]="{'width.%': 30}"
+                mat-raised-button color="primary"
+                (click)="consultar()">
+            BUSCAR
+            <mat-icon>search</mat-icon>
+        </button>
+    </div>
+</div>
+
+<div fxLayout="row" fxLayoutAlign="center center" *ngIf="clinicasTiposEspecialidades">
+    <label style="color: #cb6437; font-size: 17px; font-weight: bold; text-align: center;">
+        Encontramos {{clinicasTiposEspecialidades.length}} registro(s) para a sua pesquisa.
+    </label>
+</div>
+
+<div fxLayout="column" style="margin-top: 20px; margin-bottom: 10px" >
+    <div fxFlex="100%" fxLayoutAlign="center center" 
+            *ngFor="let esp of clinicasTiposEspecialidades; let index = index"> 
+
+        <mat-card fxFlex="100" class="mat-elevation-z6" style="margin-top: 10px; background: #efede8; margin-left: 10px; margin-right: 10px;">
+            <mat-card-header>
+                <div style="color: #d76d36;">
+                    <label style="font-size: 25px;" >{{esp.nomeRazaoSocial}}</label> 
+                </div> 
+            </mat-card-header>
+
+            <mat-card-content style="padding-top: 10px;">
+                <div fxLayout="column">
+                    <div fxLayout="column">
+                        <label style="font-weight: bold;">Especialidade</label>
+                        <label style="padding-top: 10px;">{{esp.descricaoEspecialidade}}</label>
+                    </div>
+                    <div fxLayout="column" style="padding-top: 10px;">
+                        <label style="font-weight: bold;">Endereço</label>
+                        <label style="padding-top: 10px;">{{getEndereco(esp)}}</label>
+                    </div>
+                    <div fxLayout="column" style="padding-top: 10px;">
+                        <label style="font-weight: bold;">Contato(s)</label>
+                        <label style="padding-top: 10px;">Email: {{esp.email}}</label>
+                        <label style="padding-top: 10px;">{{getContatoTelefonico(esp)}}</label>
+                    </div>
+
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+</div>
+
+<ng-template #divSemTipoEspecialidade>
+    <div fxLayout="row" fxLayoutAlign="center center" style="padding-top: 15px;">
+        <span style="font-weight: bold;" [ngStyle]="{'font-size.px': isMobile() ? 20 : 20}">
+            Não há especialidades cadastrada.
+        </span>    
+    </div>
+</ng-template>

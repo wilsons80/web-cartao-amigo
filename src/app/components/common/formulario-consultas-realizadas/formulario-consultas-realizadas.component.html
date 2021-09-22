@@ -1,0 +1,37 @@
+<mat-table *ngIf="mostrarTabela" 
+           [dataSource]="dataSource" 
+           class="mat-elevation-z6"
+           matSort style="margin-top: 20px;">
+
+    <ng-container matColumnDef="nomeImpresso">
+        <mat-header-cell *matHeaderCellDef mat-sort-header style="width: 200px;">Associado</mat-header-cell>
+        <mat-cell *matCellDef="let element" data-label="Associado" > {{element.nomeImpresso}}</mat-cell>
+    </ng-container>
+        
+    <ng-container matColumnDef="nomeClinica">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Clínica</mat-header-cell>
+        <mat-cell *matCellDef="let element" data-label="Clínica"> {{element.nomeClinica}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="especialidade">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Procedimento</mat-header-cell>
+        <mat-cell *matCellDef="let element" data-label="Procedimento">{{element.especialidade}}</mat-cell>
+    </ng-container>    
+
+    <ng-container matColumnDef="dataConsulta">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Data da consulta</mat-header-cell>
+        <mat-cell *matCellDef="let element" data-label="Data da consulta"> {{element.dataConsulta | dataComHora}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns" class="corLaranzaPadrao"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+
+<div *ngIf="!mostrarTabela">
+    <div fxLayout="row" 
+            [ngClass]="{'mat-elevation-z6': mostrarTabela}" 
+            fxLayoutAlign="center center" 
+            style="padding-top: 20px">
+        {{msg}}
+    </div>
+</div>

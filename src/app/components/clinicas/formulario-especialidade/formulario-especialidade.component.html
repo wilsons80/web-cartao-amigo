@@ -1,0 +1,62 @@
+<div ngModelGroup="mgTipoEspecialidade" fxFlex="100%" fxLayoutAlign="space-around center">
+    <div ngModelGroup="comboTipoEspecialidade" fxFlex="40%" fxLayoutGap="20px" fxFlexOffset="20px" style="padding-top: 10px;">
+        <combo-pesquisavel #campoTipoEspecialidade
+                           nome="cbTipoEspecialidade" 
+                           [itens]="tipoEspecialidades" 
+                           itemDescricao="descricao"
+                           itemId="id"
+                           [showDisplayId]="false" 
+                           [obrigatorio]="true"
+                           placeholder="Especialidade"
+                           [(valor)]="filtro.especialidades"
+                           (valorChange)="onValorChange($event)">
+        </combo-pesquisavel>
+    </div>
+
+    <div fxFlex="60%">
+        <mat-form-field fxFlex fxFlexOffset="20px">
+            <input [(ngModel)]="clinicaTipoEspecialidade.valorParticular" 
+                   currencyMask 
+                   name="valorParticular_{{pinValorClinica}}"
+                   placeholder="Valor cobrado sem desconto"
+                   matInput 
+                   maxlength="13"
+                   [options]="{ prefix: '', thousands: '.', decimal: ',' }" />
+            <span matPrefix>R$&nbsp;</span>
+        </mat-form-field>
+
+        <mat-form-field fxFlex fxFlexOffset="20px">
+            <input [(ngModel)]="clinicaTipoEspecialidade.valorAssociado" 
+                   currencyMask 
+                   name="valorAssociado_{{pinValorAssociado}}"
+                   placeholder="Valor cobrado com cartão"
+                   matInput 
+                   maxlength="13"
+                   [options]="{ prefix: '', thousands: '.', decimal: ',' }" />
+            <span matPrefix>R$&nbsp;</span>
+        </mat-form-field>        
+
+        <div style="padding-top: 20px !important;" fxFlexOffset="20px" >
+            <mat-slide-toggle 
+                              color="primary" 
+                              style="opacity: 1;"
+                              [ngStyle.xs]="{'margin-bottom.px': 20}"
+                              matTooltip="Informa se a especialidade está ativa."
+                              name="checkAtivo_{{pinCheckAtivo}}"  
+                              [(ngModel)]="clinicaTipoEspecialidade.ativo">{{clinicaTipoEspecialidade.ativo ? 'Ativo' : 'Inativa'}}
+            </mat-slide-toggle>            
+        </div>
+
+        <div style="padding-top: 10px;" >
+            <button mat-icon-button 
+                    *ngIf="perfilAcesso.deleta" 
+                    (click)="deletar()"
+                    style="padding: 0px;">
+                <mat-icon style="color: red">delete_forever</mat-icon>
+            </button>                                
+        </div>
+   </div>
+
+</div>
+
+

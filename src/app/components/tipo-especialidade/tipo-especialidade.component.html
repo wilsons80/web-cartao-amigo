@@ -1,0 +1,89 @@
+<mat-toolbar><div style="width: 100%; text-align: center;">Especialidades</div></mat-toolbar>
+<div class="painel-principal" style="padding: 10px;">
+    <div class="painel-consultar">
+        <form #formulario="ngForm">
+            
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" fxFlexFill>
+                <div ngModelGroup="mdComboTipoEspecialidade" fxFlex="100%" fxLayoutGap="20px" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: left;">Especialidades</div>
+                    </mat-toolbar>
+                    <combo-pesquisavel #cbTipoEspecialidade
+                                       nome="tipoEspecialidade" 
+                                       [itens]="tipoEspecialidadesCombo" 
+                                       itemDescricao="descricao"
+                                       itemId="id"
+                                       [showDisplayId]="false" 
+                                       [obrigatorio]="false"
+                                       placeholder="Especialidades"
+                                       [(valor)]="tipoEspecialidade">
+                    </combo-pesquisavel>
+                </div> 
+            </div>
+        
+        
+            <div dir="rtl" class="botoes" fxLayoutGap="20px" style="padding-top: 20px; padding-bottom: 20px;" fxFlexFill>
+                <button mat-raised-button (click)="consultar()">
+                    CONSULTAR
+                </button>
+        
+                <button mat-raised-button style="padding-right: 20px" (click)="limpar()" route>
+                    LIMPAR
+                </button>
+            </div>
+        </form>
+                
+                
+        <div fxLayout="row" *ngIf="perfilAcesso.insere" fxLayoutAlign="end center" fxLayoutGap="16px" style="padding-top: 10px">
+            <div>
+                <button matTooltip="Adicionar nova especialidade" mat-fab 
+                        style="background-color: #d76d36"
+                        (click)="showDialogNew()">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <table mat-table [hidden]="!mostrarTabela" 
+                        [dataSource]="dataSource" 
+                        class="mat-elevation-z6"
+                        matSort style="margin-top: 20px">
+
+            <ng-container matColumnDef="descricao">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Descrição</th>
+                <td mat-cell *matCellDef="let element"> {{element.descricao.toUpperCase()}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="acoes" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef> Ações </th>
+                <td mat-cell *matCellDef="let element">
+                    <button *ngIf="perfilAcesso.deleta" mat-button (click)="deletar(element)">
+                        <mat-icon style="color: red">delete_forever</mat-icon>
+                    </button>
+                    <button *ngIf="perfilAcesso.consulta" mat-button (click)="atualizar(element)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <div [hidden]="!mostrarTabela">
+            <mat-paginator class="mat-elevation-z6" #paginator [pageSizeOptions]="[50, 100, 150, 200]" showFirstLastButtons></mat-paginator>
+        </div>
+
+        <div [hidden]="mostrarTabela">
+            <div fxLayout="row" 
+                [ngClass]="{'mat-elevation-z6': mostrarTabela}" 
+                fxLayoutAlign="center center" 
+                style="padding-top: 20px">
+                {{msg}}
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+

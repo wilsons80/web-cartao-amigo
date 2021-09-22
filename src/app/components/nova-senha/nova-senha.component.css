@@ -1,0 +1,44 @@
+.logo-empresa {
+    height: 100px;
+    width: 300px;
+    background: url(../../../assets/imagens/LOGO_CARTAO_AMIGO-V2.1-SEM-FUNDO.png) no-repeat 0 0; 
+    background-size: auto 100px;
+    cursor: pointer;
+    border: none;
+    margin-top: 20px;
+    margin-right: 20px;
+    padding-bottom: 20px;
+}
+
+.tela-login{
+    margin-top: 5%;
+    margin-left: 35%;
+    margin-right: 35%;
+}
+
+
+.sign-in-title-greeting {
+    display: block;
+    font-size: 1.05882em;
+    font-weight: 500;
+    letter-spacing: normal;
+}
+
+.label{
+    color: #666;
+    font-weight: 575;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+
+.label-senha{
+    color: #1A73E8;
+    font-weight: 575;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+.elemento {
+    width: auto;
+    margin: 0;
+   
+}

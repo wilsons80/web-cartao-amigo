@@ -1,0 +1,26 @@
+.mat-select:focus:not(.mat-select-disabled, .invalid).combopesquisavel
+.mat-select-arrow, .mat-select-underline, .mat-select-trigger {
+    color: #0d47a1 !important;    
+}
+
+.mat-select:focus:not(.mat-select-disabled, .invalid).combopesquisavel {
+    color: #0d47a1 !important;        
+    border-bottom: 2px solid !important;
+}
+
+.mat-select:not(.invalid).combopesquisavel {
+    border-bottom: 1px;
+    color: gray;
+}
+
+.label-combo {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.combopesquisavel.mat-select-disabled {
+    color: rgba(0, 0, 0, 0.377);
+}
+
+.combo-pesquisavel .mat-form-field-appearance-legacy .mat-form-field-underline {
+  opacity: 0;
+}

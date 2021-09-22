@@ -1,0 +1,92 @@
+<div fxLayout="row" fxFlex="100%" fxLayoutAlign="center center" *ngIf="idPessoaFisica">
+    <fieldset class="styleFieldSet" fxFlex="100%" fxFlex="100%">
+        <legend class="styleLegenda">Cartão</legend>
+
+        <div fxLayout="column" style="width: 100%; margin-top: 10px; margin-bottom: 10px" 
+             *ngIf="cartao?.id && cartao?.isPagamentoRealizado; else divInformarFaltaPagamento" >
+
+            <div fxLayout="row" fxLayout.xs="column" style="margin-bottom: 10px" >
+            
+                <mat-form-field [ngStyle]="{'width.%':15}"
+                                [ngStyle.xs]="{'width.%':100}">
+                        <input type="text" 
+                               matInput
+                               readonly
+                               [(ngModel)]="cartao.numeroCartao"
+                               name="numeroCartao_{{pinCartao}}"
+                               placeholder="Número do Cartão"/>
+                </mat-form-field>
+            
+                <mat-form-field [ngStyle]="{'width.%':55, 'padding-left.px': 20}"
+                                [ngStyle.xs]="{'width.%':100}">
+                    <input  matInput 
+                            [(ngModel)]="cartao.nomeImpresso"
+                            name="nomeImpresso_{{pinCartao}}"
+                            readonly
+                            placeholder="Nome Impresso">
+                </mat-form-field>
+    
+                <mat-slide-toggle fxFlexOffset="20px" 
+                                  color="primary" 
+                                  style="opacity: 0.8;"
+                                  [ngStyle]="{'margin-top.px': 23}" 
+                                  [ngStyle.xs]="{'margin-bottom.px': 20}"
+                                  matTooltip="Informa se o cartão está ativo ou inativo."
+                                  name="ativo_{{pinCartao}}" 
+                                  [disabled]="true"
+                                  [(ngModel)]="cartao.ativo">{{cartao.ativo ? 'Ativo' : 'Inativo'}}
+                </mat-slide-toggle>
+    
+                <mat-form-field [ngStyle]="{'width.px':200 , 'padding-left.px': 20}"
+                                [ngStyle.xs]="{'width.%':100}">
+                    <input matInput 
+                            name= "dataImpressao_{{pinCartao}}"
+                            [matDatepicker]="pickerDataImpressao" 
+                            placeholder="Data Impressão" 
+                            readonly
+                            [(ngModel)]="cartao.dataImpressao"
+                            (input)="onMascaraDataInput($event)">
+                    <mat-datepicker-toggle matSuffix [for]="pickerDataImpressao"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerDataImpressao></mat-datepicker>
+                </mat-form-field>
+    
+                <mat-form-field [ngStyle]="{'width.px':200 , 'padding-left.px': 20}"
+                                [ngStyle.xs]="{'width.%':100}">
+                    <input matInput 
+                            name= "dataCriacao_{{pinCartao}}"
+                            [matDatepicker]="pickerDataCriacao" 
+                            placeholder="Data criação" 
+                            readonly
+                            [(ngModel)]="cartao.dataCriado"
+                            (input)="onMascaraDataInput($event)">
+                    <mat-datepicker-toggle matSuffix [for]="pickerDataCriacao"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerDataCriacao></mat-datepicker>
+                </mat-form-field>
+            
+            </div>
+    
+            <div fxLayout="row" fxLayout.xs="column" class="espaco" >
+                <cartao-amigo [cartao]= "cartao" [nomeImpresso]="nomeImpresso" fxFlex="100%"></cartao-amigo>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="center center" class="fontValidade">
+                <label>Valido até {{cartao.dataValidadePlano | dataSimples}}</label>
+            </div>
+        </div>
+
+        <ng-template #divInformarFaltaPagamento>
+            <div fxLayout="column" fxFlex="100" class="espaco styleFont" 
+                 style="margin-top: 10px; margin-bottom: 10px; text-align: justify;"
+                 fxLayoutAlign="space-evenly center">
+
+                <div fxLayout="row" fxFlex="100">
+                    <label>Prezado associado, ainda não identificamos o seu pagamento.</label>
+                </div>
+                <div fxLayout="row" fxFlex="100" style="padding-top: 10px;">
+                    <label>Para ter acesso ao cartão e usufruir dos benefícios do Cartão Amigo efetue o pagamento agora mesmo!</label>
+                </div>
+            </div>            
+        </ng-template>
+        
+    </fieldset>
+</div>

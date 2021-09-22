@@ -1,0 +1,86 @@
+<div fxLayout="row" fxLayoutAlign="center center" class="espaco">
+    <fieldset class="styleFieldSet" fxFlex="100%">
+        <legend class="styleLegenda">Dados Pessoais</legend>
+
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" style="padding-right: 10px;" fxFlexFill>
+            <mat-form-field fxFlexOffset="20px" fxFlex="80%">
+                <input matInput
+                        name="nomeDependente_{{pinDependente}}" 
+                        placeholder="Nome" 
+                        [(ngModel)]="dependente.pessoaFisica.nome">
+            </mat-form-field>
+        
+            <mat-form-field fxFlexOffset="20px" fxFlex="20%">
+                <input matInput 
+                        [(ngModel)]="dependente.pessoaFisica.cpf" 
+                        name="cpfDependente_{{pinDependente}}" 
+                        placeholder="CPF"
+                        [disabled]="isNotEditarCPF()"
+                        [textMask]="{mask: mascaraCpf}"
+                        required
+                        [cpfValidator]>
+                  <mat-error >CPF inválido</mat-error>  
+            </mat-form-field>
+        </div>
+        
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" style="padding-right: 10px;" fxFlexFill>    
+            <mat-form-field fxFlexOffset="20px" style="width: 200px;">
+                <input matInput
+                        name="celular_{{pinDependente}}" 
+                        placeholder="Celular" 
+                        [textMask]="{mask: maskCelular}" 
+                        pattern="^(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$"
+                        [(ngModel)]="dependente.pessoaFisica.celular">
+                <mat-error>Celular invalido</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field fxFlex="33%" fxFlexOffset="20px" >
+                <input matInput maxlength="200" 
+                        email
+                        name="emailDependente_{{pinDependente}}" 
+                        placeholder="Email" 
+                        [(ngModel)]="dependente.pessoaFisica.email" 
+                        required>
+                <mat-error>E-mail invalido</mat-error>
+            </mat-form-field>
+        
+            <mat-form-field [ngStyle]="{'width.px':200}"
+                            [ngStyle.xs]="{'width.%':100}"
+                            fxFlexOffset="20px">
+                <input matInput 
+                        name="dataCadastroDependente_{{pinDependente}}"
+                        [matDatepicker]="pickerDataCadastroDependente" 
+                        placeholder="Data cadastro" 
+                        disabled
+                        [(ngModel)]="dependente.dtCadastro"
+                        (input)="onMascaraDataInput($event)">
+                <mat-datepicker-toggle matSuffix [for]="pickerDataCadastroDependente"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDataCadastroDependente></mat-datepicker>
+            </mat-form-field>
+
+            <div fxFlexOffset="20px" 
+                 *ngIf="false"
+                 [ngStyle]="{'padding-top.px':20}"
+                 [ngStyle.xs]="{'padding-top.px':0}">
+                <mat-slide-toggle color="primary" 
+                                  style="opacity: 1;"
+                                  matTooltip="Informa se o dependente está ativo."
+                                  [ngStyle.xs]="{'margin-bottom.px': 20}"
+                                  name="dependenteAtivo_{{pinDependente}}"  
+                                  [(ngModel)]="dependente.ativo">{{dependente.ativo ? 'Ativo' : 'Inativo'}}
+                </mat-slide-toggle>            
+            </div>
+
+        </div>   
+
+    </fieldset>
+</div>   
+
+
+<div ngModelGroup="dadosCartao_{{pinDependente}}" class="espaco">
+    <dados-cartao [cartao]="dependente.cartao" [nomeImpresso]="dependente.pessoaFisica.nome" [idPessoaFisica]="dependente.pessoaFisica.id"></dados-cartao>
+</div>
+
+<div ngModelGroup="dadosEndereco_{{pinDependente}}" class="espaco">
+    <cadastro-endereco [dadosEndereco]="dependente.pessoaFisica"></cadastro-endereco>
+</div>  

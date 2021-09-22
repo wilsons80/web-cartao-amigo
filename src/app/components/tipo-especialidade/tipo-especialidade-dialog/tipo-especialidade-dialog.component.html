@@ -1,0 +1,43 @@
+<mat-toolbar><div style="width: 100%; text-align: center;">Especialidade</div></mat-toolbar>
+<mat-dialog-content fxLayout="column">
+    <form #formulario="ngForm" style="padding-top: 30px; overflow: scroll;">    
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" style="margin-top: 10px; padding-right: 10px" fxFlexFill>    
+            <mat-form-field fxFlex="100%" fxFlexOffset="20px" >
+                <input matInput maxlength="200" 
+                       name="descricao" 
+                       placeholder="Descrição" 
+                       [(ngModel)]="tipoEspecialidade.descricao" 
+                       required>
+            </mat-form-field>            
+        </div>
+    </form>    
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <div fxLayout="row" fxLayoutGap="50px" 
+        style="margin-top: 30px; margin-bottom: 10px;" 
+        fxFlexFill>
+
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px;"
+                    [disabled]="formulario.invalid"
+                    *ngIf="isPermiteEditar()"
+                    (click)="salvar()"  
+                    matTooltip="Fechar">
+                Salvar
+            </button>
+        </div>
+        
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px;"
+                    (click)="cancelar()"  
+                    matTooltip="Fechar">
+                Fechar
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

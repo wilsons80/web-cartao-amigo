@@ -1,0 +1,66 @@
+<mat-toolbar style="margin:-11px; width: auto; border-radius: 10px;">
+    <div fxLayout="row" fxLayoutAlign="center center" fxFlex="100">
+        <img [src]="getLogoCartaoAmigo()" class="imagem" style="width: 178px;"/>
+    </div>
+</mat-toolbar>
+
+<mat-dialog-content>
+
+    <form #formulario="ngForm" style="padding-top: 20px;">
+        <fieldset class="styleFieldSet" fxFlex="100%">
+            <legend class="styleLegenda">Dados do cartão</legend>
+
+            <div fxLayout="row">
+                <span class="fontBold">Nome: </span>
+                <span style="padding-left: 5px;">{{dadosCartao.nomeImpresso}}</span>
+            </div>
+
+            <div fxLayout="row" style="padding-top: 17px;">
+                <span class="fontBold">Cartão: </span>
+                <span style="padding-left: 5px;">{{dadosCartao.numeroCartao}}</span>
+            </div>
+
+            <div fxLayout="row" style="padding-top: 17px;">
+                <span class="fontBold" style="padding-top: 4px;">Válido:</span>
+                <span style="padding-left: 5px; padding-right: 5px; padding-top: 4px;">{{dadosCartao.status === true ? 'Sim' : 'Não'}}</span>
+
+                <span *ngIf="dadosCartao.status" class="material-icons" style="color: green;">thumb_up_off_alt</span>
+                <span *ngIf="!dadosCartao.status"class="material-icons" style="color: red;">thumb_down_off_alt</span>
+            </div>
+
+            <div fxLayout="row" style="padding-top: 17px;">
+                
+                <div fxLayout="column" *ngIf="dadosCartao.dataFimValidade; else divMensagem">
+                    <span class="fontBold">Validade:</span>
+                    <div fxLayout="row">
+                        <pre> Valido até: </pre>
+                        <span>{{dadosCartao.dataFimValidade | dataSimples}}</span>
+                    </div>
+                </div>
+
+                <ng-template #divMensagem>
+                    <div fxLayout="column">
+                        <span class="fontBold">Observação:</span>
+                        <span style="padding-top: 20px;">Ainda não encontramos o pagamento da assinatura do seu contrato.</span>
+                        <span style="padding-top: 10px;">Efetue o pagamente para usufruir dos benefícios que a Cartão Amigo oferece!</span>
+                    </div>
+                </ng-template>
+
+            </div>
+
+        </fieldset>
+    </form>
+    
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <div fxLayout="column" fxFlex="100" fxLayoutAlign="center center" style="padding-bottom: 15px; padding-top: 15px;">
+        <button mat-raised-button 
+                style="width: 100%; background-color: #d76d36;"
+                (click)="cancelar()"  
+                matTooltip="Fechar">
+            Fechar
+        </button>
+    </div>
+</mat-dialog-actions>
+

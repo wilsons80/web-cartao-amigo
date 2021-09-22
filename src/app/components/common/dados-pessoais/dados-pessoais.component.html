@@ -1,0 +1,79 @@
+<div ngModelGroup="dadosPessoais" class="espaco">
+    
+    <div fxLayout="row" style="margin-bottom: 20px" fxLayoutAlign="start start" fxLayoutGap="20px" fxFlexFill>
+        <div id="row_dados" fxFlex="100%" fxFlexFill>
+
+            <div fxLayout="row" fxLayout.xs="column" fxFlex="100%" fxFlexOffset="10px" fxLayoutGap="30px">
+                <mat-form-field fxFlex="60%" fxFlex.xs="100%">
+                    <input matInput 
+                           [readonly]="!permiteAlterar"
+                           maxlength="255" name="nome" 
+                           placeholder="Nome Completo"
+                           [(ngModel)]="pessoaFisica.nome" required>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="25%" fxFlex.xs="100%">
+                    <input matInput name="dataNascimento" 
+                           [matDatepicker]="pickerDataNascimento"
+                           maxlength="10"
+                           [required]="obrigaDadosPessoais"
+                           (input)="onMascaraDataInput($event)"
+                           placeholder="Data de Nascimento" 
+                           [(ngModel)]="pessoaFisica.dataNascimento">
+                    <mat-datepicker-toggle matSuffix [for]="pickerDataNascimento"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerDataNascimento></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="15%" fxFlex.xs="100%">
+                    <mat-label>Sexo:</mat-label>
+                    <mat-select [(ngModel)]="pessoaFisica.sexo" name="sexo">
+                        <mat-option *ngFor="let m of sexo" [value]="m.sigla">
+                            {{m.descricao}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="30px" fxFlexFill>
+
+        <mat-form-field fxFlex="20%" fxFlex.xs="100%" fxFlexOffset="10px">
+            <input matInput 
+                   [(ngModel)]="pessoaFisica.celular" 
+                   name="celular" placeholder="Celular"
+                   [textMask]="{mask: maskCelular}"
+                   pattern="^(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$">
+        </mat-form-field>
+
+        <mat-form-field fxFlex="60%" fxFlex.xs="100%" fxFlexOffset="20px" >
+            <input maxlength="100" matInput 
+                   [(ngModel)]="pessoaFisica.email" 
+                   type="email" name="email"
+                   placeholder="Email" 
+                   required
+                   email>
+        </mat-form-field>
+
+        <mat-form-field fxFlexOffset="20px" fxFlex="20%" fxFlex.xs="100%">
+            <input matInput 
+                   [(ngModel)]="pessoaFisica.cpf" 
+                   name="cpf" 
+                   [readonly]="!permiteAlterar"
+                   placeholder="CPF"
+                   [textMask]="{mask: mascaraCpf}"
+                   [required]="obrigaDadosPessoais"
+                   [cpfValidator]>
+             <mat-error >CPF inválido</mat-error>  
+        </mat-form-field>
+
+    </div>
+
+
+    <!-- ENDEREÇO -->
+    <cadastro-endereco [dadosEndereco]="pessoaFisica"></cadastro-endereco>
+
+
+</div>

@@ -1,0 +1,96 @@
+<div fxLayout="row" fxLayoutAlign="center center">
+    <fieldset class="styleFieldSet" fxFlex="100%">
+        <legend class="styleLegenda">Endereço*</legend>
+
+        <div fxLayoutAlign="end end" fxLayout.xs="column">
+            <a mat-button role="button" href="https://buscacepinter.correios.com.br/app/endereco/index.php?t" target="_blank">
+                <mat-icon>open_in_new</mat-icon>Buscar CEP
+            </a>
+        </div>
+        
+        
+        <div fxLayout="row" fxLayout.xs="column" class="espaco" fxLayoutGap="30px"
+                style="margin-top: 10px; margin-bottom: 10px"
+                fxFlexFill>
+        
+            <mat-form-field fxFlex="15%">
+                    <input type="text" matInput
+                        [(ngModel)]="dadosEndereco.cep"
+                        name="cep_{{pinEndereco}}"
+                        placeholder="CEP"
+                        required
+                        (blur)="onChangeCep()"
+                        [textMask]="{mask: maskCep}"
+                        pattern="^\d{2}\.?\d{3}-?\d{3}$" />
+            </mat-form-field>
+        
+            <mat-form-field fxFlex="55%">
+                <input #campoEndereco
+                        matInput maxlength="200"
+                        [(ngModel)]="dadosEndereco.endereco"
+                        name="endereco_{{pinEndereco}}"
+                        placeholder="Endereço"
+                        [required]="obrigatorio">
+                <mat-hint align="end">{{campoEndereco.value.length}} / 200</mat-hint>
+            </mat-form-field>
+        
+            <mat-form-field fxFlex="10%">
+                <input #numeroEndereco
+                        matInput 
+                        maxlength="10"
+                        [(ngModel)]="dadosEndereco.numeroEndereco"
+                        name="numeroEndereco_{{pinEndereco}}"
+                        [required]="obrigatorio"
+                        placeholder="Número">
+            </mat-form-field>
+        
+            <mat-form-field fxFlex="20%">
+                <input #complemento
+                        matInput 
+                        maxlength="200"
+                        [(ngModel)]="dadosEndereco.complemento"
+                        name="complemento_{{pinEndereco}}"
+                        placeholder="Complemento">
+                <mat-hint align="end">{{complemento.value.length}} / 200</mat-hint>
+            </mat-form-field>
+        
+        </div>
+
+
+        
+        <div fxLayout="row" fxLayout.xs="column" class="espaco" fxLayoutGap="10px"
+                style="margin-top: 10px; margin-bottom: 10px"
+                fxFlexFill>
+        
+                <mat-form-field fxFlex="40%">
+                <input #campoCidade
+                        matInput maxlength="200"
+                        [(ngModel)]="dadosEndereco.cidade"
+                        [required]="obrigatorio"
+                        name="cidade_{{pinEndereco}}"
+                        placeholder="Cidade">
+                <mat-hint align="end">{{campoCidade.value.length}} / 200</mat-hint>
+            </mat-form-field>
+        
+            <mat-form-field fxFlex="40%" style="padding-right: 20px">
+                <input #campoBairro
+                        matInput maxlength="200"
+                        [(ngModel)]="dadosEndereco.bairro"
+                        [required]="obrigatorio"
+                        name="bairro_{{pinEndereco}}"
+                        placeholder="Bairro">
+                <mat-hint align="end">{{campoBairro.value.length}} / 200</mat-hint>
+            </mat-form-field>
+        
+            <mat-form-field fxFlex="20%">
+                <mat-label>UF</mat-label>
+                <mat-select name="uf_{{pinEndereco}}" [(ngModel)]="dadosEndereco.uf" [required]="obrigatorio">
+                    <mat-option *ngFor="let e of ufs" [value]="e">
+                        {{e}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>        
+        </div>        
+    
+    </fieldset>
+</div>

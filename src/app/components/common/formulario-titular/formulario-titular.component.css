@@ -1,0 +1,19 @@
+::-webkit-scrollbar {
+    width: 8px;
+    height: 0px !important;
+}
+
+.mat-dialog-actions {
+    padding: 29px 0 !important;
+}    
+
+
+.styleLegenda {
+    color: #f95f00;
+    font-weight: bolder;
+    padding: 7px;
+}
+
+.styleFieldSet {
+    padding-left: 8px;
+}

@@ -1,0 +1,15 @@
+
+<h2 mat-dialog-title *ngFor="let msg of pergunta">{{msg}}</h2>
+
+<mat-dialog-content fxLayout="column">
+    <div style="padding-bottom: 0.5rem;" *ngFor="let texto of textoAuxiliar">
+        <label style="white-space: pre;" *ngIf="textoAuxiliar">{{texto}}</label>
+    </div>
+    <div *ngIf="htmlContent" style="padding-bottom: 0.5rem; white-space: pre;" [innerHtml]="htmlContent"></div>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <button mat-button (click)="cancela()" *ngIf="isMostrarBotaoCancelar"> {{textoCancela}}</button>
+    <button mat-button (click)="confirma()">{{textoConfirma}}</button>
+</mat-dialog-actions>
+

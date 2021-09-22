@@ -1,0 +1,17 @@
+<div class="sidenav-menu-outer"  
+     class="corLaranzaPadrao" style="color: white;">    
+    <div fxLayout="column" fxLayoutAlign="center center" class="user-block" [class.py-3]="settings.menuType != 'mini'" [class.py-2]="settings.menuType == 'mini'">
+        
+        <!-- Foto do usuário logado-->
+        <img [src]="userImage" alt="user-image" *ngIf="naoPossuiFoto()">
+        <img [src]="userImage" alt="user-image" *ngIf="!naoPossuiFoto()">
+
+
+        <h2 *ngIf="settings.menuType != 'mini'" class="mt-2">{{sessaoService.nomeUsuario?.toUpperCase()}}</h2>
+        <p *ngIf="settings.menuType == 'default'" class="secondary-text-color">{{sessaoService.email}}</p>
+    </div>
+    <mat-divider></mat-divider>
+    <div id="vertical-menu">
+        <app-vertical-menu [menuItems]="menuItems" [menuParentId]="1"></app-vertical-menu> 
+    </div>
+</div>

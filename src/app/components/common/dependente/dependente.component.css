@@ -1,0 +1,38 @@
+::-webkit-scrollbar {
+    width: 8px;
+    height: 0px !important;
+}
+
+.mat-dialog-actions {
+    padding: 29px 0 !important;
+}    
+
+.styleLegenda {
+  color: #f95f00;
+  font-weight: bolder;
+  padding: 7px;
+}
+
+.styleFieldSet {
+  padding-left: 8px;
+}
+
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.example-headers-align .mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+
+
+.inativo{
+  color: red;
+  font-weight: bold;
+}

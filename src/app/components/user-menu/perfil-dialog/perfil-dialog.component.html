@@ -1,0 +1,73 @@
+<mat-dialog-content fxLayout="column" >
+    <mat-toolbar><div style="width: 100%; text-align: center;">Perfil Usuário</div></mat-toolbar>
+
+    <form #formulario="ngForm" style="padding-top: 30px;overflow: scroll;">
+    
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" style="margin-top: 10px; margin-bottom: 10px" fxFlexFill>
+    
+            <div fxLayout="row">
+                <mat-form-field fxFlex="50%" fxFlex.xs="50%" fxFlexOffset="20px" >
+                    <input matInput maxlength="45" 
+                           name="nomeUsuario" 
+                           placeholder="Login" 
+                           disabled
+                           [(ngModel)]="usuarioLogado.username" 
+                           required>
+                </mat-form-field>
+            
+                <mat-form-field fxFlex="50%" fxFlex.xs="40%" fxFlexOffset="20px">
+                    <input matInput name="dataUltimoAcesso" 
+                           [matDatepicker]="pickerDataUltimoAcesso"
+                           placeholder="Data Último Acesso" 
+                           maxlength="10"
+                           (input)="onMascaraDataInput($event)"
+                           [(ngModel)]="usuarioLogado.dataUltimoAcesso" 
+                           disabled>
+                    <mat-datepicker-toggle matSuffix [for]="pickerDataUltimoAcesso"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerDataUltimoAcesso></mat-datepicker>
+                </mat-form-field>
+            </div>
+        
+            <div fxLayout="row">
+                <mat-form-field fxFlex="50%" fxFlexOffset="20px">
+                  <input matInput maxlength="10" name="qtdAcessoNegado" placeholder="Quantidade de acesso negado:" [(ngModel)]="usuarioLogado.qtdAcessoNegado" disabled>
+                </mat-form-field>
+    
+                <mat-checkbox  fxFlexOffset="20px" name="status" disabled [(ngModel)]="usuarioLogado.stAtivo" style="padding-top: 18px;">Ativo</mat-checkbox>
+            </div>
+
+        </div>
+
+        <dados-pessoais [pessoaFisica]="usuarioLogado.pessoaFisica" [permiteAlterar]="false"></dados-pessoais>
+
+    </form>
+    
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="50px" 
+        style="margin-top: 30px; margin-bottom: 10px;" 
+        fxFlexFill>
+
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px;"
+                    [disabled]="formulario.invalid"
+                    (click)="salvar()"  
+                    matTooltip="Fechar">
+                Salvar
+            </button>
+        </div>
+        
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px;"
+                    (click)="cancelar()"  
+                    matTooltip="Fechar">
+                Fechar
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

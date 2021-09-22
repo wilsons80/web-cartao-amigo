@@ -1,0 +1,127 @@
+<mat-dialog-content fxLayout="column">
+    <mat-toolbar><div style="width: 100%; text-align: center;">Usuário do Sistema</div></mat-toolbar>
+
+    <form #formulario="ngForm" style="padding-top: 30px; overflow: scroll;">
+    
+        <div fxLayout="row" fxLayoutGap="20px" style="margin-top: 10px; margin-bottom: 10px" fxFlexFill>
+    
+            <mat-form-field fxFlex="50%" fxFlexOffset="20px" >
+                <input matInput maxlength="45" 
+                       name="nomeUsuario" 
+                       placeholder="Login" 
+                       [disabled]="isAtualizar"
+                       [(ngModel)]="usuarioSistema.username" 
+                       required>
+            </mat-form-field>
+        
+            <mat-form-field fxFlex="40%" [fxHide]="isAtualizar">
+                <input matInput
+                       name="senhaUsuario"
+                       placeholder="Senha"
+                       maxlength="100"
+                       [type]="hide ? 'password' : 'text'"
+                       [(ngModel)]="usuarioSistema.senha"
+                       required>
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Ocultar senha'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+            </mat-form-field>
+        
+        </div>
+        
+        <div fxLayout="row" fxLayoutGap="10px" style="margin-top: 10px; margin-bottom: 10px" fxFlexFill>
+            <mat-form-field fxFlex="25%" fxFlexOffset="20px">
+                <input matInput name="dataUltimoAcesso" 
+                       [matDatepicker]="pickerDataUltimoAcesso"
+                       placeholder="Data Último Acesso" 
+                       maxlength="10"
+                       (input)="onMascaraDataInput($event)"
+                       [(ngModel)]="usuarioSistema.dataUltimoAcesso" 
+                       disabled>
+                <mat-datepicker-toggle matSuffix [for]="pickerDataUltimoAcesso"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDataUltimoAcesso></mat-datepicker>
+            </mat-form-field>
+        
+            <mat-form-field fxFlex="25%">
+              <input matInput maxlength="10" name="qtdAcessoNegado" placeholder="Quantidade de acesso negado:" [(ngModel)]="usuarioSistema.qtdAcessoNegado" disabled>
+            </mat-form-field>
+        </div>
+        
+        <div fxLayout="row" fxLayoutGap="50px" style="margin-top: 10px; margin-bottom: 10px" fxFlexFill>
+            <mat-checkbox  fxFlexOffset="20px" name="status" [(ngModel)]="usuarioSistema.stAtivo">Ativo</mat-checkbox>
+        
+            <mat-checkbox name="trocasenha" [(ngModel)]="usuarioSistema.stTrocaSenha">Troca a senha</mat-checkbox>
+        </div>
+        
+        <div fxLayout="row" fxLayoutGap="50px" style="padding-top: 10px; margin-bottom: 10px" fxFlexFill>
+            <mat-form-field fxFlex="97%" fxFlexOffset="20px">
+                <mat-label>Tipo de Usuario</mat-label>
+                <mat-select [(ngModel)]="usuarioSistema.tipoUsuario.id" name="tipoUsuario" required
+                            (selectionChange)="onCarregarTipoUsuairo($event)">
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let m of tiposUsuariosSistema.tipos" [value]="m.id">
+                        {{m.descricao.toUpperCase()}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <dados-pessoais [pessoaFisica]="usuarioSistema.pessoaFisica" [obrigaDadosPessoais]="false"></dados-pessoais>
+    
+        <div class="espaco" *ngIf="isShowPermissaoSistema()">
+            <mat-toolbar class="styleToolbar">Permissão no Sistema</mat-toolbar>
+            <div fxLayout="column" style="margin-top: 10px; margin-bottom: 10px;" fxFlexFill>
+                <div ngModelGroup="grupoAcesso" style="max-height: 300px !important; overflow-x: scroll;">
+                    <div *ngFor="let grupo of usuarioSistema.gruposAcesso; let index = index">
+                        <formulario-perfil-acesso [perfil]="grupo" 
+                                                  [perfis]="usuarioSistema.gruposAcesso"  
+                                                  [index] ="index"
+                                                  [gruposAcesso]="grupoAcessoAdministrativo"
+                                                  [perfilAcesso]="perfilAcesso">
+                        </formulario-perfil-acesso>
+                    </div>
+                </div>
+                <div *ngIf="perfilAcesso.insere" fxLayoutAlign="start center" 
+                     fxLayoutGap="16px" style="padding-top: 10px; padding-left: 20px;">
+                    <div>
+                        <button matTooltip="Novo" mat-mini-fab style="background-color: #d76d36" 
+                                (click)="addGrupoAcesso()">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </div>
+                </div>                
+            </div>
+            
+        </div>
+
+    </form>
+    
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <div fxLayout="row" fxLayoutGap="50px" 
+        style="margin-top: 30px; margin-bottom: 10px;" 
+        fxFlexFill>
+
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px;"
+                    [disabled]="formulario.invalid"
+                    (click)="salvar()"  
+                    matTooltip="Fechar">
+                Salvar
+            </button>
+        </div>
+        
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px;"
+                    (click)="cancelar()"  
+                    matTooltip="Fechar">
+                Fechar
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

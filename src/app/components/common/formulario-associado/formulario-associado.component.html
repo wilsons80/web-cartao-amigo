@@ -1,0 +1,758 @@
+<div style="overflow:auto; height:auto">
+    <div fxLayout="row" fxLayoutAlign="center center" >
+        <form #formulario="ngForm" fxFlex="91"
+               style="background: white; padding: 0px; border-radius: 15px;"
+               *ngIf="isTokenCorretorValido">
+            
+            <mat-horizontal-stepper #associado *ngIf="!retornoPagamento?.statusTransacao" 
+                                    linear #stepper style="border-radius: 15px; font-size: 11px;">
+                <mat-step [stepControl]="formularioEtapa1" errorMessage="Preencha todos os campos obrigatórios">
+                    <div ngModelGroup="formularioEtapa1" #formularioEtapa1="ngModelGroup" >
+                        <ng-template matStepLabel></ng-template>
+
+                        <div style="margin-bottom: 13px;">
+                            <div fxLayout="column" fxLayoutAlign="center center" 
+                                 style="font-weight: bold; color: #f95f00; padding-bottom: 15px; font-family: 'inherit'; text-align: center;"
+                                 [ngStyle.xs]="{'font-size.px': 14}"
+                                 [ngStyle]="{'font-size.px': 24}"
+                                 >
+                                <span>Bem-vindo!</span>    
+                                <span>Vamos ajudar a criar sua conta, será rápido e simples.</span>    
+                            </div>
+
+                            <div fxLayout="row" fxLayout.xs="column" style="padding-left: 10px; padding-right: 10px;">
+                                <mat-form-field appearance="outline" fxFlex="70%">
+                                    <mat-label>Nome completo</mat-label>
+                                    <input matInput name="nomeCompleto" 
+                                        [(ngModel)]="titular.pessoaFisica.nome" 
+                                        placeholder="Nome Completo"
+                                        required>   
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" fxFlex="30%" 
+                                                [ngStyle]="{'padding-left.px': 10}"
+                                                [ngStyle.xs]="{'padding-left.px': 0}">
+                                    <mat-label>CPF</mat-label>
+                                    <input matInput 
+                                        [(ngModel)]="titular.pessoaFisica.cpf" 
+                                        name="cpf" 
+                                        placeholder="CPF"
+                                        [textMask]="{mask: mascaraCpf}"
+                                        required
+                                        [cpfValidator]>
+                                    <mat-error >CPF inválido</mat-error>  
+                                </mat-form-field>
+
+                            </div>                    
+                
+                            <div fxLayout="column" style="padding-left: 10px; padding-right: 10px;">                    
+                            </div>   
+
+                            <div fxLayout="column" style="padding-left: 10px; padding-right: 10px;">                    
+                                <mat-form-field appearance="outline">
+                                    <mat-label>E-mail</mat-label>
+                                    <input maxlength="100" matInput 
+                                        [(ngModel)]="titular.pessoaFisica.email" 
+                                        type="email" name="email"
+                                        placeholder="Email" 
+                                        required
+                                        email>
+                                    <mat-error >E-mail inválido</mat-error>    
+                                </mat-form-field>
+                            </div> 
+
+                            <div fxLayout="column" style="padding-left: 10px; padding-right: 10px;">
+                                <div fxLayoutAlign="end end" fxLayout.xs="column">
+                                    <a mat-button role="button" href="https://buscacepinter.correios.com.br/app/endereco/index.php?t" target="_blank">
+                                        <mat-icon>open_in_new</mat-icon>Buscar CEP
+                                    </a>
+                                </div>                                
+                                <mat-form-field appearance="outline">
+                                    <mat-label>CEP</mat-label>
+                                    <input matInput 
+                                        [(ngModel)]="titular.pessoaFisica.cep" 
+                                        name="cep" 
+                                        (blur)="onChangeCep()"
+                                        required
+                                        placeholder="CEP"
+                                        [textMask]="{mask: maskCep}"
+                                        pattern="^\d{2}\.?\d{3}-?\d{3}$" >
+                                    <mat-error >CEP inválido</mat-error>       
+                                </mat-form-field>
+                            </div>
+                            
+                            <div fxLayout="row" style="padding-left: 10px; padding-right: 10px;" fxFlexFill fxLayoutGap="10px">
+
+                                <mat-form-field fxFlex="50" appearance="outline">
+                                    <mat-label>Informe a senha</mat-label>
+                                    <input matInput [type]="hideSenha ? 'password' : 'text'" 
+                                           name="senha"
+                                           [(ngModel)]="senha1" 
+                                           required>
+                                    <button mat-icon-button matSuffix (click)="hideSenha = !hideSenha" 
+                                            [attr.aria-pressed]="hideSenha">
+                                        <mat-icon>{{hideSenha ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>                                    
+                                </mat-form-field>
+
+                                
+                                <mat-form-field fxFlex="50" appearance="outline">
+                                    <mat-label>Confirma a senha</mat-label>
+                                    <input matInput [type]="hideConfirmeSenha ? 'password' : 'text'" 
+                                           name="senhaConfirmada"
+                                           [(ngModel)]="senha2" 
+                                           required>
+                                    <button mat-icon-button matSuffix (click)="hideConfirmeSenha = !hideConfirmeSenha" 
+                                            [attr.aria-pressed]="hideConfirmeSenha">
+                                        <mat-icon>{{hideConfirmeSenha ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                            </div>
+
+                            <div fxLayout="row" 
+                                 fxLayoutAlign="center center"                                  
+                                 style="padding-left: 10px; padding-right: 10px;" fxFlexFill fxLayoutGap="10px">
+                                 <span style="color: red;"
+                                       *ngIf="isSenhasInformadasValidas(formularioEtapa1)">
+                                     As senhas informadas não conferem
+                                 </span>
+
+                                 <input matInput name="senhaValida" [(ngModel)]="senhaValida" required [fxHide]="true">  
+                            </div>
+                        </div>
+                
+                        <div fxLayoutAlign="center center" style="margin-bottom: 40px;">
+                            <button mat-button matStepperNext 
+                                    [disabled]="desabilitarBotao(formularioEtapa1)"                                    
+                                    [ngClass]="{'estiloBotaoHabilidado': habilitarBotao(formularioEtapa1), 'estiloBotaoDesabilidado': desabilitarBotao(formularioEtapa1)  }"
+                                    style="border-radius: 15px;"
+                                    [ngStyle]="{'width.%': 20}"
+                                    [ngStyle.xs]="{'width.%': 100}">PRÓXIMO</button>
+                        </div>                        
+                    </div>
+                </mat-step>
+
+                <mat-step [stepControl]="formularioEndereco" errorMessage="Preencha todos os campos obrigatórios">
+                    <div ngModelGroup="formularioEndereco" #formularioEndereco="ngModelGroup">
+                        <ng-template matStepLabel></ng-template>
+                            
+                        <div fxFlex="100%">
+                            <div fxLayout="column" >
+                                <div fxLayout="row" fxLayoutAlign="space-between center" fxLayout.xs="column" >                                        
+                                    <mat-form-field fxFlex="20%" 
+                                                    [ngStyle.xs]="{'width.%':98}" 
+                                                    appearance="outline">
+                                        <mat-label>CEP</mat-label>
+                                        <input type="text" matInput
+                                                [(ngModel)]="titular.pessoaFisica.cep"
+                                                name="cep"
+                                                placeholder="CEP"
+                                                readonly
+                                                (blur)="onChangeCep()"
+                                                [textMask]="{mask: maskCep}"
+                                                pattern="^\d{2}\.?\d{3}-?\d{3}$" />
+                                    </mat-form-field>
+                                
+                                    <mat-form-field fxFlex="80%" 
+                                                    [ngStyle.xs]="{'width.%':98}"  
+                                                    [ngStyle]="{'padding-left.px':20}"  
+                                                    appearance="outline">
+                                        <mat-label>Endereço</mat-label>
+                                        <input #campoEndereco
+                                                matInput maxlength="200"
+                                                [(ngModel)]="titular.pessoaFisica.endereco"
+                                                name="endereco"
+                                                readonly
+                                                placeholder="Endereço"
+                                                [required]="obrigatorio">
+                                        <mat-hint align="end">{{campoEndereco.value.length}} / 200</mat-hint>
+                                    </mat-form-field>
+                                </div>
+                                
+                                <div fxLayout="row" fxLayoutAlign="space-between center" fxLayout.xs="column">                                        
+                                    <mat-form-field fxFlex="35%" 
+                                                    [ngStyle.xs]="{'width.%':98}"  
+                                                    appearance="outline">
+                                        <mat-label>Cidade</mat-label>
+                                        <input #campoCidade
+                                                matInput maxlength="200"
+                                                [(ngModel)]="titular.pessoaFisica.cidade"
+                                                [required]="obrigatorio"
+                                                readonly
+                                                name="cidade"
+                                                placeholder="Cidade">
+                                        <mat-hint align="end">{{campoCidade.value.length}} / 200</mat-hint>
+                                    </mat-form-field>
+                                
+                                    <mat-form-field fxFlex="35%" 
+                                                    [ngStyle.xs]="{'width.%':98}"  
+                                                    [ngStyle]="{'padding-left.px':10}"  
+                                                    appearance="outline">
+                                        <mat-label>Bairro</mat-label>
+                                        <input #campoBairro
+                                                matInput maxlength="200"
+                                                [(ngModel)]="titular.pessoaFisica.bairro"
+                                                [required]="obrigatorio"
+                                                readonly
+                                                name="bairro"
+                                                placeholder="Bairro">
+                                        <mat-hint align="end">{{campoBairro.value.length}} / 200</mat-hint>
+                                    </mat-form-field>
+                                
+                                    <div fxLayout="row" style="width: 100%" fxLayoutAlign="space-between center">
+                                        <mat-form-field style="width: 45%;"
+                                                        [ngStyle]="{'padding-left.px': 10}"
+                                                        [ngStyle.xs]="{'padding-left.px': 0}"
+                                                        appearance="outline">
+                                            <mat-label>Número</mat-label>
+                                            <input #numeroEndereco
+                                                    matInput 
+                                                    maxlength="10"
+                                                    [(ngModel)]="titular.pessoaFisica.numeroEndereco"
+                                                    name="numeroEndereco"
+                                                    required
+                                                    placeholder="Número">
+                                        </mat-form-field>
+    
+                                        <mat-form-field style="width: 50%;"
+                                                        appearance="outline">
+                                            <mat-label>UF</mat-label>
+                                            <mat-select name="uf" 
+                                                        [(ngModel)]="titular.pessoaFisica.uf" 
+                                                        [required]="obrigatorio">
+                                                <mat-option *ngFor="let e of ufs" [value]="e">
+                                                    {{e}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>                                        
+                                    </div>
+                                </div>
+                                
+                                <div fxLayout="row" fxLayoutAlign="space-between center" fxLayout.xs="column">
+                                    <mat-form-field fxFlex="68%" 
+                                                    [ngStyle.xs]="{'width.%':98}"  
+                                                    appearance="outline">
+                                        <mat-label>Complemento</mat-label>
+                                        <input #complemento
+                                                matInput 
+                                                maxlength="200"
+                                                [(ngModel)]="titular.pessoaFisica.complemento"
+                                                name="complemento"
+                                                placeholder="Complemento">
+                                    </mat-form-field>
+
+                                    <div fxLayout="row" style="width: 100%" fxLayoutAlign="space-between center">
+                                        <mat-form-field style="width: 40%;"
+                                                        [ngStyle]="{'padding-left.px': 10}"
+                                                        [ngStyle.xs]="{'padding-left.px': 0}"
+                                                        appearance="outline">
+                                            <mat-label>Celular</mat-label>
+                                            <input matInput
+                                                    name="celular" 
+                                                    required
+                                                    placeholder="Celular"
+                                                    [textMask]="{mask: maskCelular}" 
+                                                    pattern="^(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$"
+                                                    [(ngModel)]="titular.pessoaFisica.celular">
+                                            <mat-error>Celular invalido</mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 55%;"
+                                                        appearance="outline">
+                                            <mat-label>Data Nascimento</mat-label>
+                                            <input matInput name="dataNascimento"
+                                                    [matDatepicker]="pickerDataNascimento" 
+                                                    placeholder="Data de Nascimento" 
+                                                    required
+                                                    [(ngModel)]="titular.pessoaFisica.dataNascimento"
+                                                    (input)="onMascaraDataInput($event)">
+                                            <mat-datepicker-toggle matSuffix [for]="pickerDataNascimento"></mat-datepicker-toggle>
+                                            <mat-datepicker #pickerDataNascimento></mat-datepicker>
+                                        </mat-form-field>
+
+                                    </div>
+
+                                </div> 
+                            </div>
+
+                            <div fxLayout="row" style="margin-top: 10px; margin-bottom: 40px;" fxLayoutAlign="center center">
+                                <button mat-button matStepperPrevious 
+                                        class="corAzulPadrao" 
+                                        [ngStyle]="{'width.%': 20}"
+                                        [ngStyle.xs]="{'width.%': 100}"
+                                        style="color: white; border-radius: 15px;">VOLTAR</button>
+
+                                <button mat-button 
+                                        (click)="validarCadastroDependente()"
+                                        [disabled]="formularioEndereco.invalid" 
+                                        style="border-radius: 15px;"
+                                        [ngClass]="{'estiloBotaoHabilidado': habilitarBotao(formularioEndereco), 'estiloBotaoDesabilidado': desabilitarBotao(formularioEndereco)  }"
+                                        [ngStyle]="{'width.%': 20, 'margin-left.px': 20}"
+                                        [ngStyle.xs]="{'width.%': 100, 'margin-left.px': 10}">PRÓXIMO</button>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </mat-step>
+            
+                <!-- Escolha do plano e do tipo de pagamento -->
+                <mat-step [stepControl]="formularioEtapa2" *ngIf="isTitularNovoNoSistema" errorMessage="Escolha o tipo de plano">
+                    <div ngModelGroup="formularioEtapa2" #formularioEtapa2="ngModelGroup">
+                        <ng-template matStepLabel></ng-template>
+                        <div fxLayout="column" style="margin-bottom: 13px;" >
+                            <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
+                                <span style="font-size: 20px; font-weight: bold; color: #f95f00; text-align: center;">Qual plano combina mais com você?</span>    
+                                <span style="font-size: 10px;">Permite até 4 dependentes inteiramente grátis</span>
+                            </div>                            
+    
+                            <input matInput name="idTipoPlanoEscolhido" [(ngModel)]="idTipoPlanoEscolhido" required [fxHide]="true">
+                            <div fxLayout="row" fxLayoutAlign="center center">                                
+                                <mat-radio-group  name="rdTipoPlano" 
+                                                  fxFlex="60%" 
+                                                  fxFlex.xs="100%"
+                                                  [(ngModel)]="idTipoPlanoEscolhido" 
+                                                  (change)="carregarTipoPlanaEscolhido($event)"
+                                                  required
+                                                  fxLayout="row"
+                                                  fxLayoutAlign="center center">
+
+                                    <div fxFlex="50%" fxFlex.xs="90%" fxLayoutAlign="center center" 
+                                         [ngStyle.xs]="{'width.%': 100}"
+                                         (click)="getPlanoEscolhido(1)"
+                                         fxLayout="column">
+
+                                        <div fxLayout="column" fxLayoutAlign="center center"
+                                             style="cursor: pointer; border: 0.66px solid #f95f00; border-radius: 15px;">
+                                            <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Opção 1: Plano Anual</span> </div>
+                                            <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">por R$ 199,90* ou 12x R$ 20,75</span></div>
+                                            <div style="width: 80%" fxLayoutAlign="center center">
+                                                <img [src]='getImagemPlanoAnual()' style="width: 60%;">
+                                            </div>
+                                        </div>
+
+                                        <mat-radio-button style="padding-top: 3px;" value="1" fxLayoutAlign="center center">Plano Anual</mat-radio-button>
+                                    </div>                                                  
+
+                                    <div fxFlex="50%" fxFlex.xs="90%" fxLayoutAlign="center center"
+                                         [ngStyle.xs]="{'width.%': 100}"
+                                         (click)="getPlanoEscolhido(2)"
+                                         fxLayout="column">
+
+                                        <div fxLayout="column" fxLayoutAlign="center center"
+                                             style="cursor: pointer; border: 0.66px solid #f95f00; border-radius: 15px;">
+                                            <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Opção 2: Plano Mensal</span> </div>
+                                            <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">por R$ 29,90*</span></div>
+                                            <div style="width: 80%" fxLayoutAlign="center center">
+                                                <img [src]='getImagemPlanoMensal()' style="width: 60%;">
+                                            </div>
+                                        </div>
+
+                                        <mat-radio-button style="padding-top: 3px;" value="2" fxLayoutAlign="center center">Plano Mensal</mat-radio-button>
+                                    </div>                                     
+
+                                </mat-radio-group>
+                            </div>
+    
+                            <div fxLayout="column" fxLayoutAlign="center center" style="padding-top: 20px;"
+                                 *ngIf="idTipoPlanoEscolhido">
+                                <span style="font-size: 20px; font-weight: bold; color: #f95f00;">
+                                    Escolha a forma de pagamento
+                                </span>    
+                            </div>
+                            
+                            <input matInput name="idTipoPagamentoEscolhido" [(ngModel)]="idTipoPagamentoEscolhido" required [fxHide]="true">  
+                            <div fxLayout="row" 
+                                 fxLayoutAlign="center center"
+                                 *ngIf="idTipoPlanoEscolhido">
+                                 
+                                <mat-radio-group  name="rdTipoPagamento" 
+                                                  fxFlex="50%" 
+                                                  fxFlex.xs="100%" 
+                                                  [(ngModel)]="idTipoPagamentoEscolhido" 
+                                                  (change)="carregarTipoPagamentoEscolhido($event)"
+                                                  required                                                                                                    
+                                                  fxLayoutAlign="center center"> 
+
+                                    <div fxFlex="100%" 
+                                         fxLayoutAlign="center center"                                          
+                                         (click)="tipoPagamentoEscolhido(1)"
+                                         fxLayout="column">
+
+                                        <div fxLayout="row" fxLayoutAlign="center center"
+                                             style="cursor: pointer; border: 0.66px solid #f95f00; border-radius: 15px;">
+                                             <div fxFlex="25%" fxLayoutAlign="center center"><img [src]="getImagemBoleto()" style="width: 55%;"></div>    
+                                             <div fxFlex="75%" fxLayoutAlign="center center"><span>Boleto Bancário</span></div>  
+                                        </div>
+
+                                        <mat-radio-button style="padding-top: 3px;" value="1" fxLayoutAlign="center center"></mat-radio-button>
+                                    </div>                                      
+                                    
+                                    <div fxFlex="100%" 
+                                         style="padding-left: 10px;"
+                                         fxLayoutAlign="center center" 
+                                         (click)="tipoPagamentoEscolhido(2)"
+                                         fxLayout="column">
+
+                                        <div fxLayout="row" fxLayoutAlign="center center"
+                                             style="cursor: pointer; border: 0.66px solid #f95f00; border-radius: 15px;">
+                                             <div fxFlex="25%" fxLayoutAlign="center center"><img [src]="getImagemCartao()" style="width: 55%;"></div>    
+                                             <div fxFlex="75%" fxLayoutAlign="center center"><span>Cartão de Crédito</span></div>    
+                                        </div>
+
+                                        <mat-radio-button style="padding-top: 3px;" value="2" fxLayoutAlign="center center"></mat-radio-button>
+                                    </div>
+                                </mat-radio-group>
+                            </div>
+
+                            <div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="idTipoPlanoEscolhido">
+                                <mat-form-field style="width: 150px;" fxFlexOffset="10px" *ngIf="isInformarCodigoCorretor">
+                                      <mat-label>Corretor (Opcional)</mat-label>
+                                      <input matInput name="corretor" 
+                                             [(ngModel)]="codigoCorretor" 
+                                             placeholder="Código">                    
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 150px;" fxFlexOffset="10px">
+                                    <mat-label>Voucher (Opcional)</mat-label>
+                                    <input matInput name="cupon" 
+                                           [(ngModel)]="codigoCupom" 
+                                           placeholder="Código">                    
+                                </mat-form-field>
+                            </div>                              
+
+                            <div fxLayout="row" fxLayoutAlign="center center" style="padding-top: 10px; margin-bottom: 40px;">
+                                <button mat-button matStepperPrevious 
+                                        class="corAzulPadrao" 
+                                        [ngStyle]="{'width.%': 20}"
+                                        [ngStyle.xs]="{'width.%': 100}"
+                                        style="color: white; border-radius: 15px;">VOLTAR</button>
+
+                                <button mat-button 
+                                        (click)="validarVoucher()"
+                                        [disabled]="formularioEtapa2.invalid" 
+                                        style="border-radius: 15px;"
+                                        [ngClass]="{'estiloBotaoHabilidado': habilitarBotao(formularioEtapa2), 'estiloBotaoDesabilidado': desabilitarBotao(formularioEtapa2)  }"
+                                        [ngStyle]="{'width.%': 20, 'margin-left.px': 20}"
+                                        [ngStyle.xs]="{'width.%': 100, 'margin-left.px': 10}">PRÓXIMO</button>
+                            </div>
+                        </div>
+                    </div>
+                </mat-step>
+                   
+                <!-- Informe os dados do cartão -->
+                <mat-step [stepControl]="formularioEtapa3" *ngIf="isEtapaPreenchimentoDadosCartao()" 
+                          errorMessage="Informe os dados do cartão">
+                    <div ngModelGroup="formularioEtapa3" #formularioEtapa3="ngModelGroup">
+                        <ng-template matStepLabel></ng-template>
+                        
+                        <div fxLayout="column" fxLayoutAlign="space-evenly center">
+                            <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 5px;">
+                                <span style="font-size: 20px; font-weight: bold; color: #f95f00;">Informe os dados do cartão</span>    
+                            </div>   
+                            
+                            <div fxLayout="row" fxLayoutAlign="space-evenly center" *ngIf="idTipoPlanoEscolhido === '1'" style="padding-bottom: 15px;">                                
+                                <mat-radio-group  name="rdTipoPagamento"
+                                                  fxFlex="100%" 
+                                                  [(ngModel)]="idTipoPagamentoAnualEscolhido" 
+                                                  [required]="true"
+                                                  fxLayoutAlign="space-evenly center">
+                                    <div fxFlex="50%">
+                                        <mat-radio-button value="1" fxLayoutAlign="center center">À vista (R$ 199,90)</mat-radio-button>
+                                    </div>                                                  
+                                    <div fxFlex="50%"
+                                         [ngStyle]="{'padding-left.px': 10}">
+                                        <mat-radio-button value="2" fxLayoutAlign="center center">Parcelado (12x R$ 20,75)</mat-radio-button>
+                                    </div>
+                                </mat-radio-group>
+                            </div>
+        
+                            <!-- Dados para compra com CARTÃO DE CRÉDITO -->
+                            <div fxLayout="column" 
+                                 [ngStyle]="{'width.px': 423}"
+                                 [ngStyle.xs]="{'width.%': 100}"
+                                 *ngIf="idTipoPagamentoEscolhido === '2'">
+
+                                 <div fxLayout="row" style="width: 100%; padding-right: 10px;">
+                                    <mat-form-field class="w-100" fxFlexOffset="10px" appearance="outline">
+                                        <mat-label>Nome impresso no cartão</mat-label>
+                                        <input matInput 
+                                                required
+                                                name="nomeImpresso" 
+                                                [(ngModel)]="dadosCartaoCredito.nomeImpressoCartao" 
+                                                placeholder="Nome impresso no cartão">                    
+                                        <mat-error>Campo obrigatório</mat-error>
+                                    </mat-form-field>
+                                </div>  
+
+                                <div fxLayout="row" style="width: 100%; padding-right: 10px;">
+                                    <mat-form-field class="w-100" fxFlexOffset="10px" appearance="outline">
+                                        <mat-label>CPF Titular do cartão</mat-label>
+                                        <input matInput 
+                                            [(ngModel)]="dadosCartaoCredito.cpfTitularCartao" 
+                                            name="cpfTitularCartao" 
+                                            placeholder="CPF Titular do cartão"
+                                            [textMask]="{mask: mascaraCpf}"
+                                            required
+                                            [cpfValidator]>
+                                        <mat-error >CPF inválido</mat-error>  
+                                    </mat-form-field>                                    
+                                </div>
+
+                                <div fxLayout="row" style="width: 100%; padding-right: 10px;">
+                                    <mat-form-field class="w-100" fxFlexOffset="10px" appearance="outline">
+                                        <mat-label>Data nascimento do titular do cartão</mat-label>
+                                        <input matInput name="dataNascimentoTitularCartao"
+                                               [matDatepicker]="pickerDataNascimento" 
+                                               placeholder="Data de Nascimento" 
+                                               required
+                                               [(ngModel)]="dadosCartaoCredito.dataNascimentoTitularCartao"
+                                               (input)="onMascaraDataInput($event)">
+                                        <mat-datepicker-toggle matSuffix [for]="pickerDataNascimento"></mat-datepicker-toggle>
+                                        <mat-datepicker #pickerDataNascimento></mat-datepicker>
+                                    </mat-form-field>                                    
+                                </div>                                  
+        
+                                <div fxLayout="row" style="width: 100%; padding-right: 10px;">
+                                    <mat-form-field class="w-100" fxFlexOffset="10px" appearance="outline">
+                                        <mat-label>Número do cartão</mat-label>
+                                        <input matInput 
+                                            name="numeroCartao" 
+                                            required
+                                            [textMask]="{mask: maskCartao}"
+                                            (blur)="buscaBandeira()"
+                                            [(ngModel)]="dadosCartaoCredito.numeroCartao" 
+                                            placeholder="Número do Cartão">                    
+                                        <mat-error>Número inválido</mat-error>
+                                    </mat-form-field>
+                                </div>
+                 
+                                <div fxLayout="row" fxLayout.xs="column" style="width: 100%; padding-right: 10px;">                              
+                                    <div fxFlex="100">
+                                        <div fxLayout="column" fxFlex="200px" fxFlex.xs="50%">
+                                            <mat-form-field appearance="outline" style="padding-left: 10px;">
+                                                <mat-label>Mês vencimento</mat-label>
+                                                <mat-select name="uf" required [(ngModel)]="dadosCartaoCredito.mesValidade">
+                                                    <mat-option *ngFor="let e of meses" [value]="e">
+                                                        {{e}}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error>Mês inválido</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div fxLayout="column" fxFlex="220px" fxFlex.xs="50%" [ngStyle]="{'padding-left.px': 10}">                                    
+                                            <mat-form-field appearance="outline">
+                                                <mat-label>Ano Vencimento (AAAA)</mat-label>
+                                                <input matInput 
+                                                        required
+                                                        name="anoValidade" 
+                                                        pattern="^\d{4}$"
+                                                        maxlength="4"
+                                                        [(ngModel)]="dadosCartaoCredito.anoValidade" 
+                                                        placeholder="AAAA">                    
+                                                <mat-error>Ano inválido</mat-error>
+                                            </mat-form-field>                                    
+                                        </div>
+                                    </div>    
+                                </div>
+
+                                <div fxLayout="row" style="width: 100%; padding-right: 10px;">
+                                    <div fxFlex="200px">
+                                        <mat-form-field appearance="outline" style="padding-left: 10px;">
+                                            <mat-label>Código de segurança</mat-label>
+                                            <input matInput 
+                                                    name="cvv" 
+                                                    pattern="^\d{3}$"
+                                                    required
+                                                    maxlength="3"
+                                                    [(ngModel)]="dadosCartaoCredito.cvv" 
+                                                    placeholder="Código de segurança">                    
+                                            <mat-error>Código inválido</mat-error>
+                                        </mat-form-field>                                    
+                                    </div>
+                                    <div fxFlex="138px" style="padding-left: 20px;">
+                                        <img [src]="getImagemCVV()" style="width: 60%;"/>                    
+                                    </div>
+                                </div>
+        
+                                <div fxLayout="row" style="margin-top: 15px; margin-bottom: 10px;" fxLayoutAlign="center center">
+                                    <button mat-button matStepperPrevious 
+                                            class="corAzulPadrao" 
+                                            [ngStyle]="{'width.%': 35}"
+                                            [ngStyle.xs]="{'width.%': 100}"
+                                            style="color: white; border-radius: 15px;">VOLTAR</button>
+
+                                    <button mat-button matStepperNext 
+                                            [disabled]="formularioEtapa3.invalid" 
+                                            style="border-radius: 15px;"
+                                            [ngClass]="{'estiloBotaoHabilidado': habilitarBotao(formularioEtapa3), 'estiloBotaoDesabilidado': desabilitarBotao(formularioEtapa3)  }"
+                                            [ngStyle]="{'width.%': 35, 'margin-left.px': 20}"
+                                            [ngStyle.xs]="{'width.%': 100, 'margin-left.px': 10}">PRÓXIMO</button>                                            
+
+                                </div> 
+
+                            </div>                            
+                        </div>
+    
+                   </div>                      
+                </mat-step>
+
+                <!-- Resumo e finalizar-->
+                <mat-step [stepControl]="formularioResumo" errorMessage="Informe os dados obrigatórios">
+                    <div ngModelGroup="formularioResumo" #formularioResumo="ngModelGroup">
+                        <ng-template matStepLabel></ng-template>
+                        
+                        <div fxLayout="column" fxLayoutAlign="space-evenly center">
+                            <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
+                                <span style="font-size: 20px; font-weight: bold; color: #08003c;">Resumo do contrato</span>    
+                            </div>   
+                            
+                            <!-- plano escolhido -->
+                            <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPlanoEscolhido === '1'">
+                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Plano Anual (mais econômico!)</span> </div>
+                            </div>
+
+                            <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPlanoEscolhido === '2'">
+                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Plano Mensal</span> </div>
+                            </div>                            
+
+                            <!-- forma pagamento -->
+                            <div style="font-size: 10px; font-weight: bold; color: #f95f00; padding-top: 10px;">
+                                <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '1'">
+                                    <div><span>Boleto Bancário</span></div>
+                                </div>                            
+                                <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '2'">
+                                    <div><span>Cartão de Crédito</span></div>  
+                                </div>
+                            </div>
+
+                            <!-- valor pago -->
+                            <div *ngIf="idTipoPlanoEscolhido === '1'; else divValorMensal">
+                                <div style="font-size: 10px; font-weight: bold; color: #f95f00; padding-top: 10px;">
+                                    <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '1'">
+                                        <div><span>À vista (R$ 199,90)</span></div>
+                                    </div>                            
+                                    <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '2'">
+                                        <div *ngIf="idTipoPagamentoAnualEscolhido === '1'"><span>À vista (R$ 199,90)</span></div>
+                                        <div *ngIf="idTipoPagamentoAnualEscolhido === '2'"><span>Parcelado (12x R$ 20,75)</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-template #divValorMensal>
+                                <div style="font-size: 10px; font-weight: bold; color: #f95f00; padding-top: 10px;">
+                                    <div fxLayout="column" fxLayoutAlign="center center">
+                                        <div><span>R$ 29,90*</span></div>
+                                    </div>                            
+                                </div>
+                            </ng-template>
+
+                            <div fxLayout="column" fxLayoutAlign="center center" *ngIf="codigoCupom" style="padding-top: 10px;">
+                                <div><span style="font-size: 10px; font-weight: bold; color: #08003c;">O Voucher possui um desconto de {{valorVoucher}}% no valor do plano escolhido.</span> </div>
+                            </div>                            
+                            
+                            <div fxLayout="column" 
+                                style="padding-top: 20px; padding-bottom: 40px;"
+                                [ngStyle]="{'width.px': 423}"
+                                [ngStyle.xs]="{'width.%': 100}">
+
+                                <div fxLayout="row" fxLayoutAlign="center center" style="width: 100%; padding-top: 15px; padding-bottom: 1px;">
+                                    <mat-checkbox color="primary" 
+                                                title="Confirmo a assinatura ?"
+                                                [(ngModel)]="aceitoAssinatiraCartaoAmigo" 
+                                                required
+                                                name="assinaturaPorCartao">
+                                        <span style="font-size: x-small; font-weight: 600; color: #f95f00;">
+                                            Confirmo a assinatura e aceito os <a target="_blank" href={{linkTermoDeUso()}}>Termos de Uso</a> do Cartão Amigo. 
+                                        </span>    
+                                    </mat-checkbox>
+                                </div>
+        
+                                <div fxLayout="row" fxFlex="100" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '2'" >
+                                    <button mat-raised-button
+                                            fxFlex="50"
+                                            fxFlex.xs="95"
+                                            class="mat-elevation-z6 w-100 mt-3"
+                                            (click)="realizarPagamentoCartao()"
+                                            [disabled]="formulario.invalid || !aceitoAssinatiraCartaoAmigo"
+                                            style="margin-top: 30px; border-radius: 10px;"
+                                            [ngClass]="{'botaoHabilitado': formulario.valid, 'botaoDesabilitado': formulario.invalid }">
+                                        REALIZAR PAGAMENTO
+                                    </button>
+                                </div>
+
+                                <div fxLayout="row" fxFlex="100" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '1'" >
+                                    <button mat-raised-button
+                                            fxFlex="50"
+                                            fxFlex.xs="95"
+                                            class="mat-elevation-z6 w-100 mt-3"
+                                            (click)="realizarPagamentoBoleto()"
+                                            [disabled]="formulario.invalid || !aceitoAssinatiraCartaoAmigo"
+                                            style="margin-top: 30px; border-radius: 10px;"
+                                            [ngClass]="{'botaoHabilitado': formulario.valid, 'botaoDesabilitado': formulario.invalid }">
+                                        GERAR BOLETO
+                                    </button>
+                                </div>                                
+                                
+                                <div fxLayout="row" fxLayout.xs="column" style="margin-top: 25px; margin-bottom: 10px;" fxLayoutAlign="center center">
+                                    <button mat-button matStepperPrevious 
+                                            class="corAzulPadrao" 
+                                            [ngStyle]="{'width.%': 35}"
+                                            [ngStyle.xs]="{'width.%': 100}"
+                                            style="color: white; border-radius: 15px;">VOLTAR</button>
+
+                                    <button mat-button 
+                                            (click)="stepper.reset()" 
+                                            class="corAzulPadrao"
+                                            [ngStyle]="{'width.%': 35, 'margin-left.px': 20}"
+                                            [ngStyle.xs]="{'width.%': 100, 'margin-top.px': 20}"
+                                            style="color: white; border-radius: 15px; margin-left: 20px;">CANCELAR</button>
+
+                                </div> 
+
+                            </div>                            
+                        </div>  
+    
+                   </div>                      
+                </mat-step>
+
+            </mat-horizontal-stepper>
+    
+            <div *ngIf="retornoPagamento?.statusTransacao" style="border-radius: 15px;">
+                <div fxLayout="row" fxLayoutAlign="center center" style="padding-top: 40px;">
+                    <div fxLayout="row" fxLayoutAlign="space-around center">
+                        <img [src]="getLogoCartaoAmigoSemFundo()" class="imagem" style="width: 178px;"/>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="center center" style="padding-top: 80px;">
+                    <span style="font-size: 20px; font-weight: bold; color: #f95f00;">Obrigado!</span>    
+                </div>
+    
+                <div fxLayout="row" fxLayoutAlign="center center" style="padding-bottom: 90px;">
+                    <span style="font-size: 20px; font-weight: bold; color: #f95f00; text-align: center;">
+                        Você receberá um e-mail com os dados da sua conta.
+                    </span>    
+                </div>
+
+                <div fxLayout="column" *ngIf="retornoPagamento.linkPagamento" fxLayoutAlign="center center" style="padding-bottom: 90px;">
+                    <span style="font-size: 12px; font-weight: bold; color: #f95f00; text-align: center;">
+                        Se o boleto não for aberto automaticamente, então clique no link abaixo ou copie e cole em outra aba do browser.
+                    </span> 
+
+                    <div fxLayout="row" fxFlex="90%" style="font-size: 10px; font-weight: bold;padding-top: 10px;" >
+                        <div style="text-align: center;">
+                            <a target="_blank" href={{retornoPagamento.linkPagamento}}>{{retornoPagamento.linkPagamento}}</a>
+                        </div>
+                    </div>    
+                </div>
+
+
+                <div fxLayout="row" fxLayoutAlign="center center" style="padding-bottom: 60px;">
+                    <span style="font-size: 20px; font-weight: bold; color: #f95f00;">
+                        <span style="font-size: 20px; font-weight: bold; color: #08003c;">
+                            Seu pagamento está: <span style="font-size: 20px; font-weight: bold; color: #f95f00;">{{retornoPagamento.descricaoStatusTransacao}}</span>    
+                        </span>
+                    </span>    
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

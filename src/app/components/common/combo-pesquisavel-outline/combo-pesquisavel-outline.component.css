@@ -1,0 +1,13 @@
+.mat-select:focus:not(.mat-select-disabled).combopesquisavel {
+    border-bottom: 2px solid !important;
+}
+
+.bordaObrigatoria {
+    color: red;
+}
+
+
+.mat-form-field-appearance-outline .mat-form-field-flex {
+    background: #ffffff;
+    border-radius: 10px;
+}

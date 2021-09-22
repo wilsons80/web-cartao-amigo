@@ -1,0 +1,87 @@
+<mat-sidenav-container class="h-100" style="background: #1d1c3b;">
+
+    <mat-toolbar [ngClass]="['corAzulPadrao', 'fonteBranca']" *ngIf="!sessaoService.isUsuarioLogado">
+      <div fxLayout="row" fxLayoutAlign="center" fxFlex>
+        
+        <div fxLayout="row" fxLayoutAlign="center" fxFlex="20" [fxHide]="isMobile()">
+            <div fxLayout="row" fxLayoutAlign="space-around center" >
+                <img [src]="getLogoCartaoAmigo()" class="imagem" style="width: 178px;"/>
+            </div>
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="center" fxFlex></div>
+        <div fxLayout="row" fxLayoutAlign="center" fxFlex="20"></div>
+        
+      </div>
+    </mat-toolbar>
+    
+    
+    <div fxLayout="row" fxLayoutAlign="center center" class="h-90" 
+        >
+        <form #formLogin="ngForm" 
+              fxFlex="90" 
+              fxFlex.gt-sm="30" 
+              fxFlex.sm="60"               
+              style="background: white; padding: 31px; border-radius: 16px; margin-top: 50px;">
+
+             <div class="p-3">
+                <div style="width: 100%; padding-bottom: 15px;">
+                    <img [src]="imagemLogin()" style="width:100%">
+                </div>
+                
+                <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
+                   <span [ngStyle]="{'font-size.px' : isMobile() ? 20 : 36}" style="font-weight: bold">Acesso à conta</span>    
+                </div>
+
+                <mat-form-field class="w-100">
+                    <mat-icon matPrefix class="mat-icon-sm mb-2 mr-2 secondary-text-color">person</mat-icon>                          
+                    <input matInput 
+                           name="cpf" 
+                           [(ngModel)]="usuario.login" 
+                           placeholder="CPF"
+                           required>
+                    
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <mat-icon matPrefix class="mat-icon-sm mb-2 mr-2 secondary-text-color">lock</mat-icon>
+                    <input matInput 
+                           name="senha"
+                           [(ngModel)]="usuario.senha"
+                           placeholder="Senha" 
+                           type="password"
+                           required
+                        >
+                </mat-form-field>
+     
+                <button mat-raised-button
+                        class="mat-elevation-z6 w-100 mt-3"
+                        (click)="login()"
+                        [disabled]="formLogin.invalid"
+                        style="margin-top: 15px;">
+                        ACESSAR
+                </button>
+
+                <div fxLayout="column" fxLayoutAlign="center center" style="padding-top: 15px;">
+                    <a href="/contaassociado">Ainda não sou cadastrado</a>
+                 </div>
+ 
+                <div fxLayout="column" fxLayoutAlign="center center" style="padding-top: 15px;">
+                   <a href="/redefinirsenha">Esqueceu sua senha ?</a>
+                </div>
+
+             </div>
+        </form>    
+    </div>
+
+</mat-sidenav-container>
+
+
+<!--
+    xs      -> celulares
+    sm      -> ipad
+    md      -> desktop
+    lg     |
+    lt-xl  | -> monitores grandes
+    xl     | 
+-->

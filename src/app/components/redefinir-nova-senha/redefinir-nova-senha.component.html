@@ -1,0 +1,113 @@
+<mat-sidenav-container class="h-100" style="background: #1d1c3b;">
+
+    <mat-toolbar [ngClass]="['corAzulPadrao', 'fonteBranca']" *ngIf="!sessaoService.isUsuarioLogado">
+      <div fxLayout="row" fxLayoutAlign="center" fxFlex>
+        
+        <div fxLayout="row" fxLayoutAlign="center" fxFlex="20">
+            <div fxLayout="row" fxLayoutAlign="center center" >
+                <img [src]="getLogoCartaoAmigo()" class="imagem" style="width: 178px;"/>
+            </div>
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="center" fxFlex *ngIf="isNotMobile()">
+            <span style="padding-top: 7px;">Acreditamos que saúde e bem-estar é um direito de todos.</span>
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="center" fxFlex="20" *ngIf="isNotMobile()"></div>
+        
+      </div>
+    </mat-toolbar>
+    
+    
+    <div fxLayout="row" fxLayoutAlign="center center" >
+        <form #formulario="ngForm" 
+              fxFlex="70" 
+              fxFlex.xs="90"               
+              style="background: white; padding: 31px; border-radius: 16px; margin-top: 40px;">
+
+             <div class="p-3">
+                <div fxLayoutAlign="center center" style="width: 100%; padding-bottom: 15px;">
+                    <img [src]="imagemLogin()" [ngStyle]="{'width.%': isMobile() ? 70 : 30}">
+                </div>
+                
+                <div *ngIf="!senhaTrocada; else divSenhaTrocada">
+                     <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
+                        <span style="font-weight: bold;" [ngStyle]="{'font-size.px': isMobile() ? 20 : 20}">
+                            Redefinir a senha de usuário
+                         </span>    
+                     </div>
+     
+                     <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
+                         <span style="font-weight: bold; color: #d76d36;"
+                               [ngStyle]="{'font-size.px': isMobile() ? 20 : 20}">
+                             Esqueceu sua senha?
+                         </span>    
+                     </div>
+      
+                     <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
+                         <span style="font-weight: bold; text-align: center;" 
+                               [ngStyle]="{'font-size.px': isMobile() ? 14 : 20, 'width.%': isMobile() ? 100 : 50}">
+                               Escolha uma nova senha para esta conta.
+                         </span>    
+                     </div>
+                     
+                     <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
+                         <mat-form-field [ngStyle.xs]="{'width.%': 100}"
+                                         [ngStyle.sm]="{'width.%': 50}"
+                                         [ngStyle]="{'width.%': 30}"
+                                         >
+                            <mat-icon matPrefix class="mat-icon-sm mb-2 mr-2 secondary-text-color" matInput>lock</mat-icon>                          
+                            <input matInput 
+                                   name="senha1"
+                                   [(ngModel)]="senha1"
+                                   placeholder="Digite uma nova senha" 
+                                   type="password"
+                                   required>
+                        </mat-form-field>
+                     </div>
+
+                     <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
+                        <mat-form-field [ngStyle.xs]="{'width.%': 100}"
+                                        [ngStyle.sm]="{'width.%': 50}"
+                                        [ngStyle]="{'width.%': 30}"
+                                        >
+                           <mat-icon matPrefix class="mat-icon-sm mb-2 mr-2 secondary-text-color" matInput>lock</mat-icon>                          
+                           <input matInput 
+                                  name="senha"
+                                  [(ngModel)]="senha2"
+                                  placeholder="Confirme a nova senha" 
+                                  type="password"
+                                  required>
+                       </mat-form-field>
+                    </div>
+
+     
+                     <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
+                         <button mat-raised-button
+                                 class="mat-elevation-z6"
+                                 (click)="redefinir()"
+                                 [disabled]="formulario.invalid"
+                                 style="margin-top: 15px;">
+                                 Redefinir senha
+                         </button>
+                     </div>
+                </div>
+
+                <ng-template #divSenhaTrocada>
+                    <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
+                        <span style="font-weight: bold;" [ngStyle]="{'font-size.px': isMobile() ? 20 : 20}">
+                            Senha alterada com sucesso.
+                         </span>    
+                     </div>
+                </ng-template>
+
+                 <div fxLayout="column" fxLayoutAlign="center center" style="padding-top: 15px;">
+                    <mat-icon matPrefix class="mat-icon-sm mb-2 mr-2 secondary-text-color" matInput>login</mat-icon>  
+                    <a href="/login">Tela de Login</a>
+                 </div>
+
+             </div>
+        </form>    
+    </div>
+
+</mat-sidenav-container>

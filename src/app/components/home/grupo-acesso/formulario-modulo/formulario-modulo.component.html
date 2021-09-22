@@ -1,0 +1,30 @@
+<div ngModelGroup="cbModulo" 
+     fxFlex="100%" 
+     fxLayoutGap="20px" 
+     fxFlexOffset="20px">
+
+    <div ngModelGroup="comboModulo" fxFlex="100%" fxLayoutGap="20px" fxFlexOffset="20px">
+        <combo-pesquisavel #campoModulo
+                           nome="cbModulo" 
+                           [itens]="modulos" 
+                           itemDescricao="descricao"
+                           itemId="id"
+                           [showDisplayId]="false" 
+                           [obrigatorio]="true"
+                           placeholder="Tela"
+                           label="Tela"
+                           [(valor)]="filtro.modulo"
+                           (valorChange)="onValorChangeModulo($event)">
+        </combo-pesquisavel>
+    </div>
+</div>
+
+<div fxFlex="10%" style="margin-top: 18px;margin-left: 26px;" >
+    <button mat-icon-button 
+            *ngIf="perfilAcesso.deleta" 
+            (click)="deletar()"
+            style="padding: 0px;">
+        <mat-icon style="color: red">delete_forever</mat-icon>
+    </button>                                
+</div>
+

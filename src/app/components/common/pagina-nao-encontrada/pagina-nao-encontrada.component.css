@@ -1,0 +1,9 @@
+.placa {
+    height: 300px;
+    width: 600px;
+    background: url(../../../../assets/icones/placa.png) no-repeat 0 0;
+    background-size: auto 300px;
+    cursor: pointer;
+    border: none;
+    margin-left: 30%;
+}

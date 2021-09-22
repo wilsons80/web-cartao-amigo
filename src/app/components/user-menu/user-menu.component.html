@@ -1,0 +1,35 @@
+<button mat-icon-button [matMenuTriggerFor]="userMenu" #userMenuTrigger="matMenuTrigger" >
+    <mat-icon>account_circle</mat-icon>
+</button>
+
+<mat-menu #userMenu="matMenu" [overlapTrigger]="false" class="toolbar-dropdown-menu user-menu">
+    
+        <mat-card fxLayout="column" fxLayoutAlign="space-around center" class="user-info p-0">
+
+            <!-- Foto do usuário logado-->
+            <div *ngIf="false">
+                <img [src]="userImage"  alt="user-image" *ngIf="naoPossuiFoto()">
+                <img [src]="userImage"  alt="user-image" *ngIf="!naoPossuiFoto()">
+            </div>
+
+            <div fxLayout="column" fxLayoutAlign="center center">
+                <h2>{{sessaoService.nomeUsuario}}</h2>
+                <h3 class="secondary-text-color">{{sessaoService.email}}</h3>
+            </div>
+        </mat-card>  
+
+        <mat-divider></mat-divider>
+        <a mat-menu-item> 
+            <mat-icon>edit</mat-icon>
+            <span (click)="showDialogEditarPerfil()">Editar Perfil</span> 
+        </a>
+        
+        <mat-divider></mat-divider>
+
+        <a mat-menu-item (click)="logout()"> 
+            <mat-icon>power_settings_new</mat-icon>
+            <span>Sair</span> 
+        </a>
+
+    <!--</span>-->
+</mat-menu>

@@ -1,0 +1,44 @@
+<mat-accordion>
+
+    <mat-expansion-panel *ngFor="let dependente of titular.dependentes; let index = index" [expanded]="step === index" (opened)="setStep(index)" hideToggle>
+        <mat-expansion-panel-header>
+            <mat-panel-title style="padding-top: 7px;">
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <mat-icon>account_circle</mat-icon>
+                    <label [ngClass]="{'inativo': !dependente.ativo}">{{dependente.pessoaFisica?.nome?.toUpperCase()}}</label>
+                </div>
+            </mat-panel-title>
+
+            <mat-panel-description>
+              <button mat-icon-button aria-label="Remover" 
+                      *ngIf="!dependente.id" 
+                      (click)="remover(index); $event.stopPropagation()" 
+                      matTooltip="Remover dependente" 
+                      matTooltipPosition="left">
+                  <mat-icon>person_remove</mat-icon>
+              </button>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+      
+        <dependente [desabilitarCampos]="false" [dependente]="dependente" [perfilAcesso]="perfilAcesso"></dependente>
+
+    </mat-expansion-panel>
+
+    <div [hidden]="titular.dependentes?.length">
+        <div fxLayout="row" 
+             class="mat-elevation-z6" 
+             fxLayoutAlign="center center" 
+             style="padding-top: 20px; padding-bottom: 20px">
+            Não há dependentes para esse titular.
+        </div>
+    </div>
+
+</mat-accordion>
+
+<div fxLayoutAlign="end end" [ngStyle]="{'margin-top': '16px'}">
+    <button mat-raised-button arial-label="Novo dependente" 
+            (click)="adicionarDependente()"
+            *ngIf="isPermiteAdicionarDependente()"> 
+        <mat-icon matTolltip="Novo dependente" matTooltipPosition="left">group_add</mat-icon>&nbsp;&nbsp;Novo dependente&nbsp;&nbsp;
+    </button>
+</div>

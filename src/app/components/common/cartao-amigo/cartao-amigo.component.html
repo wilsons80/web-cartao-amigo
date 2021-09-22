@@ -1,0 +1,9 @@
+<div fxLayout="row" fxLayoutAlign="center center" class="fontCartao">
+    <div class="cartao zoom" fxLayout="row" *ngIf="cartao.nomeImpresso">
+        <div #divCartao fxLayout="column" fxLayoutAlign="space-around center" class="tamanhoDivCartao">
+            <img [src]="getUrlQrCode()" [ngStyle]="{'margin-top.px': cartao.isTitular ? 9 : 11}">
+            <label>{{nomeImpresso.toUpperCase()}}</label>
+            <label>{{cartao.numeroCartao.toUpperCase()}}</label>
+        </div>
+    </div>
+</div>

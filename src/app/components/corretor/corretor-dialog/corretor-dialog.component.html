@@ -1,0 +1,150 @@
+<mat-toolbar><div style="width: 100%; text-align: center;">Corretor</div></mat-toolbar>
+<mat-dialog-content fxLayout="column">
+    <form #formulario="ngForm" style="padding-top: 30px; overflow: scroll;">    
+
+        <div fxLayout="row" fxLayoutGap="20px" 
+             fxLayoutAlign="center center" 
+             style="font-size: 20px; color: #d76d36; font-weight: bold;">
+            <label>{{getCodigo()}}</label>
+        </div>    
+
+        <div fxLayout="column" fxLayoutAlign="center center" 
+             style="font-size: 11px; color: red; font-weight: bold;">
+            <label>Envie essa URL para o corretor finalizar o processo de autorização de vendas no PAGSEGURO.</label>
+            <label>{{urlAutorizacao}}</label>
+        </div>
+
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" style="padding-right: 10px" fxFlexFill>    
+
+            <mat-form-field fxFlex="50%" fxFlexOffset="20px" >
+                <input matInput maxlength="200" 
+                       name="nome" 
+                       placeholder="Nome" 
+                       required
+                       [(ngModel)]="corretor.pessoaFisica.nome" >
+            </mat-form-field>
+
+            <mat-form-field fxFlex="50%">
+                <input matInput maxlength="200" 
+                       name="publicKey" 
+                       readonly
+                       matTooltip="Número único que identifica a conta do corretor no Pagseguro."
+                       placeholder="Chave Pagseguro" 
+                       [(ngModel)]="corretor.publicKey" >
+            </mat-form-field>            
+
+        </div>
+
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" style="padding-right: 10px;" fxFlexFill>
+            <mat-form-field fxFlex="33%" fxFlexOffset="20px" >
+                <input matInput maxlength="200" 
+                       email
+                       name="email" 
+                       [disabled]="isAtualizacao"
+                       placeholder="Email" 
+                       [(ngModel)]="corretor.pessoaFisica.email" 
+                       required>
+                <mat-error>E-mail invalido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field fxFlex="33%" fxFlexOffset="20px" >
+                <input matInput
+                       name="cpf" 
+                       [disabled]="isAtualizacao"
+                       placeholder="CPF" 
+                       [textMask]="{mask: mascaraCpf}" 
+                       [cpfValidator]
+                       [(ngModel)]="corretor.pessoaFisica.cpf" 
+                       required>
+                <mat-error>CPF invalido</mat-error>
+            </mat-form-field>
+
+        </div> 
+        
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" style="padding-right: 10px;" fxFlexFill>
+            <mat-form-field fxFlexOffset="20px" style="width: 200px;">
+                <input matInput
+                       name="celular" 
+                       required
+                       placeholder="Celular" 
+                       [textMask]="{mask: maskCelular}" 
+                       pattern="^(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$"
+                       [(ngModel)]="corretor.pessoaFisica.celular">
+                <mat-error>Celular invalido</mat-error>
+            </mat-form-field>
+
+            <div style="padding-top: 20px !important;">
+                <mat-slide-toggle fxFlexOffset="20px" 
+                                  color="primary" 
+                                  style="opacity: 1;"
+                                  matTooltip="Informa se o coretor está ativo ou inativo."
+                                  [ngStyle.xs]="{'margin-bottom.px': 20}"
+                                  name="ativo" 
+                                  [(ngModel)]="corretor.ativo">{{corretor.ativo ? 'Ativo' : 'Inativo'}}
+                </mat-slide-toggle>            
+            </div>
+
+            <mat-form-field fxFlex="15" fxFlexOffset="20px">
+                <input [(ngModel)]=corretor.valorRecebimento 
+                        currencyMask 
+                        name="valorRecebimento"
+                        required
+                        placeholder="Valor recebimento (%)"
+                        matTooltip="Valor máximo permitido é 90%"
+                        matInput 
+                        max="90"
+                        min="0"
+                        (blur)="validarPorcentagem()"
+                        maxlength="5"
+                        [options]="{ prefix: '', thousands: '.', decimal: ',' }" />
+                <span matPrefix *ngIf="corretor.isPorcentagem">%&nbsp;</span>
+            </mat-form-field> 
+
+        </div>   
+        
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" style="padding-right: 10px;" fxFlexFill>
+            <mat-form-field fxFlex="100%" fxFlexOffset="20px" >
+                <input matInput maxlength="500" 
+                       name="linkPagamento" 
+                       placeholder="Link de pagamento"
+                       readonly
+                       [(ngModel)]="corretor.linkPagamento">
+            </mat-form-field>
+        </div> 
+
+        <div ngModelGroup="dadosEndereco" class="espaco">
+            <cadastro-endereco [dadosEndereco]="corretor.pessoaFisica"></cadastro-endereco>
+        </div>
+        
+    </form>
+    
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <div fxLayout="row" fxLayoutGap="50px" 
+         style="margin-top: 30px; margin-bottom: 10px;" 
+         fxFlexFill>
+
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px;"
+                    [disabled]="formulario.invalid"
+                    *ngIf="isPermiteEditar()"
+                    (click)="salvar()"  
+                    matTooltip="Fechar">
+                Salvar
+            </button>
+        </div>
+        
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px;"
+                    (click)="cancelar()"  
+                    matTooltip="Fechar">
+                Fechar
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

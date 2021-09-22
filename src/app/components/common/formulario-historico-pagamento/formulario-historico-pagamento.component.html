@@ -1,0 +1,47 @@
+<mat-table [hidden]="!mostrarTabela" 
+                 [dataSource]="dataSource" 
+                 class="mat-elevation-z6"
+                 matSort style="margin-top: 20px;">
+
+    <ng-container matColumnDef="statusTransacao">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Status </mat-header-cell>
+        <mat-cell *matCellDef="let element" data-label="Status"> {{element.statusTransacao}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="tipoPlano">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Plano</mat-header-cell>
+        <mat-cell *matCellDef="let element" data-label="Plano">{{element.tipoPlano}}</mat-cell>
+    </ng-container>    
+    
+    <ng-container matColumnDef="valorPago">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Valor Pago</mat-header-cell>
+        <mat-cell *matCellDef="let element" data-label="Valor">{{element.valorPago | currency:'BRL'}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="valorCorretor">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Valor do Corretor</mat-header-cell>
+        <mat-cell *matCellDef="let element" data-label="Valor do Corretor">{{element.valorCorretor | currency:'BRL'}}</mat-cell>
+    </ng-container>    
+
+    <ng-container matColumnDef="dtPagamentoPlanoContratado">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Data do Pagamento</mat-header-cell>
+        <mat-cell *matCellDef="let element" data-label="Data Pagamento"> {{element.dtPagamentoPlanoContratado | dataComHoraResumido}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="formaPagamento">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Forma de Pagamento</mat-header-cell>
+        <mat-cell *matCellDef="let element" data-label="Pagamento"> {{element.formaPagamento}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns" class="corLaranzaPadrao"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+
+<div [hidden]="mostrarTabela">
+    <div fxLayout="row" 
+            [ngClass]="{'mat-elevation-z6': mostrarTabela}" 
+            fxLayoutAlign="center center" 
+            style="padding-top: 20px">
+        {{msg}}
+    </div>
+</div>

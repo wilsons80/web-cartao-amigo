@@ -1,0 +1,164 @@
+<mat-dialog-content >
+    <mat-toolbar><div style="width: 100%; text-align: center;">Voucher</div></mat-toolbar>
+    
+    <form #formulario="ngForm" fxLayout="column" style="padding-top: 30px;">
+
+        <!-- APARECE QUANDO NOVOS VOUCHERS -->
+        <div *ngIf="!isAtualizar" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center center"  style="margin-top: 10px; margin-bottom: 10px; width: 100%;" fxFlexOffset="20px">
+            <mat-form-field [ngStyle]="{'width.px': 350}" 
+                            [ngStyle.xs]="{'width.%': 100}" 
+                            fxFlexOffset="20px">
+                <input matInput
+                       name="descricao"
+                       placeholder="Descrição"
+                       maxlength="100"
+                       [(ngModel)]="voucher.descricao"
+                       required>
+            </mat-form-field>
+
+            <mat-form-field [ngStyle]="{'width.px': 200}" 
+                            [ngStyle.xs]="{'width.%': 100}"  
+                            fxFlexOffset="20px">
+                <input matInput 
+                       name="dataValidade" 
+                       [matDatepicker]="pickerDataValidade"
+                       placeholder="Data Validade" 
+                       maxlength="10"
+                       required
+                       (input)="onMascaraDataInput($event)"
+                       [(ngModel)]="voucher.dataValidade" >
+                <mat-datepicker-toggle matSuffix [for]="pickerDataValidade"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDataValidade></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field [ngStyle]="{'width.px': 180}" 
+                            [ngStyle.xs]="{'width.%': 100}" 
+                            fxFlexOffset="20px">
+                <input [(ngModel)]="voucher.porcentagem"
+                       currencyMask 
+                       name="porcentagem"
+                       placeholder="Porcentagem de desconto"
+                       matInput 
+                       required
+                       maxlength="5"
+                       [options]="{ prefix: '', thousands: '.', decimal: ',' }" />
+                <span matSuffix style="padding-left: 5px;">%&nbsp;</span>
+            </mat-form-field>
+
+            <mat-form-field [ngStyle]="{'width.px': 180}" 
+                            [ngStyle.xs]="{'width.%': 100}" 
+                            fxFlexOffset="20px">
+                <input [(ngModel)]="quantidade" 
+                       name="quantidade"
+                       placeholder="Quantidade de voucher"
+                       matInput/>
+            </mat-form-field>
+        </div>
+
+
+        <!-- APARECE QUANDO FOR ATUALIZAÇÃO -->
+        <div *ngIf="isAtualizar" fxLayout="row" fxLayout.xs="column" 
+             fxLayoutAlign="center center" 
+             style="margin-top: 10px; margin-bottom: 10px; width: 100%;" fxFlexOffset="20px">
+
+            <mat-form-field [ngStyle]="{'width.px': 200}" 
+                            [ngStyle.xs]="{'width.%': 100}">
+                <input matInput maxlength="45" 
+                       name="codigo" 
+                       placeholder="Código do Voucher" 
+                       disabled
+                       [(ngModel)]="voucher.codigo">
+            </mat-form-field>
+        
+            <mat-form-field [ngStyle]="{'width.px': 400}" 
+                            [ngStyle.xs]="{'width.%': 100}" 
+                            fxFlexOffset="20px">
+                <input matInput
+                       name="descricao"
+                       placeholder="Descrição"
+                       maxlength="100"
+                       [(ngModel)]="voucher.descricao"
+                       required>
+            </mat-form-field>
+
+            <mat-form-field [ngStyle]="{'width.px': 200}" 
+                            [ngStyle.xs]="{'width.%': 100}"  
+                            fxFlexOffset="20px">
+                <input matInput 
+                       name="dataValidade" 
+                       [matDatepicker]="pickerDataValidade"
+                       placeholder="Data Validade" 
+                       maxlength="10"
+                       (input)="onMascaraDataInput($event)"
+                       [(ngModel)]="voucher.dataValidade" >
+                <mat-datepicker-toggle matSuffix [for]="pickerDataValidade"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDataValidade></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field [ngStyle]="{'width.px': 200}" 
+                            [ngStyle.xs]="{'width.%': 100}" 
+                            fxFlexOffset="20px">
+                <input [(ngModel)]=voucher.porcentagem 
+                       currencyMask 
+                       name="porcentagem"
+                       matTooltip="Valor permitido até 75% ou 100%"
+                       placeholder="Porcentagem de desconto"
+                       matInput 
+                       required
+                       max="100"
+                       min="0"
+                       (blur)="validarPorcentagem()"
+                       maxlength="5"
+                       [options]="{ prefix: '', thousands: '.', decimal: ',' }" />
+                <span matSuffix style="padding-left: 5px;">%&nbsp;</span>
+            </mat-form-field>
+
+            <div fxLayout="row">
+                <mat-checkbox fxFlexOffset="20px" name="utilizado" [(ngModel)]="voucher.utilizado" style="padding-top: 16px;">Utilizado</mat-checkbox>
+                <mat-checkbox fxFlexOffset="20px" name="ativo" [(ngModel)]="voucher.ativo" style="padding-top: 16px;">Ativo</mat-checkbox>
+            </div>
+
+        </div>
+
+    </form>
+    
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <div fxLayout="row" fxLayout.xs="column" fxFlexOffset="20px" style="margin-top: 30px; margin-bottom: 10px;" >
+        <div fxFlex="100%" *ngIf="isAtualizar" fxLayoutAlign="center center" style="padding-top: 10px;">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px; background-color: green; color: white;"
+                    [disabled]="formulario.invalid"
+                    *ngIf="isPermiteEditar()"
+                    (click)="salvar()"  
+                    matTooltip="Fechar">
+                Salvar
+            </button>
+        </div>
+
+        <div fxFlex="100%" *ngIf="!isAtualizar" fxLayoutAlign="center center" style="padding-top: 10px;">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px; background-color: green; color: white;"
+                    [disabled]="formulario.invalid"
+                    *ngIf="isPermiteEditar()"
+                    (click)="gerarVoucher()"  
+                    matTooltip="Gerar Voucher">
+                GERAR VOUCHERS
+            </button>
+        </div>
+
+        
+        <div fxFlex="100%" [ngStyle]="{'padding-left.px': 20}" fxLayoutAlign="center center" style="padding-top: 10px;">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px;"
+                    (click)="cancelar()"  
+                    matTooltip="Fechar">
+                Fechar
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

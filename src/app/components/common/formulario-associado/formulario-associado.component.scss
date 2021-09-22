@@ -1,0 +1,37 @@
+.botaoHabilitado {
+    background: #d76d36 !important; color: white;
+}
+
+.botaoDesabilitado {
+    background: #bebebd; color: rgb(68, 65, 65);
+}
+
+.mat-step-header {
+    display: none !important;
+}
+
+.styleLegenda {
+    color: #f95f00;
+    font-weight: bolder;
+    padding: 7px;
+}
+
+.styleFieldSet {
+    padding-left: 8px;
+}
+
+.readonly-wrapper {
+    cursor: not-allowed;
+}
+
+.readonly-wrapper .readonly-block {
+    pointer-events: none;
+}
+
+
+.estiloBotaoHabilidado {
+    background: #08003c; color: white; border-radius: 15px;
+}
+.estiloBotaoDesabilidado {
+    background: #a8a3a3 ; color: black; border-radius: 15px;
+}

@@ -1,0 +1,171 @@
+<mat-toolbar><div style="width: 100%; text-align: center;">Corretor</div></mat-toolbar>
+
+<div fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex="100%" class="autorizacao">
+        <div>URL de Autorização</div>
+        <div>{{autorizacao.urlAutorizacao}}</div>
+    </div> 
+</div>
+
+<div class="painel-principal" style="padding: 10px;">
+    <div class="painel-consultar">
+        <form #formulario="ngForm">            
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" fxFlexFill>
+
+                <div ngModelGroup="mdComboCorretor" fxFlex="80%" fxLayoutGap="20px" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario"><div style="width: 100%; text-align: left;">Corretor</div></mat-toolbar>
+                    <combo-pesquisavel #cbCorretor
+                                       nome="corretor" 
+                                       [itens]="corretoresCombo" 
+                                       itemDescricao="nome_codigo"
+                                       itemId="id"
+                                       [showDisplayId]="false" 
+                                       [obrigatorio]="false"
+                                       placeholder="Nome / Código"
+                                       [(valor)]="filtro.corretor">
+                    </combo-pesquisavel>
+                </div> 
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start center" 
+                 fxLayoutGap="16px" 
+                 fxFlexFill style="padding-top: 20px;">
+
+                <div fxLayout="column" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: center;">Período do cadastro</div>
+                    </mat-toolbar>
+
+                    <div fxFlex="100" fxLayoutGap="16px" fxFlexFill>
+                        <mat-form-field fxFlex= "200px" fxLayoutGap="20px">
+                            <input matInput 
+                                   name= "dataInicio"
+                                   [matDatepicker]="pickerDataInicio" 
+                                   placeholder="Data Início" 
+                                   [(ngModel)]="filtro.dataInicio"
+                                   (input)="onMascaraDataInput($event)">
+                            <mat-datepicker-toggle matSuffix [for]="pickerDataInicio"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerDataInicio></mat-datepicker>
+                        </mat-form-field>
+                    
+                        <mat-form-field fxFlex= "200px" >
+                            <input matInput name="dataFim"
+                                [matDatepicker]="pickerDataFim" 
+                                placeholder="Data Fim" 
+                                [(ngModel)]="filtro.dataFim"
+                                (input)="onMascaraDataInput($event)">
+                            <mat-datepicker-toggle matSuffix [for]="pickerDataFim"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerDataFim></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+
+                <div fxLayout="column" fxFlex="20%" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: left;">Ativo</div>
+                    </mat-toolbar>
+
+                    <div fxFlex="100" fxLayoutGap="16px" fxFlexFill>
+                        <mat-form-field fxFlex="100">
+                            <mat-label>Escolha</mat-label>
+                            <mat-select [(ngModel)]="filtro.ativo" name="ativo">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let m of sim_nao" [value]="m.flag">
+                                    {{m.tipo}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div dir="rtl" class="botoes" fxLayoutGap="20px" style="padding-top: 20px; padding-bottom: 20px;" fxFlexFill>
+                <button mat-raised-button (click)="consultar()">
+                    CONSULTAR
+                </button>
+
+                <button mat-raised-button style="padding-right: 20px" (click)="limpar()" route>
+                    LIMPAR
+                </button>
+            </div>
+        </form>
+
+        <div fxLayout="row" *ngIf="perfilAcesso.insere" fxLayoutAlign="end center" fxLayoutGap="16px" style="padding-top: 10px">
+            <div>
+                <button matTooltip="Adicionar novo corretor" mat-fab 
+                        style="background-color: #d76d36"
+                        (click)="showDialogNew()">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+        </div>
+        
+        <table mat-table [hidden]="!mostrarTabela" 
+                         [dataSource]="dataSource" 
+                         class="mat-elevation-z6"
+                         matSort style="margin-top: 20px">
+
+            <ng-container matColumnDef="nome">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+                <td mat-cell *matCellDef="let element"> {{element.nome}}</td>
+            </ng-container>
+                
+            <ng-container matColumnDef="cpf">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> CPF</th>
+                <td mat-cell *matCellDef="let element"> {{element.cpf | cpf}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="codigoAutorizacao">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Chave Pagseguro </th>
+                <td mat-cell *matCellDef="let element"> {{element.codigoAutorizacao}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ativo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ativo</th>
+                <td mat-cell *matCellDef="let element"> {{element.ativo ? 'Sim' : 'Não'}} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="dataCadastro">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Data do cadastro </th>
+                <td mat-cell *matCellDef="let element"> {{element.dataCadastro | dataComHora}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="acoes" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef> Ações </th>
+                <td mat-cell *matCellDef="let element">
+                    <button *ngIf="perfilAcesso.deleta" mat-button (click)="deletar(element)">
+                        <mat-icon style="color: red">delete_forever</mat-icon>
+                    </button>
+                    <button *ngIf="perfilAcesso.consulta" mat-button (click)="atualizar(element)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <div [hidden]="!mostrarTabela">
+            <mat-paginator class="mat-elevation-z6" #paginator [pageSizeOptions]="[50, 100, 200, 300, 400, 500]" showFirstLastButtons></mat-paginator>
+        </div>
+
+        <div [hidden]="mostrarTabela">
+            <div fxLayout="row" 
+                 [ngClass]="{'mat-elevation-z6': mostrarTabela}" 
+                 fxLayoutAlign="center center" 
+                 style="padding-top: 20px">
+                {{msg}}
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
+

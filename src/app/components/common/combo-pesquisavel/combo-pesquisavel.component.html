@@ -1,0 +1,41 @@
+<div class="combo-pesquisavel">
+    <mat-form-field ngModelGroup="grupoCombo" #grupoCombo="ngModelGroup" [ngStyle]="{width: '100%'}">
+        <mat-label>{{label}}</mat-label>
+        <mat-select class="combopesquisavel" [ngClass]="{'invalid': obrigatorio && grupoCombo?.control?.touched && !item}"  id="combo"
+                    #itensSelect
+                    [placeholder]="placeholder"
+                    name="{{nome}}-{{data}}"
+                    style="border-bottom: 1px solid; margin: 8px 0;"            
+                    [disabled]="desabilitado"
+                    [multiple]="multiplaSelecao"
+                    [ngModel]="item"
+                    (ngModelChange)="change($event)"               
+                    [required]="obrigatorio"
+                    (click)="onClick($event)"
+                    #comboCtrl="ngModel"
+                    >
+                <mat-option>
+                    <ngx-mat-select-search ngModel #itemSearch
+                                [placeholderLabel]="itensSelect.placeholder"
+                                clearSearchInput="true"
+                                noEntriesFoundLabel="Nenhum elemento encontrado."
+                                (input)="filtrarItens(itemSearch.value)"
+                                [ngModelOptions]="{standalone: true}">
+                        <mat-icon fontIcon="limpar" ngxMatSelectSearchClear></mat-icon>
+                    </ngx-mat-select-search>
+                </mat-option>
+        
+                <cdk-virtual-scroll-viewport itemSize="20" [ngStyle]="{height: !!itens?.length ? '200px': '20px'}">
+                    <mat-option></mat-option>
+                    <mat-option *cdkVirtualFor="let item of itensFilter | async" [value]="item">
+                        <span [matTooltip]="itemToString(item)"> {{ itemToString(item) }}</span>
+                    </mat-option>
+                    <mat-option *ngIf="valor" [value]="valor">{{ itemToString(valor) }}</mat-option>
+                </cdk-virtual-scroll-viewport>
+        </mat-select>
+        
+        <mat-error *ngIf="comboCtrl.hasError('required')">{{ errorMessage }}</mat-error>
+    </mat-form-field>
+</div>
+
+

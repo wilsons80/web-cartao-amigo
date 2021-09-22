@@ -1,0 +1,241 @@
+<mat-toolbar><div style="width: 100%; text-align: center;">Impressão de Cartão</div></mat-toolbar>
+<div class="painel-principal" style="padding: 10px;">
+    <div class="painel-consultar">
+        <form #formulario="ngForm">
+
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" fxFlexFill>
+                <div ngModelGroup="mdComboAssociados" fxFlex="50%" fxLayoutGap="20px" fxFlexOffset="20px">
+                    <combo-pesquisavel #cbAssociados 
+                                       nome="associado" 
+                                       [itens]="comboAssociados" 
+                                       itemDescricao="nome"
+                                       itemId="id"
+                                       [showDisplayId]="false" 
+                                       [obrigatorio]="false"
+                                       label="Associado"
+                                       placeholder="Nome do Associado"
+                                       [(valor)]="filtro.associado">
+                    </combo-pesquisavel>
+                </div> 
+
+                <mat-form-field fxFlex= "200px" fxLayoutGap="20px" fxFlexOffset="20px">
+                    <input matInput 
+                           name= "numeroCartao"
+                           placeholder="Número do Cartão" 
+                           [(ngModel)]="filtro.numeroCartao">
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" fxFlexFill>
+
+                <div fxLayout="column" fxLayoutGap="20px" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: center;">Período de geração do cartão</div>
+                    </mat-toolbar>
+                    <div fxFlex="100" fxLayoutGap="16px" fxFlexFill>
+                        <mat-form-field fxFlex= "120px" fxLayoutGap="20px">
+                            <input matInput 
+                                   name= "dataInicio"
+                                   [matDatepicker]="pickerDataInicioGerado" 
+                                   placeholder="Data Início" 
+                                   [(ngModel)]="filtro.dataInicioGerado"
+                                   (input)="onMascaraDataInput($event)">
+                            <mat-datepicker-toggle matSuffix [for]="pickerDataInicioGerado"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerDataInicioGerado></mat-datepicker>
+                        </mat-form-field>
+                    
+                        <mat-form-field fxFlex= "120px" >
+                            <input matInput name="dataFim"
+                                   [matDatepicker]="pickerDataFimGerado" 
+                                   placeholder="Data Fim" 
+                                   [(ngModel)]="filtro.dataFimGerado"
+                                   (input)="onMascaraDataInput($event)">
+                            <mat-datepicker-toggle matSuffix [for]="pickerDataFimGerado"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerDataFimGerado></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+
+                <div fxLayout="column"  fxLayoutGap="20px" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: center;">Período de impressão do cartão</div>
+                    </mat-toolbar>
+
+                    <div fxFlex="100" fxLayoutGap="16px" fxFlexFill>
+                        <mat-form-field fxFlex="120px" fxLayoutGap="20px">
+                            <input matInput 
+                                name= "dataInicio"
+                                [matDatepicker]="pickerDataInicioImpresso" 
+                                placeholder="Data Início" 
+                                [(ngModel)]="filtro.dataInicioImpresso"
+                                (input)="onMascaraDataInput($event)">
+                            <mat-datepicker-toggle matSuffix [for]="pickerDataInicioImpresso"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerDataInicioImpresso></mat-datepicker>
+                        </mat-form-field>
+                    
+                        <mat-form-field fxFlex="120px" >
+                            <input matInput name="dataFim"
+                                [matDatepicker]="pickerDataFimImpresso" 
+                                placeholder="Data Fim" 
+                                [(ngModel)]="filtro.dataFimImpresso"
+                                (input)="onMascaraDataInput($event)">
+                            <mat-datepicker-toggle matSuffix [for]="pickerDataFimImpresso"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerDataFimImpresso></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+
+                <div fxLayout="column"  fxLayoutGap="20px" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: center;">Impresso</div>
+                    </mat-toolbar>
+
+                    <div fxFlex="100" fxLayoutGap="16px" fxFlexFill>
+                        <mat-form-field fxFlex="100">
+                            <mat-label>Cartão Impresso</mat-label>
+                            <mat-select [(ngModel)]="filtro.impresso" name="impresso">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let m of sim_nao" [value]="m.flag">
+                                    {{m.tipo}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div fxLayout="column"  fxLayoutGap="20px" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: center;">Tipo de Associado </div>
+                    </mat-toolbar>
+
+                    <div fxFlex="100" fxLayoutGap="16px" fxFlexFill>
+                        <mat-form-field fxFlex="100">
+                            <mat-label>Tipo de Associado</mat-label>
+                            <mat-select [(ngModel)]="filtro.tipoAssociado" name="tipoAssociado">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let m of tiposAssociados" [value]="m.flag">
+                                    {{m.tipo}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>                
+
+            </div>
+
+
+
+            <div dir="rtl" class="botoes" fxLayoutGap="20px" fxFlexFill fxLayoutAlign="space-between center"  style="padding-top: 20px; padding-bottom: 20px;" >
+                <div fxLayout="row">
+                    <button mat-raised-button fxFlex="200px" 
+                           (click)="gerarCartao()"
+                            style="background-color: green; color: white; margin-left: 20px;" 
+                            [disabled]="formulario.invalid"
+                            *ngIf="perfilAcesso.altera">
+                        CARTÃO
+                        <mat-icon>picture_as_pdf</mat-icon>
+                    </button>
+    
+                    <button mat-raised-button fxFlex="200px" 
+                            (click)="gerarCartaBoasVindas()" 
+                            style="background-color: green; color: white; padding-left: 20px;" 
+                            [disabled]="formulario.invalid"
+                            *ngIf="perfilAcesso.altera">
+                        CARTA BOAS VINDAS
+                        <mat-icon>picture_as_pdf</mat-icon>
+                    </button>
+                </div>
+
+                <div fxLayout="row" >
+                    <button mat-raised-button fxFlex="150px" (click)="consultar()" [disabled]="formulario.invalid" style="margin-left: 20px;">
+                        CONSULTAR
+                    </button>
+    
+                    <button mat-raised-button fxFlex="150px" style="padding-right: 20px" (click)="limpar()" style="margin-left: 20px;">
+                        LIMPAR
+                    </button>
+                </div>
+
+            </div>
+        </form>
+
+
+        <br/>
+        <div [hidden]="!mostrarTabela" style="margin-top: 20px;">
+            <mat-paginator #paginator [pageSizeOptions]="[50, 100, 150, 200, 300]" showFirstLastButtons></mat-paginator>
+        </div>
+        <table [fxHide]="!mostrarTabela" matSort matSortDisableClear mat-table [dataSource]="dataSource">
+                
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef style="width: 25px">
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()"
+                                  (change)="$event ? selection.toggle(row) : null"
+                                  [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="numeroCartao" >
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Cartão</th>
+                <td mat-cell *matCellDef="let element"> {{element.numeroCartao }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nomeAssociado" >
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Nome do Associado</th>
+                <td mat-cell *matCellDef="let element"> {{element.nomeAssociado }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="isTitular" >
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Tipo do Associado</th>
+                <td mat-cell *matCellDef="let element"> {{element.isTitular ? 'Titular' : 'Dependente' }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="bloqueado">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Bloqueado</th>
+                <td mat-cell *matCellDef="let element"> {{element.bloqueado ? 'Sim' : 'Não'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dataImpressao">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Data da Impressão</th>
+                <td mat-cell *matCellDef="let element"> {{element.dataImpressao | dataComHora }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dataGeracao">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Geração do Cartão</th>
+                <td mat-cell *matCellDef="let element"> {{element.dataGeracao | dataComHora }} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="dataFimValidade">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Valide</th>
+                <td mat-cell *matCellDef="let element"> {{element.dataFimValidade | dataSimples  }} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+        </table>
+        <div [hidden]="!mostrarTabela">
+            <mat-paginator (page)="handlePageBottom($event)" 
+                            [pageSize]="paginator.pageSize"
+                            [pageIndex]="paginator.pageIndex" 
+                            [length]="paginator.length"
+                            [pageSizeOptions]="paginator.pageSizeOptions">
+            </mat-paginator>
+        </div>
+        
+        <div fxLayout="row" fxLayoutAlign="center center" style="padding-top: 20px"
+                [fxHide]="mostrarTabela" >
+            {{msg}}
+        </div>       
+
+    </div>
+</div>

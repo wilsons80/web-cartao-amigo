@@ -1,0 +1,90 @@
+<div fxLayout="column" fxLayoutAlign="space-around stretch" *ngIf="cartao?.id">
+    <div fxFlex="100%" class="espaco" *ngIf="cartao">
+        <fieldset class="styleFieldSet" fxFlex="100%">
+            <legend class="styleLegenda">Dados Pessoais</legend>
+    
+            <div fxLayout="row" fxLayout.xs="column" style="padding-right: 10px;">
+                <mat-form-field fxFlexOffset="20px" fxFlex="80%">
+                    <input matInput
+                            name="nomeTitular" 
+                            placeholder="Nome do titular" 
+                            [(ngModel)]="titular.pessoaFisica.nome">
+                </mat-form-field>
+            
+                <mat-form-field fxFlexOffset="20px" fxFlex="20%">
+                    <input matInput 
+                            [(ngModel)]="titular.pessoaFisica.cpf" 
+                            name="cpfTitular" 
+                            placeholder="CPF"
+                            disabled
+                            [textMask]="{mask: mascaraCpf}"
+                            required
+                            [cpfValidator]>
+                      <mat-error >CPF inválido</mat-error>  
+                </mat-form-field>
+            </div>
+            
+            <div fxLayout="row" fxLayout.xs="column" style="padding-right: 10px;">    
+                <mat-form-field fxFlexOffset="20px" style="width: 200px;">
+                    <input matInput
+                            name="celular" 
+                            placeholder="Celular" 
+                            [textMask]="{mask: maskCelular}" 
+                            pattern="^(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$"
+                            [(ngModel)]="titular.pessoaFisica.celular">
+                    <mat-error>Celular invalido</mat-error>
+                </mat-form-field>
+            
+                <mat-form-field fxFlex="33%" fxFlexOffset="20px" >
+                    <input matInput maxlength="200" 
+                            email
+                            name="emailTitular" 
+                            placeholder="Email" 
+                            [(ngModel)]="titular.pessoaFisica.email" 
+                            required>
+                    <mat-error>E-mail invalido</mat-error>
+                </mat-form-field>
+            
+                <mat-form-field [ngStyle]="{'width.px':200}"
+                                [ngStyle.xs]="{'width.%':100}"
+                                fxFlexOffset="20px">
+                    <input matInput 
+                            name= "dataCadastroTitular"
+                            [matDatepicker]="pickerDataCadastroTitular" 
+                            placeholder="Data cadastro" 
+                            [disabled]="desabilitarCampos"
+                            [(ngModel)]="titular.dtCadastro"
+                            (input)="onMascaraDataInput($event)">
+                    <mat-datepicker-toggle matSuffix [for]="pickerDataCadastroTitular"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerDataCadastroTitular></mat-datepicker>
+                </mat-form-field>
+            
+    
+                <div fxFlexOffset="20px" 
+                     [ngStyle]="{'padding-top.px':20}"
+                     [ngStyle.xs]="{'padding-top.px':0}">
+                    <mat-slide-toggle color="primary" 
+                                      [ngStyle]="{'opacity': desabilitarCampos ? 0.8: 1}"
+                                      [ngStyle.xs]="{'margin-bottom.px': 20}"
+                                      name="titularAtivo" 
+                                      matTooltip="Informa se a conta do titular está ativa ou inativo."
+                                      [disabled]="desabilitarCampos" 
+                                      [(ngModel)]="titular.ativo">{{titular.ativo ? 'Ativo' : 'Inativo'}}
+                    </mat-slide-toggle>            
+                </div>
+    
+            </div>         
+            
+        </fieldset>
+    </div>
+
+    <div ngModelGroup="dadosCartao" fxFlex="100%" class="espaco" *ngIf="cartao">
+        <dados-cartao [cartao]="cartao" [nomeImpresso]="titular.pessoaFisica.nome" [idPessoaFisica]="titular.pessoaFisica.id"></dados-cartao>
+    </div>
+    
+    <div ngModelGroup="dadosEndereco" fxFlex="100%" class="espaco">
+        <cadastro-endereco [dadosEndereco]="titular.pessoaFisica"></cadastro-endereco>
+    </div>
+</div>        
+
+

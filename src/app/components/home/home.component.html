@@ -1,0 +1,76 @@
+<div id="main" class="h-100">
+   <header class="header">
+      <mat-toolbar class="top-toolbar"  
+                   [ngClass]="['corAzulPadrao', 'fonteBranca']" 
+                   [class.mat-elevation-z2]="settings.fixedHeader">
+         <div fxLayout="row" fxLayoutAlign="space-between center" fxFlex>           
+             
+            <div fxLayout="row" fxLayoutAlign="center center">               
+                <a routerLink="/" fxLayout="row" fxLayoutAlign="start center" 
+                   class="logo" 
+                   ngClass.xs="mobile" 
+                   (click)="closeSubMenus()">
+                    <img [src]="getLogoToolbar()" class="imagemLogo" style="width: 178px;"/>
+                 </a>
+             </div> 
+
+             <div fxLayout="row" fxLayoutAlign="start center" > 
+                 <button *ngIf="settings.menu == 'vertical'" mat-icon-button (click)="sidenav.toggle()">
+                     <mat-icon>menu</mat-icon>
+                 </button> 
+             </div>     
+
+             
+            <div fxLayout="row" *ngIf="isMobile()" fxLayoutAlign="center" fxFlex>
+                <span style="padding-top: 5px;">Acreditamos que saúde e bem-estar é um direito de todos.</span>
+            </div>
+
+             <div fxLayout="row" fxLayoutAlign="end center">
+                 <app-fullscreen></app-fullscreen> 
+                 <app-user-menu></app-user-menu>
+             </div>
+         </div>               
+     </mat-toolbar>
+
+     <div *ngIf="!getLoadingCompleto()">
+        <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+    </div>
+    
+   </header>
+   
+   <mat-drawer-container class="page-wrapper">
+
+        <!-- Mostra o menu vertical -->
+        <mat-drawer #sidenav 
+                    *ngIf="settings.menu == 'vertical'" 
+                    [opened]="settings.sidenavIsOpened" 
+                    [mode]="(settings.sidenavIsPinned) ? 'side' : 'over'" 
+                    (openedStart)="showSidenav = !showSidenav" 
+                    (closedStart)="showSidenav = !showSidenav" 
+                    class="sidenav mat-elevation-z6" 
+                    autoFocus="false"
+                    style="background: #d76d36"
+                    >
+
+            <mat-toolbar *ngIf="settings.fixedSidenav" class="top-toolbar" style="background: #d76d36;">
+                <a routerLink="/" fxLayout="row" fxLayoutAlign="start center" class="logo">
+                    <img [src]="getLogoHeaderFixo()" class="imagemLogo" style="width: 178px;" alt="logo" />
+                </a>
+            </mat-toolbar>  
+
+            <app-sidenav></app-sidenav>
+
+        </mat-drawer>
+
+        <mat-drawer-content>
+            <router-outlet></router-outlet>
+        </mat-drawer-content>  
+
+        
+
+    </mat-drawer-container>
+
+
+
+</div>
+

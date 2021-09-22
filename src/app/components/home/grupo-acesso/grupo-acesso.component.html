@@ -1,0 +1,96 @@
+<mat-toolbar><div style="width: 100%; text-align: center;">Grupo de Acesso</div></mat-toolbar>
+<div class="painel-principal" style="padding: 10px;">
+    <div class="painel-consultar">
+        <form #formulario="ngForm">
+            
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" fxFlexFill>
+                <mat-form-field fxFlex="50%" fxFlexOffset="20px">
+                  <mat-icon matPrefix>search</mat-icon>
+                  <mat-label fxFlexOffset="20px">Informe a descrição do grupo de acesso</mat-label>
+                  <input fxFlexOffset="20px" maxlength="200" matInput name="grupoAcesso" [(ngModel)]="filtro.nomeGrupoAceso">
+                </mat-form-field>
+
+
+                <div ngModelGroup="comboModuloFilhos" fxFlex="50%" fxLayoutGap="20px" fxFlexOffset="40px">
+                    <combo-pesquisavel #comboModuloFilhos 
+                                       nome="maeBeneficiario" 
+                                       [itens]="modulosFilhos" 
+                                       itemDescricao="descricao"
+                                       itemId="id"
+                                       [showDisplayId]="false" 
+                                       [obrigatorio]="false"
+                                       label="Módulos"
+                                       placeholder="Módulos"
+                                       [(valor)]="filtro.modulo">
+                    </combo-pesquisavel>
+                </div>
+            </div>
+
+            <div dir="rtl" class="botoes" fxLayoutGap="20px" style="padding-top: 20px; padding-bottom: 20px;" fxFlexFill>
+                <button mat-raised-button (click)="consultar()">
+                    CONSULTAR
+                </button>
+
+                <button mat-raised-button style="padding-right: 20px" (click)="limpar()" route>
+                    LIMPAR
+                </button>
+            </div>
+        </form>
+
+        <div fxLayout="row" *ngIf="perfilAcesso.insere" fxLayoutAlign="end center" fxLayoutGap="16px" style="padding-top: 10px">
+            <div>
+                <button matTooltip="Adicionar novo grupo de acesso" mat-fab 
+                        style="background-color: #d76d36"
+                        (click)="showDialogNewGrupoAcesso()">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+        </div>
+        
+        
+        <table mat-table [hidden]="!mostrarTabela" 
+                         [dataSource]="dataSource" 
+                         class="mat-elevation-z6"
+                         matSort style="margin-top: 20px">
+
+            <ng-container matColumnDef="nomeGrupoAcesso">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Grupo Acesso </th>
+                <td mat-cell *matCellDef="let element"> {{element.nomeGrupoAcesso}}</td>
+            </ng-container>
+                
+            <ng-container matColumnDef="descricaoPerfilAcesso">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Perfil de Acesso </th>
+                <td mat-cell *matCellDef="let element"> {{element.descricaoPerfilAcesso}} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="acoes" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef> Ações </th>
+                <td mat-cell *matCellDef="let element">
+                    <button *ngIf="perfilAcesso.deleta"  mat-button (click)="deletar(element)">
+                        <mat-icon style="color: red">delete_forever</mat-icon>
+                    </button>
+                    <button *ngIf="perfilAcesso.consulta" mat-button (click)="atualizar(element)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <div [hidden]="!mostrarTabela">
+            <mat-paginator class="mat-elevation-z6" #paginator [pageSizeOptions]="[20, 40, 60, 80, 100]" showFirstLastButtons></mat-paginator>
+        </div>
+
+        <div [hidden]="mostrarTabela">
+            <div fxLayout="row" 
+                 [ngClass]="{'mat-elevation-z6': mostrarTabela}" 
+                 fxLayoutAlign="center center" 
+                 style="padding-top: 20px">
+                {{msg}}
+            </div>
+        </div>
+        
+    </div>
+</div>
+
