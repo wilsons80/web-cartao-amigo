@@ -1,0 +1,162 @@
+<mat-toolbar><div style="width: 100%; text-align: center;">Clínica</div></mat-toolbar>
+<mat-dialog-content fxLayout="column">
+    <form #formulario="ngForm" style="padding-top: 30px; overflow: scroll;">    
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" style="margin-top: 10px; padding-right: 10px" fxFlexFill>    
+
+            <mat-form-field fxFlex="60%" fxFlexOffset="20px" >
+                <input matInput maxlength="200" 
+                       name="nomeFantasia" 
+                       placeholder="Nome fantasia" 
+                       [(ngModel)]="clinica.nomeFantasia" >
+            </mat-form-field>
+
+            <mat-form-field fxFlex="40%">
+                <input matInput maxlength="200" 
+                       name="nomeRazaoSocial" 
+                       placeholder="Razão Social" 
+                       [(ngModel)]="clinica.nomeRazaoSocial" >
+            </mat-form-field>
+
+        </div>
+
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" style="padding-right: 10px;" fxFlexFill>
+            <mat-form-field fxFlex="33%" fxFlexOffset="20px" >
+                <input matInput maxlength="200" 
+                       email
+                       name="email" 
+                       placeholder="Email" 
+                       [(ngModel)]="clinica.email" 
+                       required>
+                <mat-error>E-mail invalido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field fxFlex="33%" fxFlexOffset="20px" >
+                <input matInput
+                       name="cnpj" 
+                       placeholder="CNPJ" 
+                       [textMask]="{mask: maskCNPJ}" 
+                       [cnpjValidator]
+                       [(ngModel)]="clinica.cnpj" 
+                       required>
+                <mat-error>CNPJ invalido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field fxFlex="33%" fxFlexOffset="20px" >
+                <input matInput
+                       name="homePage" 
+                       placeholder="Home page" 
+                       [(ngModel)]="clinica.homePage">
+            </mat-form-field>
+        </div> 
+        
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" style="padding-right: 10px;" fxFlexFill>
+            <mat-form-field fxFlexOffset="20px" style="width: 200px;">
+                <input matInput
+                       name="telefone01" 
+                       placeholder="Telefone" 
+                       [textMask]="{mask: maskPhone}" 
+                       pattern="^(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$"
+                       [(ngModel)]="clinica.telefone01">
+                <mat-error>Telefone invalido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field fxFlexOffset="20px" style="width: 200px;">
+                <input matInput
+                       name="telefone02" 
+                       placeholder="Telefone" 
+                       [textMask]="{mask: maskPhone}" 
+                       pattern="^(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$"
+                       [(ngModel)]="clinica.telefone02">
+                <mat-error>Telefone invalido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field fxFlexOffset="20px" style="width: 200px;">
+                <input matInput
+                       name="celular" 
+                       placeholder="Celular" 
+                       [textMask]="{mask: maskCelular}" 
+                       pattern="^(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$"
+                       [(ngModel)]="clinica.celular">
+                <mat-error>Celular invalido</mat-error>
+            </mat-form-field>
+
+
+            <div style="padding-top: 20px !important;">
+                <mat-slide-toggle fxFlexOffset="20px" 
+                                  color="primary" 
+                                  style="opacity: 1;"
+                                  matTooltip="Informa se a clínica está ativa."
+                                  [ngStyle.xs]="{'margin-bottom.px': 20}"
+                                  name="ativo" 
+                                  [(ngModel)]="clinica.ativo">{{clinica.ativo ? 'Ativo' : 'Inativa'}}
+                </mat-slide-toggle>            
+            </div>
+        </div>         
+
+        <div ngModelGroup="dadosEndereco" class="espaco">
+            <cadastro-endereco [dadosEndereco]="clinica"></cadastro-endereco>
+        </div>
+
+        <mat-toolbar style="height: 33px; background: #d76d36;"><div style="width: 100%; text-align: center;">Especialidades</div></mat-toolbar>
+        <div fxLayout="row" fxLayoutGap="50px" style="margin-top: 10px; margin-bottom: 10px;" fxFlexFill
+             *ngIf="tipoEspecialidades?.length > 0; else divSemTipoEspecialidade">
+            <div fxLayout="column" fxFlex="100%"  ngModelGroup="mgEspecialidades">
+                <div fxFlex="100%" *ngFor="let clinicaTipoEspecialidade of clinicaTipoEspecialidades; let index = index">
+                    <formulario-especialidade [clinicaTipoEspecialidade]="clinicaTipoEspecialidade" 
+                                              [index]="index"
+                                              [clinicaTipoEspecialidades]="clinicaTipoEspecialidades"  
+                                              [tipoEspecialidades]="tipoEspecialidades" 
+                                              [perfilAcesso]="perfilAcesso">
+                    </formulario-especialidade>
+                </div>
+
+                <div fxFlex="20%" *ngIf="perfilAcesso.insere" fxLayoutAlign="end end" 
+                     fxLayoutGap="16px" style="padding-top: 50px; padding-left: 20px;">
+                    <div>
+                        <button matTooltip="Novo" mat-mini-fab style="background-color: #d76d36" 
+                                (click)="addEspecialidade()">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </div>
+                </div>                
+            </div>
+        </div>
+        <ng-template #divSemTipoEspecialidade>
+            <div fxLayout="row" fxLayoutAlign="center center" style="padding-top: 15px;">
+                <span style="font-weight: bold;" [ngStyle]="{'font-size.px': isMobile() ? 20 : 20}">
+                    Não há especialidades cadastrada na base de dados.
+                 </span>    
+             </div>
+        </ng-template>
+    </form>
+    
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <div fxLayout="row" fxLayoutGap="50px" 
+        style="margin-top: 30px; margin-bottom: 10px;" 
+        fxFlexFill>
+
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px;"
+                    [disabled]="formulario.invalid"
+                    *ngIf="isPermiteEditar()"
+                    (click)="salvar()"  
+                    matTooltip="Fechar">
+                Salvar
+            </button>
+        </div>
+        
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px;"
+                    (click)="cancelar()"  
+                    matTooltip="Fechar">
+                Fechar
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

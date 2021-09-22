@@ -1,0 +1,206 @@
+<mat-toolbar><div style="width: 100%; text-align: center;">Clínica</div></mat-toolbar>
+
+<div class="painel-principal" style="padding: 10px;">
+    <div class="painel-consultar">
+        <form #formulario="ngForm">
+            
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" fxFlexFill>
+                <div ngModelGroup="mdComboClinica" fxFlex="50%" fxLayoutGap="20px" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario"><div style="width: 100%; text-align: left;">Clínica</div></mat-toolbar>
+                    <combo-pesquisavel #cbClinia
+                                       nome="clinica" 
+                                       [itens]="clinicasCombo" 
+                                       itemDescricao="nome"
+                                       itemId="id"
+                                       [showDisplayId]="false" 
+                                       [obrigatorio]="false"
+                                       placeholder="Nome fantasia"
+                                       [(valor)]="filtro.clinica">
+                    </combo-pesquisavel>
+                </div> 
+
+                <div ngModelGroup="mdComboTipoEspecialidade" fxFlex="50%" fxLayoutGap="20px" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario"><div style="width: 100%; text-align: left;">Especialidade</div></mat-toolbar>
+                    <combo-pesquisavel #cbClinia
+                                       nome="tipoEspecialidade" 
+                                       [itens]="tipoEspecialidadesCombo" 
+                                       itemDescricao="nome"
+                                       itemId="id"
+                                       [showDisplayId]="false" 
+                                       [obrigatorio]="false"
+                                       placeholder="Especialidade"
+                                       [(valor)]="filtro.tipoEspecialidade">
+                    </combo-pesquisavel>
+                </div> 
+
+            </div>
+
+
+            <div fxLayout="row" fxLayoutAlign="start center" 
+                 fxLayoutGap="16px" 
+                 fxFlexFill style="padding-top: 20px;">
+
+                <div fxLayout="column" fxLayoutGap="20px" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: center;">Período do cadastro</div>
+                    </mat-toolbar>
+
+                    <div fxFlex="100" fxLayoutGap="16px" fxFlexFill>
+                        <mat-form-field fxFlex= "200px" fxLayoutGap="20px">
+                            <input matInput 
+                                name= "dataInicio"
+                                [matDatepicker]="pickerDataInicio" 
+                                placeholder="Data Início" 
+                                [(ngModel)]="filtro.dataInicio"
+                                (input)="onMascaraDataInput($event)">
+                            <mat-datepicker-toggle matSuffix [for]="pickerDataInicio"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerDataInicio></mat-datepicker>
+                        </mat-form-field>
+                    
+                        <mat-form-field fxFlex= "200px" >
+                            <input matInput name="dataFim"
+                                [matDatepicker]="pickerDataFim" 
+                                placeholder="Data Fim" 
+                                [(ngModel)]="filtro.dataFim"
+                                (input)="onMascaraDataInput($event)">
+                            <mat-datepicker-toggle matSuffix [for]="pickerDataFim"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerDataFim></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+
+                <div fxLayout="column" fxFlex="20%" fxLayoutGap="20px" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: left;">Ativo</div>
+                    </mat-toolbar>
+
+                    <div fxFlex="100" fxLayoutGap="16px" fxFlexFill>
+                        <mat-form-field fxFlex="100">
+                            <mat-label>Escolha</mat-label>
+                            <mat-select [(ngModel)]="filtro.ativo" name="ativo">
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let m of sim_nao" [value]="m.flag">
+                                    {{m.tipo}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div fxLayout="column" fxFlex="30%"  fxLayoutGap="20px" fxFlexOffset="20px">
+                    <mat-toolbar class="toolbarFormulario">
+                        <div style="width: 100%; text-align: left;">Bairro</div>
+                    </mat-toolbar>
+
+                    <div fxFlex="100%" fxLayoutGap="16px" fxFlexFill>
+                        <mat-form-field fxFlex="100%" >
+                            <mat-label fxFlexOffset="20px">Bairro</mat-label>
+                            <input fxFlexOffset="20px" 
+                                   matInput name="bairro" 
+                                   [(ngModel)]="filtro.bairro">
+                        </mat-form-field>
+                    </div>
+                </div>                
+            </div>
+
+
+            <div dir="rtl" class="botoes" fxLayoutGap="20px" style="padding-top: 20px; padding-bottom: 20px;" fxFlexFill>
+                <button mat-raised-button (click)="consultar()">
+                    CONSULTAR
+                </button>
+
+                <button mat-raised-button style="padding-right: 20px" (click)="limpar()" route>
+                    LIMPAR
+                </button>
+            </div>
+        </form>
+
+        <div fxLayout="row" *ngIf="perfilAcesso.insere" fxLayoutAlign="end center" fxLayoutGap="16px" style="padding-top: 10px">
+            <div>
+                <button matTooltip="Adicionar nova clínica" mat-fab 
+                        style="background-color: #d76d36"
+                        (click)="showDialogNewClinica()">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+        </div>
+        
+        <table mat-table [hidden]="!mostrarTabela" 
+                         [dataSource]="dataSource" 
+                         class="mat-elevation-z6"
+                         matSort style="margin-top: 20px">
+
+            <ng-container matColumnDef="nomeRazaoSocial">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Razão Social </th>
+                <td mat-cell *matCellDef="let element"> {{element.nomeRazaoSocial}}</td>
+            </ng-container>
+                
+            <ng-container matColumnDef="cnpj">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> CNPJ da Clínica </th>
+                <td mat-cell *matCellDef="let element"> {{element.cnpj | cnpj}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cidade">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cidade </th>
+                <td mat-cell *matCellDef="let element"> {{element.cidade}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="bairro">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Bairro </th>
+                <td mat-cell *matCellDef="let element"> {{element.bairro}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="uf">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> UF </th>
+                <td mat-cell *matCellDef="let element"> {{element.uf}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ativo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ativo</th>
+                <td mat-cell *matCellDef="let element"> {{element.ativo ? 'Sim' : 'Não'}} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="dataCadastro">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Data do cadastro </th>
+                <td mat-cell *matCellDef="let element"> {{element.dataCadastro | dataComHora}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="acoes" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef> Ações </th>
+                <td mat-cell *matCellDef="let element">
+                    <button *ngIf="perfilAcesso.deleta" mat-button (click)="deletar(element)">
+                        <mat-icon style="color: red">delete_forever</mat-icon>
+                    </button>
+                    <button *ngIf="perfilAcesso.consulta" mat-button (click)="atualizar(element)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <div [hidden]="!mostrarTabela">
+            <mat-paginator class="mat-elevation-z6" #paginator [pageSizeOptions]="[50, 100, 200, 300, 400, 500]" showFirstLastButtons></mat-paginator>
+        </div>
+
+        <div [hidden]="mostrarTabela">
+            <div fxLayout="row" 
+                 [ngClass]="{'mat-elevation-z6': mostrarTabela}" 
+                 fxLayoutAlign="center center" 
+                 style="padding-top: 20px">
+                {{msg}}
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
+

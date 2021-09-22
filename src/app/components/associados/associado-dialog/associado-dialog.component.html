@@ -1,0 +1,56 @@
+<mat-dialog-content fxLayout="column">
+    <mat-toolbar><div style="width: 100%; text-align: center;">Associado - Titular</div></mat-toolbar>
+
+    <form #formulario="ngForm" style="padding-top: 30px; overflow: scroll;">
+
+        <mat-tab-group animationDuration="1000ms">
+            <mat-tab label="Dados Titular">
+                <div ngModelGroup="mgTitular" class="espaco">
+                    <formulario-titular [titular]="titular"></formulario-titular>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Dependentes">
+                <div ngModelGroup="mgDependentes" class="espaco">
+                    <formulario-dependente [titular]="titular" [perfilAcesso]="perfilAcesso"></formulario-dependente>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Histórico de pagamento">
+                <div ngModelGroup="mgHistoricoPagamento" class="espaco">
+                    <formulario-historico-pagamento [historicoPagamento]="historicoPagamentos"></formulario-historico-pagamento>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </form>
+    
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <div fxLayout="row" fxLayoutGap="50px" 
+        style="margin-top: 30px; margin-bottom: 10px;" 
+        fxFlexFill>
+
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px;"
+                    [disabled]="formulario.invalid"
+                    *ngIf="isPermiteEditar()"
+                    (click)="salvar()"  
+                    matTooltip="Fechar">
+                Salvar
+            </button>
+        </div>
+        
+        <div fxFlex="100%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    style="width: 240px;"
+                    (click)="cancelar()"  
+                    matTooltip="Fechar">
+                Fechar
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

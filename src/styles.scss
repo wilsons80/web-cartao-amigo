@@ -1,0 +1,433 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+@import "./app/themes/base";
+
+
+
+.espaco{
+  padding: 10px;
+}
+
+.styleToolbar {
+  height: 21px;
+  font-size: 15px;
+  background: #d76d36 !important;
+}
+
+.mat-horizontal-content-container {
+  padding: 5px !important;
+}
+
+.spinner {
+  line-height: 1.2rem;
+  background: url(./assets/icones/spinner_290.gif) no-repeat 0 0;
+  padding-left: 38px;
+  display: inline-block;
+  padding-top: 6px;
+  min-height: 32px;
+}
+
+.corAzulPadrao{
+  /*background-color: #1d1d38;*/
+  background-color: #08003c;
+  
+}
+
+.corLaranzaPadrao{
+  background-color: #d76d36;
+}
+
+.fonteBranca {
+  color: #ffffff;
+}
+
+/*
+#rodape {
+  align-self: flex-end;
+  padding: 1.5rem 2rem;
+  width: auto;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  margin-top: 3rem;
+  width: 100%;
+}
+
+.cinza {
+  color: rgba(0,0,0,0.54);
+}
+
+mat-toolbar.mat-toolbar.mat-toolbar-single-row.tituloprincipal{
+  background: rgb(213, 226, 253);
+
+}
+
+mat-toolbar.mat-toolbar.mat-toolbar-single-row.titulopartes{
+  background: rgb(241, 241, 241);
+  height: auto;
+  font-size: large;
+  color: rgb(142,142,142);
+  margin-bottom: 20px;
+  margin: 0px;
+}
+
+.nav-caption{
+  display: inline-block;
+  padding-left: 6px;
+  padding-top: 3px
+}
+
+.submenu{
+  padding-left: 15px
+}
+
+
+.spinner {
+  line-height: 1.2rem;
+  background: url(./assets/icones/spinner_290.gif) no-repeat 0 0;
+  padding-left: 38px;
+  display: inline-block;
+  padding-top: 6px;
+  min-height: 32px;
+}
+*/
+
+/* BOTOES DA APP */
+button.mat-raised-button.mat-button-base{
+  text-transform: uppercase;
+  color: white;
+
+  font-size: 11px;  
+  width: 200px ;
+  height: 35px;
+  line-height: inherit;
+  background-color: #1d1d38 ;
+}
+
+
+
+
+/* TELAS DE CONSULTA */
+.painel-principal {
+    margin-top: 1%;
+    /* margin-left: 15%;
+    margin-right: 15%; */
+    /* border: 3px solid #73AD21; */
+}
+
+.center {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.painel-consultar {
+  margin: 0 25px 20px 25px;
+  /* border: 3px solid #73AD21; */
+}
+
+.painel-tabela {
+  margin-top: 5%;
+  margin-left: 10%;
+  margin-right: 8%;
+}
+
+tr.mat-header-row.ng-star-inserted, div.inserted {
+  background: #d76d36 !important;
+}
+
+th.mat-header-cell {
+  font-size: 15px;
+  color: white;
+}
+
+mat-toolbar.mat-toolbar.mat-toolbar-single-row {
+  background: #08003c;
+  color: white;  
+}
+
+.fixo {
+  position: sticky;
+  position: -webkit-sticky; /* For macOS/iOS Safari */
+  top: 0; /* Sets the sticky toolbar to be on top */
+  z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+}
+
+/* FONTE DE TODA A APLICAÇÃO */
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+
+/* TABELA */
+
+table {
+  width: 100%;
+
+}
+
+tr.mat-header-row.ng-star-inserted,
+div.inserted {
+  padding: 15px 0 15px 28px;
+  background: #ECEFF1;
+  justify-content: center;
+}
+
+
+.expandido{
+  width: 250px;
+}
+
+.listamenufilhos{
+  background: lightgray;
+  width: 200px
+}
+
+
+/*================================================================*/
+/* Muda a cor da linha da tabela ao passar o mouse por cima */
+tr:not(th):hover {
+  background: #F8F8FF;
+}
+
+tr:not(th):active {
+  background: #efefef;
+}
+/*================================================================*/
+
+.fixo{
+  position: sticky !important;
+  top: 0 !important; /* Sets the sticky toolbar to be on top */
+  z-index: 1000 !important; /* Ensure that your app's content doesn't overlap the toolbar */
+}
+
+.backgroud-error {
+  background-color: #961818 !important;
+}
+
+cdk-virtual-scroll-viewport {
+  height: 190px !important;
+}
+
+.editor-rico .cke_chrome {
+  border: none !important;
+}
+
+.cinza {
+  color: rgba(0,0,0,0.54);
+}
+
+
+
+/* Barra de porcentagem */
+.barra-porcentagem-container[class="barra-porcentagem-container"] {
+	background-color: #E3F2FD;
+	box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
+}
+
+.barra-porcentagem-parcial[class="barra-porcentagem-parcial"] {
+	background-color: #aaddff;
+}
+
+.barra-porcentagem-parcial.excedeu {
+	background-color: #F44336;
+}
+
+.barra-porcentagem-valor.excedeu.label{
+  color: #D00D23;
+  padding-bottom: 10px;
+}
+
+.barra-porcentagem-valor.excedeu[class="excedeu"] {
+	color: #FFF;
+}
+
+.toolbarFormulario {
+  background: #888282 !important;
+  height: 23px;
+  font-size: 13px;
+}
+
+
+
+/*********** Configurações de Dialogs *******************/
+.configuracaoDialogGrupoAcesso mat-dialog-container {
+  width: 1030px;
+  overflow: hidden;
+  padding: 5px;
+}
+
+.configuracaoDialogClinica mat-dialog-container {
+  width: 1500px !important;
+  max-height: 1300px;
+  overflow: hidden;
+  padding: 5px;
+}
+
+.configuracaoDialogVoucher mat-dialog-container {
+  width: 1500px !important;
+  max-height: 1300px;
+  overflow: hidden;
+  padding: 5px;
+}
+
+.configuracaoDialogAssociados{
+  width: 1500px !important;
+  max-height: 1300px;
+  overflow: hidden;
+  padding: 5px;
+  max-width: 90vw !important;
+}
+
+.configuracaoDialogUsuarioSistema mat-dialog-container {
+  width: 1030px;
+  max-height: 1300px;
+  max-width: none !important;
+  overflow: hidden;
+  padding: 5px;
+}
+
+.configuracaoDialogValidarCartao mat-dialog-container {
+  border-radius: 20px !important;
+  width: 442px !important;
+}
+
+.mat-card-header-text {
+  margin: 0px !important;
+}
+
+
+
+.mat-horizontal-stepper-header-container {
+  height: 40px;
+}
+
+
+
+/****************************************************************************************/
+/* INICIO: Responsável por deixar os data-table responsible */
+/****************************************************************************************/
+@media screen and (max-width: 960px) {
+  .mat-table {
+      border: 0;
+      vertical-align: middle;
+      padding: 8px;
+  }
+
+  .mat-table caption {
+      font-size: 1em;
+  }
+
+  /* Oculta o header para dispositivos mobile */  
+  .mat-table .mat-header-cell {
+      border: 10px solid;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+  }
+
+  .mat-table .mat-row {
+      border-bottom: 5px solid #ddd;
+      display: block;
+  }
+
+  .mat-cell, .mat-footer-cell {
+      font-size: 12px;
+  }
+
+  mat-cell, mat-header-cell, mat-footer-cell {
+      min-height: 22px !important;
+  }
+
+  mat-row::after, mat-header-row::after, mat-footer-row::after {
+      min-height: auto !important;
+  }
+
+  /* 
+  // Deixa o datatable zebrado
+  .mat-table .mat-row:nth-child(even) {background: #CCC}
+  .mat-table .mat-row:nth-child(odd) {background: #FFF}
+  */
+
+  .mat-table .mat-cell {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      /*font-size: 1em;*/
+      text-align: right;
+      font-weight: bold;
+      height:15px;
+      /*margin-bottom: 4%;*/
+  }
+  .mat-table .mat-cell:before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      text-transform: uppercase;
+      font-weight: normal;
+      
+      font-size: .85em;
+  }
+  .mat-table .mat-cell:last-child {
+      border-bottom: 1 !important;
+      height: 40px;
+  }
+
+
+  .mat-table .mat-cell:first-child {
+      /*margin-top: 4%;*/
+      padding-left: 0px;
+  }
+
+  mat-cell:last-of-type, mat-header-cell:last-of-type, mat-footer-cell:last-of-type {
+    padding-right: 0px !important;
+  }
+}
+
+
+.mat-cell, .mat-footer-cell {
+  font-size: 11px !important;
+}
+
+
+.mat-expansion-panel-body {
+  padding: 0 3px 16px !important;
+}
+
+
+.mat-vertical-content-container {
+  margin-left: 0px !important;
+}
+
+.mat-vertical-stepper-header {
+  padding: 8px !important;
+}
+
+.mat-vertical-content {
+  padding: 10px !important;
+}
+
+.mat-step-header {
+  margin-bottom: 10px;
+}
+
+.mat-stepper-vertical-line {
+  border-left-width: 0px !important;
+}
+
+.emotions-pic{
+  height: 60px;
+  width: 60px;
+  border-radius: 100%;
+}
+
+/****************************************************************************************/
+/* FIM: Responsável por deixar os data-table responsible */
+/****************************************************************************************/
