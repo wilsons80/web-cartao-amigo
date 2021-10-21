@@ -1,5 +1,6 @@
-$green-dark-primary: mat-palette($mat-green, 700, 50, 800);
-$green-dark-accent: mat-palette($mat-amber, A200, A100, A700);
-$green-dark-warn: mat-palette($mat-red, A200);
+@use '~@angular/material' as mat;
+$green-dark-primary: mat.define-palette(mat.$green-palette, 700, 50, 800);
+$green-dark-accent: mat.define-palette(mat.$amber-palette, A200, A100, A700);
+$green-dark-warn: mat.define-palette(mat.$red-palette, A200);
 
-$green-dark-theme: mat-dark-theme($green-dark-primary, $green-dark-accent, $green-dark-warn);
+$green-dark-theme: mat.define-dark-theme($green-dark-primary, $green-dark-accent, $green-dark-warn);

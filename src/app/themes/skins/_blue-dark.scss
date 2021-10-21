@@ -1,5 +1,6 @@
-$blue-dark-primary: mat-palette($mat-light-blue, 700, 50, 800);
-$blue-dark-accent: mat-palette($mat-amber, A200, A100, A700);
-$blue-dark-warn: mat-palette($mat-red, A200);
+@use '~@angular/material' as mat;
+$blue-dark-primary: mat.define-palette(mat.$light-blue-palette, 700, 50, 800);
+$blue-dark-accent: mat.define-palette(mat.$amber-palette, A200, A100, A700);
+$blue-dark-warn: mat.define-palette(mat.$red-palette, A200);
 
-$blue-dark-theme: mat-dark-theme($blue-dark-primary, $blue-dark-accent, $blue-dark-warn);
+$blue-dark-theme: mat.define-dark-theme($blue-dark-primary, $blue-dark-accent, $blue-dark-warn);
