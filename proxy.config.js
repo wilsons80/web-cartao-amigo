@@ -1,4 +1,4 @@
-const targetDomain = process.env.NODE_ENV? `http://api-dev.cartaoamigo.com.br` : 'http://localhost:8080';
+const targetDomain = process.env.NODE_ENV? `https://cartao-amigo-api-dev.herokuapp.com/` : 'http://localhost:8080';
 console.log(`Usando o endereço "${targetDomain}" para o proxy...\n`);
 
 

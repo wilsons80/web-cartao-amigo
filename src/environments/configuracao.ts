@@ -1,3 +1,3 @@
 export const configuracao = {
-  ambiente: 'dev',
-};
+   ambiente: 'undefined'
+}

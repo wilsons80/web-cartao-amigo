@@ -91,20 +91,13 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
   planoEscolhido: TipoPlano;
   idTipoPlanoEscolhido          = "";
   idTipoPagamentoEscolhido      = "";
-  idTipoPagamentoAnualEscolhido = "";
   senderHash: string;
 
   isPodeUtilizarVoucherNoPagamento = true;
   isVoucher100Porcento = true;
   valorVoucher = null;
 
-  planoAnual: TipoPlano;
-  planoMensal: TipoPlano;
-
   aceitoAssinatiraCartaoAmigo = false;
-
-  idPlanoAnual = 1;
-  idPlanoMensal = 2;
 
   isInformarCodigoCorretor = true;
   codigoCorretor: string;
@@ -163,8 +156,9 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
 
   ngOnInit() {
     const tipoPlano = this.activatedRoute.snapshot.queryParams['plano'];
-    if(tipoPlano === 'mensal') {this.idTipoPlanoEscolhido = "2";}
-    if(tipoPlano === 'anual') {this.idTipoPlanoEscolhido = "1";}
+    if(tipoPlano === 'anual-avista')    {this.idTipoPlanoEscolhido = "1";}
+    if(tipoPlano === 'mensal')          {this.idTipoPlanoEscolhido = "2";}
+    if(tipoPlano === 'anual-parcelado') {this.idTipoPlanoEscolhido = "3";}
 
 
     const path = this.activatedRoute.snapshot.routeConfig.path;
@@ -187,18 +181,12 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
     this.titular.pessoaFisica = new PessoaFisica();
     this.planoEscolhido = new TipoPlano();
 
-    this.planoAnual  = new TipoPlano();
-    this.planoMensal = new TipoPlano();
-
     this.pagamentoCR = new CheckoutTransparenteCartaoCredito();
     this.dadosCartaoCredito = new DadosCartaoCredito();
     this.retornoPagamento = new RetornoPagamento();
 
     this.tipoPlanoService.getAllAtivos().subscribe((tipos: TipoPlano[]) => {
       this.tipoPlanos = tipos;
-
-      this.planoAnual  = this.tipoPlanos.find(tp => tp.id === 1);
-      this.planoMensal = this.tipoPlanos.find(tp => tp.id === 2);
 
       if(this.idTipoPlanoEscolhido) {
         this.planoEscolhido = this.tipoPlanos.find(tp => tp.id === Number(this.idTipoPlanoEscolhido));
@@ -402,10 +390,6 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
             dados.cpfTitularCartao              = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.cpfTitularCartao);
             dados.dataNascimentoTitularCartao   = this.dadosCartaoCredito.dataNascimentoTitularCartao;
 
-            if(Number(this.idTipoPagamentoAnualEscolhido) === 2) {
-              dados.idPlano = 3; // plano anual parcelado
-            }
-
             this.loadingPopupService.mostrarMensagemDialog('Processando pagamento....');
             return this.pagamentoCartaoCreditoSplitService.pagar(dados)
                 .pipe(
@@ -590,7 +574,7 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
 
   isEtapaPreenchimentoDadosCartao(){
     return this.isTitularNovoNoSistema 
-        && this.idTipoPagamentoEscolhido === '2' 
+        && this.isTipoPagamentoEscolhidoCartaoCredito() 
         && this.isPodeUtilizarVoucherNoPagamento 
         && !this.isVoucher100Porcento;
   }
@@ -694,4 +678,20 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
   desabilitarBotao(formularioEtapa1) {
     return formularioEtapa1.invalid || this.isSenhasInformadasValidas(formularioEtapa1)
   }
+
+  isPlanoEscolhidoAnualAvista(): boolean {
+    return this.idTipoPlanoEscolhido === '1';
+  }
+  isPlanoEscolhidoAnualParcelado(): boolean {
+    return this.idTipoPlanoEscolhido === '3';
+  }
+
+  isTipoPagamentoEscolhidoBoleto(): boolean {
+    return this.idTipoPagamentoEscolhido === '1';
+  }
+  isTipoPagamentoEscolhidoCartaoCredito(): boolean {
+    return this.idTipoPagamentoEscolhido === '2';
+  }
+
+  
 }
