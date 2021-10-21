@@ -34,7 +34,7 @@ export class CartaoAmigoComponent implements OnInit {
 
   
   getImagemCartao() {
-    return 'https://s3.amazonaws.com/www.cartaoamigo.com.br/imagens/cartao-frente.png';
+    return 'https://s3.amazonaws.com/cartaoamigo.com.br/imagens/cartao-frente.png';
   }
 
 

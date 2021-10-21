@@ -85,9 +85,16 @@ export class RenovarAssinaturaComponent implements OnInit {
   planoEscolhido: TipoPlano;
   idTipoPlanoEscolhido          = "";
   idTipoPagamentoEscolhido      = null;
+  idTipoPagamentoAnualEscolhido = "";
   senderHash: string;
 
   iniciarPagamento = false;
+
+  planoAnual: TipoPlano;
+  planoMensal: TipoPlano;
+
+  idPlanoAnual = 1;
+  idPlanoMensal = 2;
 
   isPodeUtilizarVoucherNoPagamento = true;
   isVoucher100Porcento = true;
@@ -151,12 +158,18 @@ export class RenovarAssinaturaComponent implements OnInit {
   ngOnInit() {
     this.planoEscolhido = new TipoPlano();
 
+    this.planoAnual  = new TipoPlano();
+    this.planoMensal = new TipoPlano();
+
     this.pagamentoCR        = new CheckoutTransparenteCartaoCredito();
     this.dadosCartaoCredito = new DadosCartaoCredito();
     this.retornoPagamento   = new RetornoPagamento();    
 
     this.tipoPlanoService.getAllAtivos().subscribe((tipos: TipoPlano[]) => {
       this.tipoPlanos = tipos;
+
+      this.planoAnual  = this.tipoPlanos.find(tp => tp.id === 1);
+      this.planoMensal = this.tipoPlanos.find(tp => tp.id === 2);
 
       if(this.idTipoPlanoEscolhido) {
         this.planoEscolhido = this.tipoPlanos.find(tp => tp.id === Number(this.idTipoPlanoEscolhido));
@@ -319,6 +332,10 @@ export class RenovarAssinaturaComponent implements OnInit {
             dados.cpfTitularCartao              = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.cpfTitularCartao);
             dados.dataNascimentoTitularCartao   = this.dadosCartaoCredito.dataNascimentoTitularCartao;
             
+            if(Number(this.idTipoPagamentoAnualEscolhido) === 2) {
+              dados.idPlano = 3; // plano anual parcelado
+            }
+
             this.loadingPopupService.mostrarMensagemDialog('Processando pagamento....');
             return this.pagamentoCartaoCreditoSplitService.pagar(dados)
                 .pipe(
@@ -478,13 +495,14 @@ export class RenovarAssinaturaComponent implements OnInit {
     this.codigoCorretor                = null;
     this.idTipoPlanoEscolhido          = "";
     this.idTipoPagamentoEscolhido      = null;
+    this.idTipoPagamentoAnualEscolhido = "";
     this.aceitoAssinatiraCartaoAmigo   = false;
   }
 
 
 
   isEtapaPreenchimentoDadosCartao(){
-    return this.isTipoPagamentoEscolhidoCartaoCredito()
+    return this.idTipoPagamentoEscolhido === '2' 
         && this.isPodeUtilizarVoucherNoPagamento 
         && !this.isVoucher100Porcento;
   }
@@ -543,7 +561,7 @@ export class RenovarAssinaturaComponent implements OnInit {
   }
 
   linkTermoDeUso(){
-    return 'https://s3.amazonaws.com/www.cartaoamigo.com.br/documentos/Termo+de+Uso.pdf';
+    return 'https://s3.amazonaws.com/cartaoamigo.com.br/documentos/Termo+de+Uso.pdf';
   }
 
   habilitarBotao(formulario) {
@@ -552,20 +570,5 @@ export class RenovarAssinaturaComponent implements OnInit {
 
   desabilitarBotao(formulario) {
     return formulario.invalid
-  }
-
-
-  isPlanoEscolhidoAnualAvista(): boolean {
-    return this.idTipoPlanoEscolhido === '1';
-  }
-  isPlanoEscolhidoAnualParcelado(): boolean {
-    return this.idTipoPlanoEscolhido === '3';
-  }
-
-  isTipoPagamentoEscolhidoBoleto(): boolean {
-    return this.idTipoPagamentoEscolhido === '1';
-  }
-  isTipoPagamentoEscolhidoCartaoCredito(): boolean {
-    return this.idTipoPagamentoEscolhido === '2';
   }
 }

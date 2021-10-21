@@ -302,6 +302,7 @@
                         <div fxLayout="column" style="margin-bottom: 13px;" >
                             <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
                                 <span style="font-size: 20px; font-weight: bold; color: #f95f00; text-align: center;">Qual plano combina mais com você?</span>    
+                                <span style="font-size: 10px;">Permite até 4 dependentes inteiramente grátis</span>
                             </div>                            
     
                             <input matInput name="idTipoPlanoEscolhido" [(ngModel)]="idTipoPlanoEscolhido" required [fxHide]="true">
@@ -323,36 +324,37 @@
                                         <div fxLayout="column" fxLayoutAlign="center center"
                                              style="cursor: pointer; border: 0.66px solid #f95f00; border-radius: 15px;">
                                             <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Opção 1: Plano Anual</span> </div>
-                                            <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">por R$ 299,90 a vista</span></div>
+                                            <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">por R$ 199,90* ou 12x R$ 20,75</span></div>
                                             <div style="width: 80%" fxLayoutAlign="center center">
                                                 <img [src]='getImagemPlanoAnual()' style="width: 60%;">
                                             </div>
                                         </div>
-                                        <mat-radio-button style="padding-top: 3px;" value="1" fxLayoutAlign="center center"></mat-radio-button>
+
+                                        <mat-radio-button style="padding-top: 3px;" value="1" fxLayoutAlign="center center">Plano Anual</mat-radio-button>
                                     </div>                                                  
 
-                                    
                                     <div fxFlex="50%" fxFlex.xs="90%" fxLayoutAlign="center center"
                                          [ngStyle.xs]="{'width.%': 100}"
-                                         (click)="getPlanoEscolhido(3)"
+                                         (click)="getPlanoEscolhido(2)"
                                          fxLayout="column">
 
                                         <div fxLayout="column" fxLayoutAlign="center center"
                                              style="cursor: pointer; border: 0.66px solid #f95f00; border-radius: 15px;">
-                                            <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Opção 2: Plano Anual</span> </div>
-                                            <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">por 12x R$ 29,90</span></div>
-
+                                            <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Opção 2: Plano Mensal</span> </div>
+                                            <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">por R$ 29,90*</span></div>
                                             <div style="width: 80%" fxLayoutAlign="center center">
-                                                <img [src]='getImagemPlanoAnual()' style="width: 60%;">
+                                                <img [src]='getImagemPlanoMensal()' style="width: 60%;">
                                             </div>
                                         </div>
-                                        <mat-radio-button style="padding-top: 3px;" value="3" fxLayoutAlign="center center"></mat-radio-button>
+
+                                        <mat-radio-button style="padding-top: 3px;" value="2" fxLayoutAlign="center center">Plano Mensal</mat-radio-button>
                                     </div>                                     
-                                    
+
                                 </mat-radio-group>
                             </div>
     
-                            <div *ngIf="idTipoPlanoEscolhido" fxLayout="column" fxLayoutAlign="center center" style="padding-top: 20px;" >
+                            <div fxLayout="column" fxLayoutAlign="center center" style="padding-top: 20px;"
+                                 *ngIf="idTipoPlanoEscolhido">
                                 <span style="font-size: 20px; font-weight: bold; color: #f95f00;">
                                     Escolha a forma de pagamento
                                 </span>    
@@ -371,11 +373,9 @@
                                                   required                                                                                                    
                                                   fxLayoutAlign="center center"> 
 
-                                    <!-- (1) BOLETO -->
                                     <div fxFlex="100%" 
                                          fxLayoutAlign="center center"                                          
                                          (click)="tipoPagamentoEscolhido(1)"
-                                         *ngIf="!isPlanoEscolhidoAnualParcelado()"
                                          fxLayout="column">
 
                                         <div fxLayout="row" fxLayoutAlign="center center"
@@ -383,10 +383,10 @@
                                              <div fxFlex="25%" fxLayoutAlign="center center"><img [src]="getImagemBoleto()" style="width: 55%;"></div>    
                                              <div fxFlex="75%" fxLayoutAlign="center center"><span>Boleto Bancário</span></div>  
                                         </div>
+
                                         <mat-radio-button style="padding-top: 3px;" value="1" fxLayoutAlign="center center"></mat-radio-button>
                                     </div>                                      
                                     
-                                    <!-- (2) CARTÃO DE CRÉDITO -->
                                     <div fxFlex="100%" 
                                          style="padding-left: 10px;"
                                          fxLayoutAlign="center center" 
@@ -398,6 +398,7 @@
                                              <div fxFlex="25%" fxLayoutAlign="center center"><img [src]="getImagemCartao()" style="width: 55%;"></div>    
                                              <div fxFlex="75%" fxLayoutAlign="center center"><span>Cartão de Crédito</span></div>    
                                         </div>
+
                                         <mat-radio-button style="padding-top: 3px;" value="2" fxLayoutAlign="center center"></mat-radio-button>
                                     </div>
                                 </mat-radio-group>
@@ -449,18 +450,27 @@
                                 <span style="font-size: 20px; font-weight: bold; color: #f95f00;">Informe os dados do cartão</span>    
                             </div>   
                             
-                            <div *ngIf="isPlanoEscolhidoAnualAvista()" fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
-                                <span style="font-size: 20px; font-weight: bold; color: #f95f00;">À vista (R$ 299,90)</span>    
-                            </div>  
-                            <div *ngIf="isPlanoEscolhidoAnualParcelado()" fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
-                                <span style="font-size: 20px; font-weight: bold; color: #f95f00;">Parcelado (12x R$ 29,90)</span>    
+                            <div fxLayout="row" fxLayoutAlign="space-evenly center" *ngIf="idTipoPlanoEscolhido === '1'" style="padding-bottom: 15px;">                                
+                                <mat-radio-group  name="rdTipoPagamento"
+                                                  fxFlex="100%" 
+                                                  [(ngModel)]="idTipoPagamentoAnualEscolhido" 
+                                                  [required]="true"
+                                                  fxLayoutAlign="space-evenly center">
+                                    <div fxFlex="50%">
+                                        <mat-radio-button value="1" fxLayoutAlign="center center">À vista (R$ 199,90)</mat-radio-button>
+                                    </div>                                                  
+                                    <div fxFlex="50%"
+                                         [ngStyle]="{'padding-left.px': 10}">
+                                        <mat-radio-button value="2" fxLayoutAlign="center center">Parcelado (12x R$ 20,75)</mat-radio-button>
+                                    </div>
+                                </mat-radio-group>
                             </div>
         
                             <!-- Dados para compra com CARTÃO DE CRÉDITO -->
                             <div fxLayout="column" 
                                  [ngStyle]="{'width.px': 423}"
                                  [ngStyle.xs]="{'width.%': 100}"
-                                 *ngIf="isTipoPagamentoEscolhidoCartaoCredito()">
+                                 *ngIf="idTipoPagamentoEscolhido === '2'">
 
                                  <div fxLayout="row" style="width: 100%; padding-right: 10px;">
                                     <mat-form-field class="w-100" fxFlexOffset="10px" appearance="outline">
@@ -597,35 +607,43 @@
                             </div>   
                             
                             <!-- plano escolhido -->
-                            <div fxLayout="column" fxLayoutAlign="center center" *ngIf="isPlanoEscolhidoAnualAvista()">
+                            <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPlanoEscolhido === '1'">
                                 <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Plano Anual (mais econômico!)</span> </div>
                             </div>
-                            <div fxLayout="column" fxLayoutAlign="center center" *ngIf="isPlanoEscolhidoAnualParcelado()">
-                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Plano Anual (Parcelado)</span> </div>
+
+                            <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPlanoEscolhido === '2'">
+                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Plano Mensal</span> </div>
                             </div>                            
 
                             <!-- forma pagamento -->
                             <div style="font-size: 10px; font-weight: bold; color: #f95f00; padding-top: 10px;">
-                                <div fxLayout="column" fxLayoutAlign="center center" *ngIf="isTipoPagamentoEscolhidoBoleto()">
+                                <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '1'">
                                     <div><span>Boleto Bancário</span></div>
                                 </div>                            
-                                <div fxLayout="column" fxLayoutAlign="center center" *ngIf="isTipoPagamentoEscolhidoCartaoCredito()">
+                                <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '2'">
                                     <div><span>Cartão de Crédito</span></div>  
                                 </div>
                             </div>
 
                             <!-- valor pago -->
-                            <div>
+                            <div *ngIf="idTipoPlanoEscolhido === '1'; else divValorMensal">
                                 <div style="font-size: 10px; font-weight: bold; color: #f95f00; padding-top: 10px;">
-                                    <div fxLayout="column" fxLayoutAlign="center center" *ngIf="isTipoPagamentoEscolhidoBoleto()">
-                                        <div><span>À vista (R$ 299,90)</span></div>
+                                    <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '1'">
+                                        <div><span>À vista (R$ 199,90)</span></div>
                                     </div>                            
-                                    <div fxLayout="column" fxLayoutAlign="center center" *ngIf="isTipoPagamentoEscolhidoCartaoCredito()">
-                                        <div *ngIf="isPlanoEscolhidoAnualAvista()"><span>À vista (R$ 299,90)</span></div>
-                                        <div *ngIf="isPlanoEscolhidoAnualParcelado()"><span>Parcelado (12x R$ 29,90)</span></div>
+                                    <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '2'">
+                                        <div *ngIf="idTipoPagamentoAnualEscolhido === '1'"><span>À vista (R$ 199,90)</span></div>
+                                        <div *ngIf="idTipoPagamentoAnualEscolhido === '2'"><span>Parcelado (12x R$ 20,75)</span></div>
                                     </div>
                                 </div>
                             </div>
+                            <ng-template #divValorMensal>
+                                <div style="font-size: 10px; font-weight: bold; color: #f95f00; padding-top: 10px;">
+                                    <div fxLayout="column" fxLayoutAlign="center center">
+                                        <div><span>R$ 29,90*</span></div>
+                                    </div>                            
+                                </div>
+                            </ng-template>
 
                             <div fxLayout="column" fxLayoutAlign="center center" *ngIf="codigoCupom" style="padding-top: 10px;">
                                 <div><span style="font-size: 10px; font-weight: bold; color: #08003c;">O Voucher possui um desconto de {{valorVoucher}}% no valor do plano escolhido.</span> </div>
@@ -648,7 +666,7 @@
                                     </mat-checkbox>
                                 </div>
         
-                                <div fxLayout="row" fxFlex="100" fxLayoutAlign="center center" *ngIf="isTipoPagamentoEscolhidoCartaoCredito()" >
+                                <div fxLayout="row" fxFlex="100" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '2'" >
                                     <button mat-raised-button
                                             fxFlex="50"
                                             fxFlex.xs="95"
@@ -661,7 +679,7 @@
                                     </button>
                                 </div>
 
-                                <div fxLayout="row" fxFlex="100" fxLayoutAlign="center center" *ngIf="isTipoPagamentoEscolhidoBoleto()" >
+                                <div fxLayout="row" fxFlex="100" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '1'" >
                                     <button mat-raised-button
                                             fxFlex="50"
                                             fxFlex.xs="95"
