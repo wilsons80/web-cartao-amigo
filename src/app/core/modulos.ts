@@ -20,6 +20,7 @@ export enum Modulos{
      , ESPECIALIDADE                        = 'ESPECIALIDADE'
      , CORRETOR                             = 'CORRETOR'
      , AUTORIZACAO_GATEWAY                  = 'AUTORIZACAO_GATEWAY'
+     , CLINICA                              = 'CLINICA'
      , VALIDAR_CARTAO                       = 'VALIDAR_CARTAO'
 
 }

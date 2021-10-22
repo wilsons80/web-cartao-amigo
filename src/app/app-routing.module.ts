@@ -13,6 +13,8 @@ import { RedefinirSenhaComponent } from './components/redefinir-senha/redefinir-
 import { ValidarCartaoComponent } from './components/validar-carteirinha/validar-cartao.component';
 import { RedefinirNovaSenhaComponent } from './components/redefinir-nova-senha/redefinir-nova-senha.component';
 import { FormularioAutorizadorCorretorComponent } from './components/common/formulario-autorizador-corretor/formulario-autorizador-corretor.component';
+import { AcessoModuloResolver } from './guards/acesso-modulo.resolve';
+import { Modulos } from './core/modulos';
 
 
 const routes: Routes = [
@@ -23,6 +25,7 @@ const routes: Routes = [
       { path: 'configuracao/grupoacesso', loadChildren: () => import('./components/home/grupo-acesso/grupo-acesso.module').then(m => m.GrupoAcessoModule) },
       { path: 'configuracao/novasenha', loadChildren: () => import('./components/nova-senha/nova-senha.module').then(m => m.NovaSenhaModule)} ,
       { path: 'configuracao/usuarios', loadChildren: () => import('./components/usuarios/usuarios.module').then(m => m.UsuariosModule)} ,
+      
       { path: 'administrativo/clinicas', loadChildren: () => import('./components/clinicas/clinicas.module').then(m => m.ClinicasModule)} ,
       { path: 'administrativo/associados', loadChildren: () => import('./components/associados/associados.module').then(m => m.AssociadosModule)} ,
       { path: 'administrativo/impressao-cartao', loadChildren: () => import('./components/impressao-cartao/impressao-cartao.module').then(m => m.ImpressaoCartaoModule)} ,
@@ -42,8 +45,10 @@ const routes: Routes = [
   { path: 'pagamento/corretor', component: FormularioAssociadoComponent }, // usado para link de pagamento do corretor
   
   { path: 'pagseguro/split/redirect', component: FormularioAutorizadorCorretorComponent},
-  { path: 'validarcartao', component: ValidarCartaoComponent},
-  { path: 'VALIDARCARTAO', component: ValidarCartaoComponent},
+  
+  { path: 'validarcartao', component: ValidarCartaoComponent, canActivate: [AuthGuard], resolve: {perfilAcesso:AcessoModuloResolver}, data:{modulo:Modulos.VALIDAR_CARTAO}},
+  { path: 'VALIDARCARTAO', component: ValidarCartaoComponent, canActivate: [AuthGuard], resolve: {perfilAcesso:AcessoModuloResolver}, data:{modulo:Modulos.VALIDAR_CARTAO}},
+
   { path: 'clinicacredenciada', component: ValidarCartaoComponent},
   { path: 'redefinirsenha', component: RedefinirSenhaComponent },
   { path: 'redefinirnovasenha', component: RedefinirNovaSenhaComponent },

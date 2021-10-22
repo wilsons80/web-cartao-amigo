@@ -22,4 +22,21 @@ export class TiposUsuariosSistema {
       const tipoUsuario = this.tipos.find( d => d.descricao.includes(descricao));
       return tipoUsuario ? tipoUsuario.descricao : '';
     }
+
+
+    isUsuarioTipoClinica(idTipoUsuario: number): boolean {
+      const tipo = this.tipos.find( d => d.tipo === 'CLINICA');
+      return idTipoUsuario === tipo?.id;
+    }
+
+    isUsuarioTipoAdministrativo(idTipoUsuario: number): boolean {
+      const tipo = this.tipos.find( d => d.tipo === 'ADMINISTRATIVO');
+      return idTipoUsuario === tipo?.id;
+    }
+
+    isUsuarioTipoRoot(idTipoUsuario: number): boolean {
+      const tipo = this.tipos.find( d => d.tipo === 'ROOT');
+      return idTipoUsuario === tipo?.id;
+    }
+
 }

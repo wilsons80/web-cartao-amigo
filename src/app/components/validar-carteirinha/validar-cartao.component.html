@@ -1,6 +1,6 @@
 <mat-sidenav-container class="h-100" style="background: #1d1c3b;">
 
-    <mat-toolbar [ngClass]="['corAzulPadrao', 'fonteBranca']" *ngIf="!sessaoService.isUsuarioLogado">
+    <mat-toolbar [ngClass]="['corAzulPadrao', 'fonteBranca']" >
       <div fxLayout="row" fxLayoutAlign="center" fxFlex>
         
         <div fxLayout="row" fxLayoutAlign="center" fxFlex="20">
@@ -30,8 +30,18 @@
                 <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
                     <span style="font-weight: bold; color: #d76d36;"
                           [ngStyle]="{'font-size.px': isMobile() ? 20 : 20}">
-                          Validar Cartão
+                          VALIDAR CARTÃO
                     </span>    
+                </div>
+
+                <div fxLayout="row" fxLayoutAlign="center center" style="padding-bottom: 15px;">                        
+                    <mat-form-field fxFlex="100%" fxLayoutGap="20px" fxFlexOffset="10px">
+                        <input matInput
+                               name="numero_cartao"
+                               placeholder="Número do cartão"
+                               maxlength="20"
+                               [(ngModel)]="numerocartao">
+                    </mat-form-field>
                 </div>
 
                 <div fxLayout="row" fxLayoutAlign="center center" style="padding-bottom: 15px;">                        

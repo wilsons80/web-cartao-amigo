@@ -212,6 +212,10 @@ export class UsuarioDialogComponent implements OnInit {
   }
 
   isShowPermissaoSistema() {
-    return this.usuarioLogado?.tipoUsuario?.id === 4 || this.usuarioLogado?.tipoUsuario?.id === 5;
+    const tipoUsuarioLogado = this.usuarioLogado?.tipoUsuario;
+    const isTipoAdministrativo = this.tiposUsuariosSistema.isUsuarioTipoAdministrativo(tipoUsuarioLogado?.id);
+    const isTipoRoot           = this.tiposUsuariosSistema.isUsuarioTipoRoot(tipoUsuarioLogado?.id);
+
+    return isTipoAdministrativo || isTipoRoot;
   }
 }
