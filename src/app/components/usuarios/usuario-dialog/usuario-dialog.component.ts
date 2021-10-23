@@ -18,7 +18,7 @@ import { UsuarioLogado } from 'src/app/core/usuario-logado';
 import { TiposUsuariosSistema } from 'src/app/core/tipos-usuarios-sistema';
 import { SessaoService } from 'src/app/services/sessao/sessao.service';
 import { ConfirmDialogComponent } from '../../common/confirm-dialog/confirm-dialog.component';
-import { LatinStringNormalizer } from 'src/app/utils/LatinStringNormalizer';
+import { ClinicaCombo } from 'src/app/core/clinica-combo';
 
 @Component({
   selector: 'usuario-dialog',
@@ -42,7 +42,6 @@ export class UsuarioDialogComponent implements OnInit {
   perfilAcesso: Acesso;
 
   grupoAcessoAdministrativo: GrupoAcesso[];
-
   tiposUsuariosSistema: TiposUsuariosSistema;
 
   constructor(private dataUtilService: DataUtilService,
@@ -209,6 +208,15 @@ export class UsuarioDialogComponent implements OnInit {
 
   onMascaraDataInput(event) {
     return this.dataUtilService.onMascaraDataInput(event);
+  }
+
+
+  isTipoUsuarioClinica(): boolean {
+    if(this.usuarioSistema.tipoUsuario?.id) {
+      const isUsuarioTipoClinica = this.tiposUsuariosSistema.isUsuarioTipoClinica(this.usuarioSistema.tipoUsuario.id);
+      return isUsuarioTipoClinica;
+    }
+    return false;
   }
 
   isShowPermissaoSistema() {

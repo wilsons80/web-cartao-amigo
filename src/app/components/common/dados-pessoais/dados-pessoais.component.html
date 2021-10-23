@@ -16,7 +16,6 @@
                     <input matInput name="dataNascimento" 
                            [matDatepicker]="pickerDataNascimento"
                            maxlength="10"
-                           [required]="obrigaDadosPessoais"
                            (input)="onMascaraDataInput($event)"
                            placeholder="Data de Nascimento" 
                            [(ngModel)]="pessoaFisica.dataNascimento">

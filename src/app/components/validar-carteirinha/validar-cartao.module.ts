@@ -14,12 +14,11 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { RouterModule } from '@angular/router';
 import { TextMaskModule } from 'angular2-text-mask';
 import { SharedDirectivesModule } from 'src/app/directives/shared-directives.module';
-import { ComboPesquisavelModule } from '../common/combo-pesquisavel/combo-pesquisavel.module';
 import { DialogValidarCartaoComponent } from './dialog-validar-cartao/dialog-validar-cartao.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { PipesModule } from 'src/app/theme/pipes/pipes.module';
 import { SharedPipesModule } from 'src/app/pipes/shared-pipes.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { ComboPesquisavelOutlineModule } from '../common/combo-pesquisavel-outline/combo-pesquisavel-outline.module';
 
 
 @NgModule({
@@ -41,7 +40,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     MatOptionModule,
     MatSelectModule,
     SharedPipesModule,
-    ComboPesquisavelModule,
+    ComboPesquisavelOutlineModule,
     MatToolbarModule
   ]
 })

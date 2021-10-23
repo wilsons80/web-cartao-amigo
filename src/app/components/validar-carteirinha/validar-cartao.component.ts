@@ -61,6 +61,7 @@ export class ValidarCartaoComponent implements OnInit {
 
   ngOnInit(): void {
     this.numerocartao = this.activatedRoute.snapshot.queryParams['numerocartao'] || this.activatedRoute.snapshot.queryParams['NUMEROCARTAO'];
+    this.numerocartao = this.numerocartao?.toUpperCase();
     this.buscarTodasClinicas();
   }
   
@@ -160,7 +161,11 @@ export class ValidarCartaoComponent implements OnInit {
 
 
   onChangeClinica(clinica) {
-    console.log(clinica);
     this.buscarTodasAsEspecialidadesClinica();
   }
+
+
+  upperCaseTexto(){
+    this.numerocartao = this.numerocartao.toUpperCase();
+ }
 }

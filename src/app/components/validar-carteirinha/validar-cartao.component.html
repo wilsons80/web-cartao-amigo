@@ -22,7 +22,7 @@
     <div fxLayout="row" fxLayoutAlign="center center" class="h-90">
         <form #formulario="ngForm" 
               fxFlex="90" 
-              fxFlex.gt-sm="30" 
+              fxFlex.gt-sm="40" 
               fxFlex.sm="60" 
               style="background: white; padding: 31px; border-radius: 16px;">
 
@@ -35,18 +35,21 @@
                 </div>
 
                 <div fxLayout="row" fxLayoutAlign="center center" style="padding-bottom: 15px;">                        
-                    <mat-form-field fxFlex="100%" fxLayoutGap="20px" fxFlexOffset="10px">
+                    <mat-form-field fxFlex="100%" fxLayoutGap="20px" fxFlexOffset="10px"
+                                    appearance="outline">
                         <input matInput
                                name="numero_cartao"
                                placeholder="Número do cartão"
                                maxlength="20"
+                               (change)="upperCaseTexto()"
+                               required
                                [(ngModel)]="numerocartao">
                     </mat-form-field>
                 </div>
 
                 <div fxLayout="row" fxLayoutAlign="center center" style="padding-bottom: 15px;">                        
                     <div ngModelGroup="comboclinica" fxFlex="100%" fxLayoutGap="20px" fxFlexOffset="10px">
-                        <combo-pesquisavel #comboclinicas
+                        <combo-pesquisavel-outline #comboclinicas
                                            nome="comoClinicas" 
                                            [itens]="clinicas" 
                                            itemDescricao="nomeFantasia"
@@ -57,13 +60,13 @@
                                            placeholder="Nome fantasia da Clínica"
                                            [(valor)]="clinicaSelecionada"
                                            (valorChange)="onChangeClinica($event)">
-                        </combo-pesquisavel>
+                        </combo-pesquisavel-outline>
                     </div>
                  </div>
 
                  <div fxLayout="row" fxLayoutAlign="center center" style="padding-bottom: 15px;">                        
                     <div ngModelGroup="comboclinicasTipoEspecialidade" fxFlex="100%" fxLayoutGap="20px" fxFlexOffset="10px">
-                        <combo-pesquisavel #comboclinicasTipoEspecialidade
+                        <combo-pesquisavel-outline #comboclinicasTipoEspecialidade
                                            nome="clinicasTipoEspecialidade" 
                                            [itens]="clinicasTipoEspecialidades" 
                                            itemDescricao="descricaoEspecialidade"
@@ -73,10 +76,13 @@
                                            label="Especialidades"
                                            placeholder="Especialidades"
                                            [(valor)]="clinicasTipoEspecialidadeSelecionada">
-                        </combo-pesquisavel>
+                        </combo-pesquisavel-outline>
                     </div>
                  </div>
 
+                 <div fxLayout="row" fxLayoutAlign="center center">                        
+                    <label class="labelRequired">Todos os campos são obrigatórios.</label>       
+                 </div>
 
                  <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px; padding-top: 15px;">                    
                     <button mat-raised-button

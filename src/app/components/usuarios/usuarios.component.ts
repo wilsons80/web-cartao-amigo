@@ -29,6 +29,8 @@ import { DataUtilService } from 'src/app/services/commons/data-util.service';
 import { UsuarioDto } from 'src/app/core/usuario-dto';
 import { AutenticadorService } from 'src/app/services/autenticador/autenticador.service';
 import { UsuarioSistemaService } from 'src/app/services/usuario-sistema/usuario-sistema.service';
+import { ClinicaCombo } from 'src/app/core/clinica-combo';
+import { ClinicaService } from 'src/app/services/clinica/clinica.service';
 
 
 class Filtro {
@@ -82,7 +84,7 @@ export class UsuariosComponent implements OnInit {
   ];  
 
   grupoAcessoAdministrativo: GrupoAcesso[];
-
+  
   constructor(public appSettings:AppSettings,
               private drc: ChangeDetectorRef,
               changeDetectorRef: ChangeDetectorRef,
@@ -94,6 +96,7 @@ export class UsuariosComponent implements OnInit {
               private loadingPopupService: LoadingPopupService,
               private dialog: MatDialog,
               public usuarioSistemaBuilder: UsuarioSistemaBuilder,
+              private clinicaService:ClinicaService,
               public usuarioBuilder: UsuarioBuilder,
               public usuarioService: UsuarioService) {
 
@@ -237,7 +240,7 @@ export class UsuariosComponent implements OnInit {
       idUsuarioSistema: usuarioDto?.idUsuario,
       perfilAcesso: this.perfilAcesso,
       grupoAcessoAdministrativo: this.grupoAcessoAdministrativo,
-      usuarioLogado: this.autenticadorService.usuarioLogado
+      usuarioLogado: this.autenticadorService.usuarioLogado,
     };
     dialogConfig.panelClass = 'configuracaoDialogUsuarioSistema';    
 
