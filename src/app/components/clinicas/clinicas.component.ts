@@ -134,8 +134,8 @@ export class ClinicasComponent implements OnInit {
 
   consultar() {
     this.loadingPopupService.mostrarMensagemDialog('Aguarde....');
-    this.clinicaService.getFilter(this.filtro.clinica.id, 
-                                  this.filtro.tipoEspecialidade.id,
+    this.clinicaService.getFilter(this.filtro.clinica?.id, 
+                                  this.filtro.tipoEspecialidade?.id,
                                   this.filtro.bairro,
                                   this.filtro.ativo,
                                   this.filtro.dataInicio,
