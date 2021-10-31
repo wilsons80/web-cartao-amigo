@@ -1,28 +1,12 @@
-<div fxLayout="row" fxLayoutAlign="center center" style="padding-top: 1px; background: #08003c;">
-    <mat-toolbar [ngClass]="['corAzulPadrao', 'fonteBranca']" *ngIf="!sessaoService.isUsuarioLogado">
-        <div fxLayout="row" fxLayoutAlign="center" fxFlex>
-          
-          <div fxLayout="row" fxLayoutAlign="center">
-              <div >
-                  <img [src]="getLogoCartaoAmigo()" class="imagem" style="width: 178px;"/>
-              </div>
-          </div>
-        
-        </div>
-      </mat-toolbar>  
-</div>
-
 <mat-sidenav-container  
-     style="background: #1d1c3b;"
-     [ngStyle]="{'padding-top.rem': 1}"
      class="img-background"
-     style="overflow:auto; height:auto; height: -webkit-fill-available;" >
+     style="height: -webkit-fill-available;" >
    
     <div fxLayout="row" fxLayoutAlign="center center" class="h-90" >
         <form #formLogin="ngForm" 
-              fxFlex="90" 
-              fxFlex.gt-sm="30" 
-              fxFlex.sm="60"               
+              fxFlex.xs="90%" 
+              fxFlex.sm="45%"               
+              fxFlex.md="50%" 
               style="background: white; padding: 31px; border-radius: 16px;">
 
             <div class="p-3">
@@ -76,7 +60,6 @@
     </div>
 
 </mat-sidenav-container>
-
 
 <!--
     xs      -> celulares
