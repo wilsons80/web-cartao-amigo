@@ -543,7 +543,7 @@ export class RenovarAssinaturaComponent implements OnInit {
   }
 
   linkTermoDeUso(){
-    return 'https://s3.amazonaws.com/www.cartaoamigo.com.br/documentos/Termo+de+Uso.pdf';
+    return 'https://s3.amazonaws.com/cartaoamigo.com.br/documentos/Termo+de+Uso.pdf';
   }
 
   habilitarBotao(formulario) {

@@ -427,7 +427,7 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
   }
 
   linkTermoDeUso(){
-    return 'https://s3.amazonaws.com/www.cartaoamigo.com.br/documentos/Termo+de+Uso.pdf';
+    return 'https://s3.amazonaws.com/cartaoamigo.com.br/documentos/Termo+de+Uso.pdf';
   }
 
   getPlanoEscolhido(tipo) {
