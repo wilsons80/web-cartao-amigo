@@ -215,7 +215,7 @@
                                         <mat-hint align="end">{{campoBairro.value.length}} / 200</mat-hint>
                                     </mat-form-field>
                                 
-                                    <div fxLayout="row" style="width: 100%" fxLayoutAlign="space-between center">
+                                    <div fxLayout="row" style="width: 30%; padding-left: 5px;" fxLayoutAlign="space-between center">
                                         <mat-form-field style="width: 45%;"
                                                         [ngStyle]="{'padding-left.px': 10}"
                                                         [ngStyle.xs]="{'padding-left.px': 0}"
@@ -547,7 +547,7 @@
                                         <div fxLayout="column" fxFlex="200px" fxFlex.xs="50%">
                                             <mat-form-field appearance="outline" style="padding-left: 10px;">
                                                 <mat-label>Mês vencimento</mat-label>
-                                                <mat-select name="uf" required [(ngModel)]="dadosCartaoCredito.mesValidade">
+                                                <mat-select name="mesvencimento" required [(ngModel)]="dadosCartaoCredito.mesValidade">
                                                     <mat-option *ngFor="let e of meses" [value]="e">
                                                         {{e}}
                                                     </mat-option>
