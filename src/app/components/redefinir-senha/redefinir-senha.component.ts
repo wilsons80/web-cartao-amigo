@@ -84,4 +84,7 @@ export class RedefinirSenhaComponent implements OnInit {
     return '../../../assets/imagens/LOGO_CARTAO_AMIGO-V2.2.jpg';
   }
 
+  getImagemBackground() {
+    return '../../../assets/imagens/banner-cartao-amigo.jpg';
+  }
 }

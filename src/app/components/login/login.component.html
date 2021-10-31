@@ -1,30 +1,31 @@
-<mat-sidenav-container class="h-100" style="background: #1d1c3b;">
-
+<div fxLayout="row" fxLayoutAlign="center center" style="padding-top: 1px; background: #08003c;">
     <mat-toolbar [ngClass]="['corAzulPadrao', 'fonteBranca']" *ngIf="!sessaoService.isUsuarioLogado">
-      <div fxLayout="row" fxLayoutAlign="center" fxFlex>
+        <div fxLayout="row" fxLayoutAlign="center" fxFlex>
+          
+          <div fxLayout="row" fxLayoutAlign="center">
+              <div >
+                  <img [src]="getLogoCartaoAmigo()" class="imagem" style="width: 178px;"/>
+              </div>
+          </div>
         
-        <div fxLayout="row" fxLayoutAlign="center" fxFlex="20" [fxHide]="isMobile()">
-            <div fxLayout="row" fxLayoutAlign="space-around center" >
-                <img [src]="getLogoCartaoAmigo()" class="imagem" style="width: 178px;"/>
-            </div>
         </div>
+      </mat-toolbar>  
+</div>
 
-        <div fxLayout="row" fxLayoutAlign="center" fxFlex></div>
-        <div fxLayout="row" fxLayoutAlign="center" fxFlex="20"></div>
-        
-      </div>
-    </mat-toolbar>
-    
-    
-    <div fxLayout="row" fxLayoutAlign="center center" class="h-90" 
-        >
+<mat-sidenav-container  
+     style="background: #1d1c3b;"
+     [ngStyle]="{'padding-top.rem': 1}"
+     class="img-background"
+     style="overflow:auto; height:auto; height: -webkit-fill-available;" >
+   
+    <div fxLayout="row" fxLayoutAlign="center center" class="h-90" >
         <form #formLogin="ngForm" 
               fxFlex="90" 
               fxFlex.gt-sm="30" 
               fxFlex.sm="60"               
-              style="background: white; padding: 31px; border-radius: 16px; margin-top: 50px;">
+              style="background: white; padding: 31px; border-radius: 16px;">
 
-             <div class="p-3">
+            <div class="p-3">
                 <div style="width: 100%; padding-bottom: 15px;">
                     <img [src]="imagemLogin()" style="width:100%">
                 </div>
@@ -63,7 +64,7 @@
                 </button>
 
                 <div fxLayout="column" fxLayoutAlign="center center" style="padding-top: 15px;">
-                    <a href="/contaassociado">Ainda não sou cadastrado</a>
+                    <a href="/formulario-associado">Ainda não sou cadastrado</a>
                  </div>
  
                 <div fxLayout="column" fxLayoutAlign="center center" style="padding-top: 15px;">

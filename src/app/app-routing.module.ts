@@ -7,7 +7,6 @@ import { NovaSenhaComponent } from './components/nova-senha/nova-senha.component
 import { HomeComponent } from './components/home/home.component';
 import { TelaPrincipalComponent } from './components/home/tela-principal/tela-principal.component';
 import { PaginaNaoEncontradaComponent } from './components/common/pagina-nao-encontrada/pagina-nao-encontrada.component';
-import { CriarContaAssociadoComponent } from './components/criar-conta-associado/criar-conta-associado.component';
 import { FormularioAssociadoComponent } from './components/common/formulario-associado/formulario-associado.component';
 import { RedefinirSenhaComponent } from './components/redefinir-senha/redefinir-senha.component';
 import { ValidarCartaoComponent } from './components/validar-carteirinha/validar-cartao.component';
@@ -36,9 +35,8 @@ const routes: Routes = [
   },
   
   { path: 'login', component: LoginComponent },
-  { path: 'contaassociado', component: CriarContaAssociadoComponent }, // usado na tela de login do sistema
   
-  { path: 'formulario-associado', component: FormularioAssociadoComponent }, // usado no site principal
+  { path: 'formulario-associado', component: FormularioAssociadoComponent }, // usado para cadastrar um associado
   { path: 'pagamento/corretor', component: FormularioAssociadoComponent }, // usado para link de pagamento do corretor
   
   { path: 'pagseguro/split/redirect', component: FormularioAutorizadorCorretorComponent},
