@@ -1,23 +1,22 @@
-<mat-sidenav-container class="h-100" style="background: #1d1c3b;">
+<mat-toolbar [ngClass]="['corAzulPadrao', 'fonteBranca']">
+    <div fxLayout="row" fxLayoutAlign="center" fxFlex>      
 
-    <mat-toolbar [ngClass]="['corAzulPadrao', 'fonteBranca']" *ngIf="!sessaoService.isUsuarioLogado">
-      <div fxLayout="row" fxLayoutAlign="center" fxFlex>
-        
-        <div fxLayout="row" fxLayoutAlign="center" fxFlex="20">
-            <div fxLayout="row" fxLayoutAlign="space-around center">
-                <img [src]="getLogoCartaoAmigo()" class="imagem" style="width: 178px;"/>
-            </div>
-        </div>
+      <a routerLink="/" fxLayout="row" fxLayoutAlign="start center" ngClass.xs="mobile" >
+        <img [src]="getLogoCartaoAmigo()" class="imagem" style="width: 178px;"/>
+      </a>
 
-        <div fxLayout="row" fxLayoutAlign="center" fxFlex [fxHide]="isNotMobile()">
-            <span style="padding-top: 7px;">Acreditamos que saúde e bem-estar é um direito de todos.</span>
-        </div>
-
-        <div fxLayout="row" fxLayoutAlign="center" fxFlex="20"></div>
-        
+      <div fxLayout="row" fxLayoutAlign="center" fxFlex [fxHide]="isNotMobile()">
+          <span style="padding-top: 7px;">Acreditamos que saúde e bem-estar é um direito de todos.</span>
       </div>
-    </mat-toolbar>
-    
+
+      <div fxLayout="row" fxLayoutAlign="center" fxFlex="20"></div>
+      
+    </div>
+</mat-toolbar>
+
+<mat-sidenav-container class="h-100" 
+     class="img-background"
+     style="height: -webkit-fill-available;" >>
     
     <div fxLayout="row" fxLayoutAlign="center center" class="h-90">
         <form #formulario="ngForm" 
