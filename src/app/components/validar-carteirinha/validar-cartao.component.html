@@ -80,7 +80,7 @@
                     </div>
                  </div>
 
-                 <div fxLayout="row" fxLayoutAlign="center center">                        
+                 <div fxLayout="row" fxLayoutAlign="center center" *ngIf="formulario.invalid && formulario.touched">                        
                     <label class="labelRequired">Todos os campos são obrigatórios.</label>       
                  </div>
 
