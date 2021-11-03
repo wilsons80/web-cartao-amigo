@@ -3,17 +3,19 @@
     <mat-toolbar [ngClass]="['corAzulPadrao', 'fonteBranca']" >
       <div fxLayout="row" fxLayoutAlign="center" fxFlex>
         
-        <div fxLayout="row" fxLayoutAlign="center" fxFlex="20">
+        <a href="/" fxLayout="row" fxLayoutAlign="center" fxFlex="20">
             <div fxLayout="row" fxLayoutAlign="space-around center">
                 <img [src]="getLogoCartaoAmigo()" class="imagem" style="width: 178px;"/>
             </div>
-        </div>
+        </a>
 
         <div fxLayout="row" fxLayoutAlign="center" fxFlex [fxHide]="isNotMobile()">
             <span style="padding-top: 7px;">Acreditamos que saúde e bem-estar é um direito de todos.</span>
         </div>
 
-        <div fxLayout="row" fxLayoutAlign="center" fxFlex="20"></div>
+        <div fxLayout="row" fxLayoutAlign="end center" fxFlex="20">
+            <app-fullscreen></app-fullscreen> 
+        </div>
         
       </div>
     </mat-toolbar>

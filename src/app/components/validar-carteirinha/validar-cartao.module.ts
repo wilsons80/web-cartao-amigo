@@ -19,6 +19,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { SharedPipesModule } from 'src/app/pipes/shared-pipes.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ComboPesquisavelOutlineModule } from '../common/combo-pesquisavel-outline/combo-pesquisavel-outline.module';
+import { FullscreenModule } from '../fullscreen/fullscreen.module';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { ComboPesquisavelOutlineModule } from '../common/combo-pesquisavel-outli
     MatSelectModule,
     SharedPipesModule,
     ComboPesquisavelOutlineModule,
-    MatToolbarModule
+    MatToolbarModule,
+    FullscreenModule
   ]
 })
 export class ValidarCarteirinhaModule { }

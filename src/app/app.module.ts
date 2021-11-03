@@ -36,7 +36,6 @@ import { AppSettings } from './app.settings';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { VerticalMenuComponent } from './components/menu/vertical-menu/vertical-menu.component';
-import { FullScreenComponent } from './components/fullscreen/fullscreen.component';
 import { UserMenuComponent } from './components/user-menu/user-menu.component';
 import { HomeComponent } from './components/home/home.component';
 import { SharedModule } from './shared/shared.module';
@@ -53,6 +52,7 @@ import { PerfilDialogComponent } from './components/user-menu/perfil-dialog/perf
 import { DadosPessoaisModule } from './components/common/dados-pessoais/dados-pessoais.module';
 import { TipoEspecialidadeModule } from './components/tipo-especialidade/tipo-especialidade.module';
 import { FormularioAutorizadorCorretorModule } from './components/common/formulario-autorizador-corretor/formulario-autorizador-corretor.module';
+import { FullscreenModule } from './components/fullscreen/fullscreen.module';
 
 
 registerLocaleData(localePt, 'pt-BR');
@@ -67,7 +67,6 @@ registerLocaleData(localePt, 'pt-BR');
     HomeComponent,
     SidenavComponent,
     VerticalMenuComponent,
-    FullScreenComponent,
     UserMenuComponent,
     TelaPrincipalComponent,
     PerfilDialogComponent   
@@ -78,6 +77,7 @@ registerLocaleData(localePt, 'pt-BR');
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    FullscreenModule,
 
     AppRoutingModule,
     MatToolbarModule,
