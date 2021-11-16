@@ -41,7 +41,6 @@ import { HomeComponent } from './components/home/home.component';
 import { SharedModule } from './shared/shared.module';
 import { SessaoService } from './services/sessao/sessao.service';
 import { TelaPrincipalComponent } from './components/home/tela-principal/tela-principal.component';
-import { CriarContaAssociadoModule } from './components/criar-conta-associado/criar-conta-associado.module';
 import { ValidarCarteirinhaModule } from './components/validar-carteirinha/validar-cartao.module';
 import { FormularioAssociadoModule } from './components/common/formulario-associado/formulario-associado.module';
 import { RedefinirSenhaModule } from './components/redefinir-senha/redefinir-senha.module';
@@ -82,7 +81,6 @@ registerLocaleData(localePt, 'pt-BR');
     AppRoutingModule,
     MatToolbarModule,
     LoginModule,
-    CriarContaAssociadoModule,
     HttpClientModule,
     RouterModule,
     ExceptionHandlerModule,

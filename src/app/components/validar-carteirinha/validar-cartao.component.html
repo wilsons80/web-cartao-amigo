@@ -1,4 +1,5 @@
-<mat-sidenav-container class="h-100" style="background: #1d1c3b;">
+<mat-toolbar [ngClass]="['corAzulPadrao', 'fonteBranca']">
+    <div fxLayout="row" fxLayoutAlign="center" fxFlex>      
 
     <mat-toolbar [ngClass]="['corAzulPadrao', 'fonteBranca']" >
       <div fxLayout="row" fxLayoutAlign="center" fxFlex>
@@ -18,8 +19,14 @@
         </div>
         
       </div>
-    </mat-toolbar>
-    
+
+      <div fxLayout="row" fxLayoutAlign="center" fxFlex="20"></div>
+      
+    </div>
+</mat-toolbar>
+
+<mat-sidenav-container class="h-100 img-background"
+                       style="height: -webkit-fill-ava ilable;" >
     
     <div fxLayout="row" fxLayoutAlign="center center" class="h-90">
         <form #formulario="ngForm" 
