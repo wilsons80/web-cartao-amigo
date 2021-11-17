@@ -332,10 +332,6 @@ export class RenovarAssinaturaComponent implements OnInit {
             dados.cpfTitularCartao              = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.cpfTitularCartao);
             dados.dataNascimentoTitularCartao   = this.dadosCartaoCredito.dataNascimentoTitularCartao;
             
-            if(Number(this.idTipoPagamentoAnualEscolhido) === 2) {
-              dados.idPlano = 3; // plano anual parcelado
-            }
-
             this.loadingPopupService.mostrarMensagemDialog('Processando pagamento....');
             return this.pagamentoCartaoCreditoSplitService.pagar(dados)
                 .pipe(
@@ -477,7 +473,7 @@ export class RenovarAssinaturaComponent implements OnInit {
 
   cancelarPagamento(stepper){
     stepper.reset();
-    this.iniciarPagamento              = false;
+    this.iniciarPagamento = false;
 
     this.novoPagamento();
   }

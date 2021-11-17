@@ -620,10 +620,10 @@
                             </div>
 
                             <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPlanoEscolhido === '3'">
-                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Plano Anual de R$ 358,80 (12 x 29,90)</span> </div>
+                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Plano Anual de R$ 358,80</span> </div>
                             </div>                            
 
-                            <!-- forma pagamento -->
+                            <!-- Método de pagamento -->
                             <div style="font-size: 10px; font-weight: bold; color: #f95f00; padding-top: 10px;">
                                 <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '1'">
                                     <div><span>Boleto Bancário</span></div>
@@ -632,6 +632,17 @@
                                     <div><span>Cartão de Crédito</span></div>  
                                 </div>
                             </div>
+
+                            <!-- forma de pagamento -->
+                            <div style="font-size: 10px; font-weight: bold; color: #f95f00; padding-top: 10px;">
+                                <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '1'">
+                                    <div><span>À vista</span></div>
+                                </div>                            
+                                <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '2'">
+                                    <div><span>Parcelado em 12 x R$ 29,90</span></div>  
+                                </div>
+                            </div>                                
+                           
 
                             <div fxLayout="column" fxLayoutAlign="center center" *ngIf="codigoCupom" style="padding-top: 10px;">
                                 <div><span style="font-size: 10px; font-weight: bold; color: #08003c;">O Voucher possui um desconto de {{valorVoucher}}% no valor do plano escolhido.</span> </div>
