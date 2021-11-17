@@ -91,7 +91,6 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
   planoEscolhido: TipoPlano;
   idTipoPlanoEscolhido          = "";
   idTipoPagamentoEscolhido      = "";
-  idTipoPagamentoAnualEscolhido = "";
   senderHash: string;
 
   isPodeUtilizarVoucherNoPagamento = true;
@@ -402,9 +401,11 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
             dados.cpfTitularCartao              = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.cpfTitularCartao);
             dados.dataNascimentoTitularCartao   = this.dadosCartaoCredito.dataNascimentoTitularCartao;
 
-            if(Number(this.idTipoPagamentoAnualEscolhido) === 2) {
+            /*
+            if(Number(this.idTipoPlanoEscolhido) === 2) {
               dados.idPlano = 3; // plano anual parcelado
             }
+            */
 
             this.loadingPopupService.mostrarMensagemDialog('Processando pagamento....');
             return this.pagamentoCartaoCreditoSplitService.pagar(dados)
