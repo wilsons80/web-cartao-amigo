@@ -9,8 +9,13 @@
                 <input matInput maxlength="45" 
                        name="nomeUsuario" 
                        placeholder="Login" 
+                       [disabled]="isDesabilitarUsername"
                        [(ngModel)]="usuarioSistema.username" 
                        required>
+                <button mat-icon-button matSuffix (click)="isDesabilitarUsername = !isDesabilitarUsername"
+                        matTooltip="Habilita e Desabilita a edição do campo">
+                    <mat-icon>mode_edit</mat-icon>
+                </button>    
             </mat-form-field>
         
             <mat-form-field fxFlex="40%" [fxHide]="isAtualizar">

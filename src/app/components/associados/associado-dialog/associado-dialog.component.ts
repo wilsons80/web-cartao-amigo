@@ -15,6 +15,8 @@ import { switchMap, tap } from 'rxjs/operators';
 import { HistoricoPagamentoService } from 'src/app/services/historico-pagamento/historico-pagamento.service';
 import { HistoricoPagamento } from 'src/app/core/historico-pagamento';
 import { HistoricoPagamentoBuilder } from 'src/app/services/builder/historico-pagamento-builder';
+import { ProcedimentoAssociadoClinicaService } from 'src/app/services/procedimento-associado-clinica/procedimento-associado-clinica.service';
+import { ProcedimentoAssociadoClinicaDto } from 'src/app/core/procedimento-associado-clinica-dto';
 
 @Component({
   selector: 'associado-dialog',
@@ -42,11 +44,12 @@ export class AssociadoDialogComponent implements OnInit {
 
   titular: Titular;
   historicoPagamentos: HistoricoPagamento[];
-
+  procedimentos: ProcedimentoAssociadoClinicaDto[];
 
   constructor(private dataUtilService: DataUtilService,
               public titularService: TitularService,
               private historicoPagamentoService: HistoricoPagamentoService,
+              private procedimentoAssociadoClinicaService: ProcedimentoAssociadoClinicaService,
               private drc: ChangeDetectorRef,
               private loadingPopupService: LoadingPopupService,
               private historicoPagamentoBuilder: HistoricoPagamentoBuilder,
@@ -76,12 +79,18 @@ export class AssociadoDialogComponent implements OnInit {
         }),
         switchMap((titular: Titular) => {
           return this.historicoPagamentoService.getPagamentoByTitular(titular.id);
-        })
-      ).subscribe((historicoPagamento: HistoricoPagamento[]) =>{
-        this.historicoPagamentos = historicoPagamento;
-        if(!_.isEmpty(this.historicoPagamentos)) {
-          this.historicoPagamentos = this.historicoPagamentos.map(h => this.historicoPagamentoBuilder.build(h));
-        }
+        }),
+        tap((historicoPagamento: HistoricoPagamento[]) => {
+          this.historicoPagamentos = historicoPagamento;
+          if(!_.isEmpty(this.historicoPagamentos)) {
+            this.historicoPagamentos = this.historicoPagamentos.map(h => this.historicoPagamentoBuilder.build(h));
+          }
+        }),
+        switchMap(() => {
+          return this.procedimentoAssociadoClinicaService.getAllTitular(this.titular.id);
+        }),
+      ).subscribe((procedimentos: ProcedimentoAssociadoClinicaDto[]) =>{
+        this.procedimentos = procedimentos || [];
       }).add( () => this.loadingPopupService.closeDialog()  );
 
     }

@@ -18,6 +18,7 @@ import { SharedDirectivesModule } from 'src/app/directives/shared-directives.mod
 import { FormularioTitularModule } from '../common/formulario-titular/formulario-titular.module';
 import { FormularioDependenteModule } from '../common/formulario-dependente/formulario-dependente.module';
 import { FormularioHistoricoPagamentoModule } from '../common/formulario-historico-pagamento/formulario-historico-pagamento.module';
+import { FormularioConsultasRealizadasModule } from '../common/formulario-consultas-realizadas/formulario-consultas-realizadas.module';
 
 @NgModule({
   declarations: [AssociadosComponent, 
@@ -38,7 +39,8 @@ import { FormularioHistoricoPagamentoModule } from '../common/formulario-histori
     CadastroEnderecoModule,
     FormularioTitularModule,
     FormularioDependenteModule,
-    FormularioHistoricoPagamentoModule
+    FormularioHistoricoPagamentoModule,
+    FormularioConsultasRealizadasModule
   ]
 })
 export class AssociadosModule { }

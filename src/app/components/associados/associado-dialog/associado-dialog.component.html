@@ -21,6 +21,13 @@
                     <formulario-historico-pagamento [historicoPagamento]="historicoPagamentos"></formulario-historico-pagamento>
                 </div>
             </mat-tab>
+
+            <mat-tab label="Consultas Realizadas">
+                <div ngModelGroup="mgConsultasRealizadas" class="espaco">
+                    <formulario-consultas-realizadas [procedimentos]="procedimentos"></formulario-consultas-realizadas>
+                </div>
+            </mat-tab>
+
         </mat-tab-group>
     </form>
     

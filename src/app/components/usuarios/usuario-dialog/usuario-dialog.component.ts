@@ -32,6 +32,7 @@ export class UsuarioDialogComponent implements OnInit {
 
   hide = true;
   isAtualizar = false;
+  isDesabilitarUsername = true;
 
   minDate = new Date();
   usuarioLogado: UsuarioLogado;

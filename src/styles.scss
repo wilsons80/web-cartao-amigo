@@ -200,6 +200,11 @@ tr:not(th):hover {
 tr:not(th):active {
   background: #efefef;
 }
+
+/*Muda a font dos registros da table*/
+tr {
+  font-weight: 700 !important;
+}
 /*================================================================*/
 
 .fixo{
