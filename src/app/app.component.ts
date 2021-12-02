@@ -88,10 +88,6 @@ export class AppComponent {
     if(localStorage.getItem('token')) {
       localStorage.removeItem('token');
     }
-
-    if(localStorage.getItem('IDSESSIONUSUARIO')) {
-      localStorage.removeItem('IDSESSIONUSUARIO');
-    }
   }
 
 

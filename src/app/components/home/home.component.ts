@@ -158,7 +158,7 @@ export class HomeComponent implements OnInit {
   }
 
   salvarConfiguracaoAmbiente() {
-    //console.log(this.settings);    
+    
   }
 
 

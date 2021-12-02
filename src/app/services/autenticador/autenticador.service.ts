@@ -54,23 +54,13 @@ export class AutenticadorService {
     localStorage.setItem('token', authResult.token);
   }
 
-  private setIdSessaoLoginUsuario() {
-    if(localStorage.getItem('IDSESSIONUSUARIO')) {
-      localStorage.removeItem('IDSESSIONUSUARIO');
-    }
-    localStorage.setItem('IDSESSIONUSUARIO', String(Date.now()));
-  }
-
   get token(): string {
     return localStorage.getItem('token');
   }
 
   login(usuario: Usuario) {
-    this.limparDadosSessao();
-    this.setIdSessaoLoginUsuario();
+    this.limparDadosSessao();    
   
-    usuario.idsession = localStorage.getItem('IDSESSIONUSUARIO');
-
     return this.http.post(autenticadorRootPath + `login`, usuario).pipe(
       tap((usuarioLogado: UsuarioLogado) => {
         this.usuarioLogado = usuarioLogado;
@@ -87,7 +77,6 @@ export class AutenticadorService {
     localStorage.removeItem('token');
     localStorage.removeItem('logo');
     localStorage.removeItem('fotoPerfil');
-    localStorage.removeItem('IDSESSIONUSUARIO');
     this.usuarioEstaLogado = false;
   }
 
@@ -129,7 +118,6 @@ export class AutenticadorService {
       shareReplay(),
       
       catchError((error: any) => {
-        console.log(error);
         if(error.status === 504 || error.error.codigo === 401 || error.error.codigo === 407) {
           this.logout();
         }
@@ -150,7 +138,7 @@ export class AutenticadorService {
   }
 
   isLoggedIn() {
-    if(localStorage.getItem('IDSESSIONUSUARIO')) {
+    if(localStorage.getItem('token')) {
       this.usuarioEstaLogado = true;
     }
     
