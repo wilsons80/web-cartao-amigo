@@ -20,7 +20,7 @@
         </div>
 
         <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" style="padding-right: 10px;" fxFlexFill>
-            <mat-form-field fxFlex="33%" fxFlexOffset="20px" >
+            <mat-form-field fxFlex="25%" fxFlexOffset="20px" >
                 <input matInput maxlength="200" 
                        email
                        name="email" 
@@ -30,18 +30,29 @@
                 <mat-error>E-mail invalido</mat-error>
             </mat-form-field>
 
-            <mat-form-field fxFlex="33%" fxFlexOffset="20px" >
+            <mat-form-field fxFlex="20%" fxFlexOffset="20px" >
                 <input matInput
                        name="cnpj" 
                        placeholder="CNPJ" 
                        [textMask]="{mask: maskCNPJ}" 
                        [cnpjValidator]
                        [(ngModel)]="clinica.cnpj" 
-                       required>
+                       [required]="!clinica.cpf">
                 <mat-error>CNPJ invalido</mat-error>
             </mat-form-field>
 
-            <mat-form-field fxFlex="33%" fxFlexOffset="20px" >
+            <mat-form-field fxFlex="20%" fxFlexOffset="20px">
+                <input matInput 
+                       name="cpf" 
+                       placeholder="CPF"
+                       [textMask]="{mask: mascaraCpf}"
+                       [cpfValidator]
+                       [(ngModel)]="clinica.cpf" 
+                       [required]="!clinica.cnpj">
+                 <mat-error >CPF inválido</mat-error>  
+            </mat-form-field>
+
+            <mat-form-field fxFlex="35%" fxFlexOffset="20px" >
                 <input matInput
                        name="homePage" 
                        placeholder="Home page" 

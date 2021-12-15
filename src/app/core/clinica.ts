@@ -22,6 +22,7 @@ export class Clinica {
     homePage:string;           
     ativo:boolean;   
     metadados: ArquivoMetadados;     
-    dataCadastro: Date;     
+    dataCadastro: Date; 
+    cpf: string;    
                                
 }

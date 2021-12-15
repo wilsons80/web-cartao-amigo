@@ -1,14 +1,10 @@
 import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
-import { ControlContainer, NgForm } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Clinica } from 'src/app/core/clinica';
-import { PerfilAcesso } from 'src/app/core/perfil-acesso';
 import { ClinicaService } from 'src/app/services/clinica/clinica.service';
 import { LoadingPopupService } from 'src/app/services/loadingPopup/loading-popup.service';
 import { ToastService } from 'src/app/services/toast/toast.service';
-import { ClinicaBuilder } from 'src/app/services/builder/clinica-builder';
 import * as _ from 'lodash';
-import { GrupoAcesso } from 'src/app/core/grupo-acesso';
 import { ClinicaTipoEspecialidadeService } from 'src/app/services/clinica-tipo-especialidade/clinica-tipo-especialidade.service';
 import { switchMap, tap } from 'rxjs/operators';
 import { ClinicasTipoEspecialidade } from 'src/app/core/clinicas-tipo-especialidade';
@@ -25,6 +21,7 @@ import { FuncoesUteisService } from 'src/app/services/commons/funcoes-uteis.serv
 })
 export class ClinicaDialogComponent implements OnInit {
 
+  public mascaraCpf = [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/,];
   public maskCNPJ = [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/];
   public maskPhone = ['(', /[1-9]/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
   public maskCelular = ['(', /[1-9]/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
@@ -96,10 +93,11 @@ export class ClinicaDialogComponent implements OnInit {
 
   formatar() {
     this.clinica.cnpj       = this.funcoesUteisService.getApenasNumeros(this.clinica.cnpj);
+    this.clinica.cpf        = this.funcoesUteisService.getApenasNumeros(this.clinica.cpf);
     this.clinica.cep        = this.funcoesUteisService.getApenasNumeros(this.clinica.cep);
     this.clinica.telefone01 = this.clinica.telefone01 ? this.funcoesUteisService.getApenasNumeros(this.clinica.telefone01) : '';
     this.clinica.telefone02 = this.clinica.telefone02 ? this.funcoesUteisService.getApenasNumeros(this.clinica.telefone02) : '';
-    this.clinica.celular    = this.clinica.celular ? this.funcoesUteisService.getApenasNumeros(this.clinica.celular) : '';
+    this.clinica.celular    = this.clinica.celular    ? this.funcoesUteisService.getApenasNumeros(this.clinica.celular) : '';
   }
 
   private cadastrar(){
