@@ -6,5 +6,6 @@ export class TipoPlano {
 	quantidadeParcelas: number;
 	quantidadeDiasVigencia: number;
 	ativo: boolean;
+	idPlanoPagarme: string;
 }
 	

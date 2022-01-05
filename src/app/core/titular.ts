@@ -10,4 +10,5 @@ export class Titular {
 	codigoCorretor: string;
 	senha?:string;
 	senhaConfirmada?:string;
+	idClientePagarMe:string;
 }

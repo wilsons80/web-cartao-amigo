@@ -7,7 +7,7 @@
                     class="mat-elevation-z6 w-100 mt-3"
                     (click)="iniciarPagamentoAssinatura()"
                     style="margin-top: 30px; border-radius: 10px;">
-               INICIAR PAGAMENTO
+               INICIAR ASSINATURA
             </button>
         </div>
     </div>
@@ -18,13 +18,13 @@
                  #renovarAssinatura="ngModelGroup" fxFlex="100" 
                  style="background: white; padding: 0px; border-radius: 15px;">   
                 
-                <mat-horizontal-stepper *ngIf="!retornoPagamento?.statusTransacao" linear #stepper style="border-radius: 15px;">            
+                <mat-horizontal-stepper *ngIf="!retornoPagamento?.status" linear #stepper style="border-radius: 15px;">            
                     <mat-step [stepControl]="formularioEtapa2" errorMessage="Escolha o tipo de plano">
                         <div ngModelGroup="formularioEtapa2" #formularioEtapa2="ngModelGroup">
                             <ng-template matStepLabel></ng-template>
                             <div  style="margin-bottom: 13px;">
                                 <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
-                                    <span style="font-size: 20px; font-weight: bold; color: #f95f00;">Qual plano combina mais com você?</span>    
+                                    <span style="font-size: 20px; font-weight: bold; color: #f95f00;">Seleciona o plano da assinatura ?</span>    
                                     <span style="font-size: 10px;">Permite até 4 dependentes inteiramente grátis</span>
                                 </div>                            
         
@@ -39,7 +39,8 @@
                                                     fxLayout.xs="column"
                                                     fxLayoutAlign="center center">
 
-                                        <div fxFlex="50%" fxFlex.xs="90%" fxLayoutAlign="center center" 
+                                        <div *ngIf="false" 
+                                             fxFlex="50%" fxFlex.xs="90%" fxLayoutAlign="center center" 
                                             [ngStyle.xs]="{'width.%': 100}"
                                             (click)="getPlanoEscolhido(1)"
                                             fxLayout="column">
@@ -59,19 +60,19 @@
                                         <div fxFlex="50%" fxFlex.xs="90%" fxLayoutAlign="center center"
                                             [ngStyle]="{'padding-left.px': 10}" 
                                             [ngStyle.xs]="{'width.%': 100, 'padding-top.px': 10}"
-                                            (click)="getPlanoEscolhido(3)"
+                                            (click)="getPlanoEscolhido(4)"
                                             fxLayout="column">
 
                                             <div fxLayout="column" fxLayoutAlign="center center"
                                                 style="cursor: pointer; border: 0.66px solid #f95f00; border-radius: 15px;">
-                                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Opção 2: Plano Anual</span> </div>
-                                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">R$ 358,80 (12 x 29,90)</span></div>
+                                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Assinatura recorrente</span> </div>
+                                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">R$ 29,90 mensal</span></div>
                                                 <div style="width: 80%" fxLayoutAlign="center center">
                                                     <img [src]='getImagemPlanoMensal()' style="width: 60%;">
                                                 </div>
                                             </div>
 
-                                            <mat-radio-button style="padding-top: 3px;" value="3" fxLayoutAlign="center center">Eu quero</mat-radio-button>
+                                            <mat-radio-button style="padding-top: 3px;" value="4" fxLayoutAlign="center center">Eu quero</mat-radio-button>
                                         </div>                                     
 
                                     </mat-radio-group>
@@ -99,7 +100,6 @@
                                         <div fxFlex="100%" 
                                             fxLayoutAlign="center center"                                          
                                             (click)="tipoPagamentoEscolhido(1)"
-                                            *ngIf="idTipoPlanoEscolhido === '1'"
                                             fxLayout="column">
 
                                             <div fxLayout="row" fxLayoutAlign="center center"
@@ -176,11 +176,8 @@
                                 </div>                        
             
                                 <div fxLayout="row" fxLayoutAlign="center center"  style="padding-bottom: 15px;">                                
-                                    <div fxFlex="100%" [ngStyle]="{'padding-left.px': 10}" *ngIf="idTipoPlanoEscolhido === '1'">
-                                        <label value="1" fxLayoutAlign="center center">À vista (R$ 249,90)</label>
-                                    </div>
-                                    <div fxFlex="100%" [ngStyle]="{'padding-left.px': 10}" *ngIf="idTipoPlanoEscolhido === '3'">
-                                        <label value="3" fxLayoutAlign="center center">R$ 358,80 em 12x R$ 29,90</label>
+                                    <div fxFlex="100%" [ngStyle]="{'padding-left.px': 10}">
+                                        <label value="3" fxLayoutAlign="center center">R$ 29,90 mensal</label>
                                     </div>
                                 </div>
                                                             
@@ -238,7 +235,6 @@
                                                 name="numeroCartao" 
                                                 required
                                                 [textMask]="{mask: maskCartao}"
-                                                (blur)="buscaBandeira()"
                                                 [(ngModel)]="dadosCartaoCredito.numeroCartao" 
                                                 placeholder="Número do Cartão">                    
                                             <mat-error>Número inválido</mat-error>
@@ -324,12 +320,12 @@
                                 </div>   
                                 
                                 <!-- plano escolhido -->
-                                <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPlanoEscolhido === '1'">
-                                    <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Plano Anual de R$ 249,90</span> </div>
+                                <div fxLayout="column" fxLayoutAlign="center center">
+                                    <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Assinatura recorrente</span> </div>
                                 </div>
 
-                                <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPlanoEscolhido === '3'">
-                                    <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Plano Anual de R$ 358,80</span> </div>
+                                <div fxLayout="column" fxLayoutAlign="center center" >
+                                    <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">R$ 29,90 por mês</span> </div>
                                 </div>                            
 
                                 <!-- Método de pagamento -->
@@ -341,16 +337,6 @@
                                         <div><span>Cartão de Crédito</span></div>  
                                     </div>
                                 </div>
-
-                                <!-- forma de pagamento -->
-                                <div style="font-size: 10px; font-weight: bold; color: #f95f00; padding-top: 10px;">
-                                    <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '1'">
-                                        <div><span>À vista</span></div>
-                                    </div>                            
-                                    <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '2'">
-                                        <div><span>Parcelado em 12 x R$ 29,90</span></div>  
-                                    </div>
-                                </div>                                
 
                                 <div fxLayout="column" fxLayoutAlign="center center" *ngIf="codigoCupom" style="padding-top: 10px;">
                                     <div><span style="font-size: 10px; font-weight: bold; color: #08003c;">O Voucher possui um desconto de {{valorVoucher}}% no valor do plano escolhido.</span> </div>
@@ -422,7 +408,7 @@
 
                 </mat-horizontal-stepper>
         
-                <div *ngIf="retornoPagamento?.statusTransacao" style="border-radius: 15px;">
+                <div *ngIf="retornoPagamento?.status" style="border-radius: 15px;">
                     <div fxLayout="row" fxLayoutAlign="center center" style="padding-top: 20px;">
                         <span style="font-size: 20px; font-weight: bold; color: #f95f00;">Obrigado!</span>    
                     </div>
@@ -447,7 +433,7 @@
                     <div fxLayout="row" fxLayoutAlign="center center" style="padding-bottom: 60px;">
                         <span style="font-size: 20px; font-weight: bold; color: #f95f00;">
                             <span style="font-size: 20px; font-weight: bold; color: #08003c;">
-                                Seu pagamento está: <span style="font-size: 20px; font-weight: bold; color: #f95f00;">{{retornoPagamento.descricaoStatusTransacao}}</span>    
+                                Sua assinatura está: <span style="font-size: 20px; font-weight: bold; color: #f95f00;">{{retornoPagamento.descricaoStatusTransacao}}</span>    
                             </span>
                         </span>    
                     </div>
@@ -459,7 +445,7 @@
                                 class="mat-elevation-z6 w-100 mt-3"
                                 (click)="novoPagamento()"
                                 style="margin-top: 30px; border-radius: 10px;">
-                        NOVO PAGAMENTO
+                        NOVA ASSINATURA
                         </button>
                     </div>
                 </div>
