@@ -21,4 +21,5 @@ export enum Rotas {
     CORRETOR                        = 'api/corretores/',
     AUTORIZACAO_GATEWAY             = 'api/pagseguro/split/autorizacao/',
     PROCEDIMENTO_ASSOCIADO_CLINICA  = 'api/procedimentos/',
+    ASSINATURAS                     = 'api/assinaturas/',
 }

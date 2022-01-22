@@ -12,6 +12,8 @@ import { AssinaturaPlanoRecorrenciaPagarmeService } from 'src/app/services/pagar
 import * as _ from 'lodash';
 import { HistoricoPagamentoService } from 'src/app/services/historico-pagamento/historico-pagamento.service';
 import { switchMap, tap } from 'rxjs/operators';
+import { Assinaturas } from 'src/app/core/assinaturas';
+import { HistoricoPagamentoBuilder } from 'src/app/services/builder/historico-pagamento-builder';
 
 @Component({
   selector: 'formulario-historico-pagamento',
@@ -26,6 +28,7 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
 
   @Input() historicoPagamento: HistoricoPagamento[];
   @Input() ocultarColunas = false;
+  @Input() assinaturaAtiva:Assinaturas;
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -37,14 +40,14 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
   displayedColumns: string[] = [];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   msg: string;
-
-  assinaturaPassivelDeCancelamento:HistoricoPagamento;
+  
   
   constructor(private dataUtilService: DataUtilService,
               changeDetectorRef: ChangeDetectorRef,
               private toastService: ToastService,
               private dialog: MatDialog,
               private historicoPagamentoService: HistoricoPagamentoService,
+              private historicoPagamentoBuilder: HistoricoPagamentoBuilder,
               private assinaturaPlanoRecorrenciaPagarmeService: AssinaturaPlanoRecorrenciaPagarmeService,
               media: MediaMatcher,
               private drc: ChangeDetectorRef,) {
@@ -85,10 +88,6 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
     this.dataSource.data      = this.historicoPagamento;
     this.dataSource.sort      = this.sort;  
     this.mostrarTabela        = true; 
-
-    if(!_.isEmpty(this.historicoPagamento)){
-      this.assinaturaPassivelDeCancelamento = this.historicoPagamento.find(h => h.tipoPlano.ativo && h.tipoPlano.isRecorrencia);
-    }
   }
 
   ngAfterViewInit() {
@@ -105,14 +104,14 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
   }
 
   isHabilitaBotaoCancelarAssinatura(){
-    return !!this.assinaturaPassivelDeCancelamento;
+    return !!this.assinaturaAtiva;
   }
 
   cancelarAssinatura(){
-    this.chamaCaixaDialogoCancelarAssinatura(this.assinaturaPassivelDeCancelamento);
+    this.chamaCaixaDialogoCancelarAssinatura(this.assinaturaAtiva);
   }
 
-  private chamaCaixaDialogoCancelarAssinatura(historicoPagamento: HistoricoPagamento) {
+  private chamaCaixaDialogoCancelarAssinatura(assinaturaAtiva: Assinaturas) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
       pergunta: 'Deseja realmente cancelar sua assinatura ?',
@@ -123,17 +122,21 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(confirma => {
       if (confirma) {
-        this.assinaturaPlanoRecorrenciaPagarmeService.cancelarAssinatura(historicoPagamento.numeroTransacaoGatewayPagamento)
+        this.assinaturaPlanoRecorrenciaPagarmeService.cancelarAssinatura(assinaturaAtiva.codigoAssinatura)
         .pipe(
           switchMap(() => {
-            return this.historicoPagamentoService.getPagamentoByTitular(historicoPagamento.titular.id);
+            return this.historicoPagamentoService.getPagamentoByTitular(assinaturaAtiva.idTitular);
           }),
           tap((historicoPagamento: HistoricoPagamento[]) => {
-            this.historicoPagamento = historicoPagamento;
-          })
+            this.historicoPagamento = historicoPagamento || [];
+            if(!_.isEmpty(this.historicoPagamento)) {
+              this.historicoPagamento = this.historicoPagamento.map(h => this.historicoPagamentoBuilder.build(h));
+            }
+          }),
         )
         .subscribe(() => {
             this.toastService.showSucesso('Assinatura cancelada com sucesso.');
+            this.assinaturaAtiva = null;
             this.carregarListaHistoricoPagamento();
         })
       } else {

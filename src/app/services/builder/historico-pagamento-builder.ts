@@ -24,6 +24,7 @@ export class HistoricoPagamentoBuilder  {
     tela.formaPagamento                  = historicoPagamentoTO.formaPagamento.descricao;
     tela.valorPago                       = historicoPagamentoTO.valorPago || 0;
     tela.valorCorretor                   = historicoPagamentoTO.valorCorretor || 0;
+    tela.titular                         = historicoPagamentoTO.titular;
     return tela;
   }
 

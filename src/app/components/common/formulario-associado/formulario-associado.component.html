@@ -21,7 +21,7 @@
 
             <mat-horizontal-stepper #associado *ngIf="!retornoPagamento?.status" 
                                     linear #stepper style="border-radius: 15px; font-size: 11px;">
-                <mat-step *ngIf="false" [stepControl]="formularioEtapa1" errorMessage="Preencha todos os campos obrigatórios">
+                <mat-step [stepControl]="formularioEtapa1" errorMessage="Preencha todos os campos obrigatórios">
                     <div ngModelGroup="formularioEtapa1" #formularioEtapa1="ngModelGroup" >
                         <ng-template matStepLabel></ng-template>
 
@@ -147,7 +147,7 @@
                     </div>
                 </mat-step>
 
-                <mat-step *ngIf="false" [stepControl]="formularioEndereco" errorMessage="Preencha todos os campos obrigatórios">
+                <mat-step [stepControl]="formularioEndereco" errorMessage="Preencha todos os campos obrigatórios">
                     <div ngModelGroup="formularioEndereco" #formularioEndereco="ngModelGroup">
                         <ng-template matStepLabel></ng-template>
                             
@@ -311,7 +311,7 @@
                 </mat-step>
             
                 <!-- Escolha do plano e do tipo de pagamento -->
-                <mat-step [stepControl]="formularioEtapa2" *ngIf="true || isTitularNovoNoSistema" errorMessage="Escolha o tipo de plano">
+                <mat-step [stepControl]="formularioEtapa2" *ngIf="isTitularNovoNoSistema" errorMessage="Escolha o tipo de plano">
                     <div ngModelGroup="formularioEtapa2" #formularioEtapa2="ngModelGroup">
                         <ng-template matStepLabel></ng-template>
                         <div fxLayout="column" style="margin-bottom: 13px;" >

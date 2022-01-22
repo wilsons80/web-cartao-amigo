@@ -23,6 +23,8 @@ import { AutenticadorService } from 'src/app/services/autenticador/autenticador.
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ProcedimentoAssociadoClinicaService } from 'src/app/services/procedimento-associado-clinica/procedimento-associado-clinica.service';
 import { ProcedimentoAssociadoClinicaDto } from 'src/app/core/procedimento-associado-clinica-dto';
+import { AssinaturasService } from 'src/app/services/assinaturas/assinaturas.service';
+import { Assinaturas } from 'src/app/core/assinaturas';
 
 
 @Component({
@@ -50,6 +52,7 @@ export class MinhaContaComponent implements OnInit {
   titular: Titular;
   historicoPagamentos: HistoricoPagamento[];
   procedimentos: ProcedimentoAssociadoClinicaDto[];
+  assinaturaAtiva:Assinaturas;
 
   sim_nao: any[] = [
     {tipo: 'Sim', flag: 'S'},
@@ -76,6 +79,7 @@ export class MinhaContaComponent implements OnInit {
               private historicoPagamentoBuilder: HistoricoPagamentoBuilder,
               private toastService: ToastService,
               public sessaoService: SessaoService,
+              private assinaturasService: AssinaturasService,
               private procedimentoAssociadoClinicaService: ProcedimentoAssociadoClinicaService,
               public autenticadorService: AutenticadorService,
               private funcoesUteisService: FuncoesUteisService) {
@@ -193,7 +197,16 @@ export class MinhaContaComponent implements OnInit {
   private onCarregarHistoricoPagamento() {
     if(this.titular?.id) {
       this.loadingPopupService.mostrarMensagemDialog('Aguarde....');
-      this.historicoPagamentoService.getPagamentoByTitular(this.titular.id)
+
+      this.assinaturasService.getAssinaturaAtivaDoTitular(this.titular?.id)
+      .pipe(
+        tap((assinaturaAtiva: Assinaturas) => {
+          this.assinaturaAtiva = assinaturaAtiva;
+        }),
+        switchMap(() => {
+          return this.historicoPagamentoService.getPagamentoByTitular(this.titular.id)
+        }),
+      )
       .subscribe((historicoPagamento: HistoricoPagamento[]) => {
         this.historicoPagamentos = historicoPagamento || [];
         if(!_.isEmpty(this.historicoPagamentos)) {

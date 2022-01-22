@@ -31,8 +31,8 @@ export class AssinaturaPlanoRecorrenciaPagarmeService {
     return this.http.post(`${path}criar/boleto`, parans);
   }
 
-  cancelarAssinatura(idAssinatura: string){
-	  return this.http.delete(`${path}${idAssinatura}`);
+  cancelarAssinatura(codigoAssinaturaPagarme: string){
+	  return this.http.delete(`${path}${codigoAssinaturaPagarme}`);
   }
 
   listarAssinaturasCliente(idCliente: string){
