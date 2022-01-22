@@ -1,3 +1,10 @@
+<button mat-button class="botaoCancelarAssinatura"
+       (click)="cancelarAssinatura()" 
+       *ngIf="isHabilitaBotaoCancelarAssinatura()"
+       title="Cancela a assinatura vigente">
+    Cancelar Assinatura
+</button>
+
 <mat-table [hidden]="!mostrarTabela" 
                  [dataSource]="dataSource" 
                  class="mat-elevation-z6"
@@ -10,7 +17,7 @@
 
     <ng-container matColumnDef="tipoPlano">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Plano</mat-header-cell>
-        <mat-cell *matCellDef="let element" data-label="Plano">{{element.tipoPlano}}</mat-cell>
+        <mat-cell *matCellDef="let element" data-label="Plano">{{element.tipoPlano.descricao}}</mat-cell>
     </ng-container>    
     
     <ng-container matColumnDef="valorPago">

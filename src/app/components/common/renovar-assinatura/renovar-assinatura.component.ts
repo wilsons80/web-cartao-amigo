@@ -95,8 +95,6 @@ export class RenovarAssinaturaComponent implements OnInit {
   idTipoPlanoEscolhido          = "";
   idTipoPagamentoEscolhido      = null;
 
-  senderHash: string;
-
   iniciarPagamento = false;
 
   isPodeUtilizarVoucherNoPagamento = true;
@@ -107,17 +105,10 @@ export class RenovarAssinaturaComponent implements OnInit {
 
   codigoCorretor: string;
   codigoCupom: string;
-  pagamentoCR: CheckoutTransparenteCartaoCredito;
   dadosCartaoCredito: DadosCartaoCredito;
 
-  pagamentoBoleto: CheckoutTransparenteBoleto;
-  dadosBoleto: any;
 
   retornoPagamento: any;
-
-  // Dados para realizar o pagamento com CARTÃO DE CRÉDITO
-  idSessao: string;
-  binTO: any;
 
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
@@ -140,18 +131,9 @@ export class RenovarAssinaturaComponent implements OnInit {
               private tipoPlanoService: TipoPlanoService,
               private enderecoService: EnderecoService,
 
-              //PAGAR.ME
               private assinaturaPlanoRecorrenciaPagarmeService: AssinaturaPlanoRecorrenciaPagarmeService,
               private cartaoClienteRecorrenciaPagarmeService: CartaoClienteRecorrenciaPagarmeService,
-              private clienteRecorrenciaPagarmeService: ClienteRecorrenciaPagarmeService,
               private notificacaoTransacaoRecorrenciaPagarmeService: NotificacaoTransacaoRecorrenciaPagarmeService,
-              
-              //PAGSEGURO
-              //private bandeiraSplitService: BandeiraSplitService,
-              //private pagamentoCartaoCreditoSplitService: PagamentoCartaoCreditoSplitService,
-              //private pagamentoBoletoSplitService: PagamentoBoletoSplitService,
-              //private tokenCartaoSplitService: TokenCartaoSplitService,
-              //private notificacaoTransacalSplitService: NotificacaoTransacalSplitService,
               
               private voucherService: VoucherService
               ) {
@@ -165,8 +147,6 @@ export class RenovarAssinaturaComponent implements OnInit {
 
   ngOnInit() {
     this.planoEscolhido = new TipoPlano();
-
-    this.pagamentoCR        = new CheckoutTransparenteCartaoCredito();
     this.dadosCartaoCredito = new DadosCartaoCredito();
     this.retornoPagamento   = new RetornoPagamento();    
 
@@ -207,43 +187,6 @@ export class RenovarAssinaturaComponent implements OnInit {
 
   onMascaraDataInput(event) {
     return this.dataUtilService.onMascaraDataInput(event);
-  }
-
-/*
-  buscaBandeira() {
-    if(!this.dadosCartaoCredito.numeroCartao) {
-      this.toastService.showAlerta('Informe os 16 dígitos do cartão de crédito.');
-      return;
-    }
-
-    const numeroCartao = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.numeroCartao);
-    if(!numeroCartao || numeroCartao.length != 16) {
-      this.toastService.showAlerta('O número do cartão deve ter 16 dígitos.');
-      return;
-    }
-
-    const binCartao = numeroCartao.substring(0,6);
-    this.bandeiraSplitService.get(this.idSessao, binCartao).subscribe((bandeira: any) => {
-      if(bandeira.bin.statusMessage === 'Error') {
-        this.toastService.showAlerta('O número do cartão está inválido.');
-      } else {
-        this.binTO = bandeira;
-      }
-    });
-  }
-*/
-
-  private preencherParansTokenCartao(): ParansTokenCartao {
-    const parans = new ParansTokenCartao();
-    parans.idSessao            = this.idSessao;
-    parans.valor               = this.planoEscolhido.valor;
-    parans.numeroCartao        = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.numeroCartao);
-    parans.bandeiraCartao      = this.binTO?.bin?.brand?.name;
-    parans.cvv                 = this.dadosCartaoCredito.cvv;
-    parans.mesVencimentoCartao = this.dadosCartaoCredito.mesValidade;
-    parans.anoVencimentoCartao = this.dadosCartaoCredito.anoValidade;
-
-    return parans;
   }
   
   realizarPagamentoBoleto() {
@@ -293,62 +236,6 @@ export class RenovarAssinaturaComponent implements OnInit {
       BroadcastEventService.get('PAGAMENTO_REALIZADO').emit(true);
       this.loadingPopupService.closeDialog();
     }).add( () => this.loadingPopupService.closeDialog() );    
-
-
-    /*
-    return PagSeguroDirectPayment.onSenderHashReady(
-      response => {
-        if(!response || response.status == 'error') {
-          this.toastService.showAlerta('Erro ao recuperar o sender hash, o pagamento não será realizado.');
-          return false;
-        }
-        this.senderHash = response.senderHash;
-
-        const dados = new CheckoutTransparenteBoleto();
-        dados.idPlano         = Number(this.idTipoPlanoEscolhido);
-        dados.cpfComprador    = this.funcoesUteisService.getApenasNumeros(this.titular.pessoaFisica.cpf);
-        dados.codigoCorretor  = this.codigoCorretor;
-        dados.senderHash      = this.senderHash;
-        dados.voucher         = this.codigoCupom
-
-        this.loadingPopupService.mostrarMensagemDialog('Processando pagamento....');
-        return this.pagamentoBoletoSplitService.pagar(dados).pipe(
-            catchError((retornoPagamento: RetornoPagamento) => {
-              this.loadingPopupService.closeDialog();
-              return of(null);
-            }),
-            tap((retornoPagamento: RetornoPagamento) => {
-              this.abrirBoleto(retornoPagamento);
-              this.retornoPagamento = retornoPagamento;
-            }),
-            switchMap((retornoPagamento: RetornoPagamento) => {
-              if(retornoPagamento && !_.isEmpty(retornoPagamento.codigoTransacao)) {
-                return this.notificacaoTransacalSplitService.buscarDadosNotificacao(retornoPagamento.codigoTransacao);
-              } else {
-                return new Observable(obs => obs.next()); 
-              }            
-            }),
-
-        ).subscribe((retornoNotificacao: NotificacaoTransacao) => {
-          if(retornoNotificacao && retornoNotificacao.status) {
-            this.retornoPagamento.status                   = String(retornoNotificacao.status.codigoTransacao);
-            this.retornoPagamento.descricaoStatusTransacao = retornoNotificacao.status.descricao;
-
-            this.historicoPagamentoService.getPagamentoByTitular(this.titular.id)
-            .subscribe((historicoPagamento: HistoricoPagamento[]) =>{
-              this.historicoPagamentos = historicoPagamento || [];
-              if(!_.isEmpty(this.historicoPagamentos)) {
-                this.historicoPagamentos = this.historicoPagamentos.map(h => this.historicoPagamentoBuilder.build(h));
-              }
-            });
-          }
-          
-          BroadcastEventService.get('PAGAMENTO_REALIZADO').emit(true);
-          this.loadingPopupService.closeDialog();
-        }).add( () => this.loadingPopupService.closeDialog() );        
-      }
-    )
-    */
 
   }
 
@@ -451,72 +338,8 @@ export class RenovarAssinaturaComponent implements OnInit {
 
       BroadcastEventService.get('PAGAMENTO_REALIZADO').emit(true);
       this.loadingPopupService.closeDialog();
-    }).add( () => this.loadingPopupService.closeDialog() );  ;
-   
-    /*
-    return PagSeguroDirectPayment.onSenderHashReady(
-      response => {
-        if(!response || response.status == 'error') {
-          this.toastService.showAlerta('Erro ao recuperar o sender hash, o pagamento não será realizado.');
-          return false;
-        }
-        this.senderHash = response.senderHash;
-
-        const parans = this.preencherParansTokenCartao();
-        this.tokenCartaoSplitService.get(parans)
-        .pipe(
-          switchMap((tokenCartao: any) => {
-            const dados = new CheckoutTransparenteCartaoCredito();
-            dados.idPlano                       = Number(this.idTipoPlanoEscolhido);
-            dados.cpfComprador                  = this.funcoesUteisService.getApenasNumeros(this.titular.pessoaFisica.cpf);
-            dados.codigoCorretor                = this.codigoCorretor;
-            dados.senderHash                    = this.senderHash;
-            dados.tokenCartaoCredito            = tokenCartao.token;
-            dados.voucher                       = this.codigoCupom
-            dados.idSessao                      = this.idSessao;
-            dados.bandeiraCartao                = parans.bandeiraCartao;
-            dados.nomeImpressoCartao            = this.dadosCartaoCredito.nomeImpressoCartao;
-            dados.cpfTitularCartao              = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.cpfTitularCartao);
-            dados.dataNascimentoTitularCartao   = this.dadosCartaoCredito.dataNascimentoTitularCartao;
-            
-            this.loadingPopupService.mostrarMensagemDialog('Processando pagamento....');
-            return this.pagamentoCartaoCreditoSplitService.pagar(dados)
-                .pipe(
-                  catchError((retornoPagamento: RetornoPagamento) => {
-                  this.loadingPopupService.closeDialog();
-                  return of(null);
-                }));
-          }),
-          tap((retornoPagamento: RetornoPagamento) => {
-            this.retornoPagamento = retornoPagamento;
-          }),
-          switchMap((retornoPagamento: RetornoPagamento) => {
-            if(retornoPagamento && !_.isEmpty(retornoPagamento.codigoTransacao)) {
-              return this.notificacaoTransacalSplitService.buscarDadosNotificacao(retornoPagamento.codigoTransacao);
-            } else {
-              return new Observable(obs => obs.next()); 
-            }            
-          }),
-        ).subscribe((retornoNotificacao: NotificacaoTransacao) => {
-          if(retornoNotificacao && retornoNotificacao.status) {
-            this.retornoPagamento.statusTransacao          = String(retornoNotificacao.status.codigoTransacao);
-            this.retornoPagamento.descricaoStatusTransacao = retornoNotificacao.status.descricao;
-
-            this.historicoPagamentoService.getPagamentoByTitular(this.titular.id)
-            .subscribe((historicoPagamento: HistoricoPagamento[]) =>{
-              this.historicoPagamentos = historicoPagamento || [];
-              if(!_.isEmpty(this.historicoPagamentos)) {
-                this.historicoPagamentos = this.historicoPagamentos.map(h => this.historicoPagamentoBuilder.build(h));
-              }
-            });            
-          }
-          
-          BroadcastEventService.get('PAGAMENTO_REALIZADO').emit(true);
-          this.loadingPopupService.closeDialog();
-        }).add( () => this.loadingPopupService.closeDialog() );        
-      }
-    );
-    */
+    }).add( () => this.loadingPopupService.closeDialog() );
+    
   }
 
   private abrirBoleto(retornoPagamento: RetornoPagamento) {
@@ -532,19 +355,11 @@ export class RenovarAssinaturaComponent implements OnInit {
 
   tipoPagamentoEscolhido(tipo) {
     this.idTipoPagamentoEscolhido = String(tipo);
-
-    // cartão de crédito
-    if(this.idTipoPagamentoEscolhido === "2") {
-      this.pagamentoCR = new CheckoutTransparenteCartaoCredito();
-    }
-
-    // boleto
-    if(this.idTipoPagamentoEscolhido === "1") {
-      this.pagamentoCR = new CheckoutTransparenteCartaoCredito();
-    }
-
   }
 
+  carregarTipoPagamentoEscolhido($event){
+    this.idTipoPagamentoEscolhido = $event.value;
+  }
 
   getLogoCartaoAmigo() {
     return '../../../assets/imagens/LOGO_CARTAO_AMIGO-V2.2.jpg';
@@ -578,9 +393,6 @@ export class RenovarAssinaturaComponent implements OnInit {
     this.idTipoPlanoEscolhido = $event.value;
   }
 
-  carregarTipoPagamentoEscolhido($event){
-    this.idTipoPagamentoEscolhido = $event.value;
-  }
 
   private getTipoBrowser(){
     var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
@@ -641,7 +453,6 @@ export class RenovarAssinaturaComponent implements OnInit {
     this.idTipoPagamentoEscolhido      = null;
     this.aceitoAssinatiraCartaoAmigo   = false;
   }
-
 
 
   isEtapaPreenchimentoDadosCartao(){

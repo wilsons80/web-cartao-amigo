@@ -7,5 +7,6 @@ export class TipoPlano {
 	quantidadeDiasVigencia: number;
 	ativo: boolean;
 	idPlanoPagarme: string;
+	isRecorrencia: boolean;
 }
 	

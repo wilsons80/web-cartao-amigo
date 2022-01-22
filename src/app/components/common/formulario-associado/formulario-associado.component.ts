@@ -9,22 +9,14 @@ import { FuncoesUteisService } from 'src/app/services/commons/funcoes-uteis.serv
 import { ContaAssociadoService } from 'src/app/services/conta-associado/conta-associado.service';
 import { LoadingPopupService } from 'src/app/services/loadingPopup/loading-popup.service';
 import { CheckoutTransparenteBoleto} from 'src/app/services/pagseguro/split/pagamento-boleto-split.service';
-import { CheckoutTransparenteCartaoCredito } from 'src/app/services/pagseguro/split/pagamento-cartao-credito-split.service';
 import { ToastService } from 'src/app/services/toast/toast.service';
-import { SessaoSplitService } from 'src/app/services/pagseguro/split/sessao-split.service';
-import { NotificacaoTransacalSplitService } from 'src/app/services/pagseguro/split/notificacao-transacao-split.service';
-import { BandeiraSplitService } from 'src/app/services/pagseguro/split/bandeira-split.service';
 import { catchError, finalize, switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { PagamentoBoletoSplitService } from 'src/app/services/pagseguro/split/pagamento-boleto-split.service';
-import { PagamentoCartaoCreditoSplitService } from 'src/app/services/pagseguro/split/pagamento-cartao-credito-split.service';
-import { ParansTokenCartao, TokenCartaoSplitService } from 'src/app/services/pagseguro/split/token-cartao-split.service';
 import { TipoPlanoService } from 'src/app/services/tipo-plano/tipo-plano.service';
 import { TipoPlano } from 'src/app/core/tipo-plano';
 import { RetornoPagamento } from 'src/app/services/pagseguro/retorno-pagamento';
 import { NotificacaoTransacao } from 'src/app/services/pagseguro/notificacao-transacao';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TitularService } from 'src/app/services/titular/titular.service';
 import { EnderecoService } from 'src/app/services/endereco/endereco.service';
 import { DataUtilService } from 'src/app/services/commons/data-util.service';
 import * as _ from 'lodash';
@@ -34,6 +26,14 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { VoucherService } from 'src/app/services/voucher/voucher.service';
 import { CorretorService } from 'src/app/services/corretor/corretor.service';
 import { Corretor } from 'src/app/core/corretor';
+import { AssinaturaPlanoRecorrenciaPagarmeService, NovaAssinaturaPlano } from 'src/app/services/pagarme/recorrencia/assinatura-plano-recorrencia-pagarme.service';
+import { CartaoClienteRecorrenciaPagarmeService } from 'src/app/services/pagarme/recorrencia/cartao-cliente-recorrencia-pagarme.service';
+import { NotificacaoTransacaoRecorrenciaPagarmeService } from 'src/app/services/pagarme/recorrencia/notificacao-transacao-recorrencia-pagarme.service';
+import { CartaoClientePagarme } from 'src/app/services/pagarme/cartao-cliente-pagarme';
+import { ParansTokenCartaoPagarme } from 'src/app/services/pagarme/parans-token-cartao-pagarme';
+import { ClientePagarme } from 'src/app/services/pagarme/cliente-pagarme';
+import { CriarCartaoCliente } from 'src/app/services/pagarme/criar-cartao-cliente';
+import { ListaCartaoClientePagarme } from 'src/app/services/pagarme/lista-cartao-cliente-pagarme';
 
 class DadosCartaoCredito {
    numeroCartao: string;
@@ -45,7 +45,6 @@ class DadosCartaoCredito {
    dataNascimentoTitularCartao: Date; 
 }
 
-declare var PagSeguroDirectPayment: any;
 declare var window: any;
 declare var document: any;
 declare var InstallTrigger: any;
@@ -87,38 +86,22 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
   public settings: Settings;
   
   tipoPlanos: TipoPlano[] = [];
-
   planoEscolhido: TipoPlano;
   idTipoPlanoEscolhido          = "";
-  idTipoPagamentoEscolhido      = "";
-  senderHash: string;
+  idTipoPagamentoEscolhido      = null;
 
   isPodeUtilizarVoucherNoPagamento = true;
   isVoucher100Porcento = true;
   valorVoucher = null;
 
-  planoAnual: TipoPlano;
-  planoMensal: TipoPlano;
-
   aceitoAssinatiraCartaoAmigo = false;
-
-  idPlanoAnual = 1;
-  idPlanoMensal = 2;
 
   isInformarCodigoCorretor = true;
   codigoCorretor: string;
   codigoCupom: string;
-  pagamentoCR: CheckoutTransparenteCartaoCredito;
   dadosCartaoCredito: DadosCartaoCredito;
 
-  pagamentoBoleto: CheckoutTransparenteBoleto;
-  dadosBoleto: any;
-
-  retornoPagamento: RetornoPagamento;
-
-  // Dados para realizar o pagamento com CARTÃO DE CRÉDITO
-  idSessao: string;
-  binTO: any;
+  retornoPagamento: any;
 
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
@@ -135,18 +118,17 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
     private loadingPopupService: LoadingPopupService,
     private dataUtilService: DataUtilService,
     private contaAssociadoService: ContaAssociadoService,
-    private notificacaoTransacalSplitService: NotificacaoTransacalSplitService,
     private funcoesUteisService: FuncoesUteisService,
     private drc: ChangeDetectorRef,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
     private dialog: MatDialog,
     private tipoPlanoService: TipoPlanoService,
-    private sessaoSplitService: SessaoSplitService,
-    private bandeiraSplitService: BandeiraSplitService,
-    private pagamentoCartaoCreditoSplitService: PagamentoCartaoCreditoSplitService,
-    private pagamentoBoletoSplitService: PagamentoBoletoSplitService,
-    private tokenCartaoSplitService: TokenCartaoSplitService,
+
+    private assinaturaPlanoRecorrenciaPagarmeService: AssinaturaPlanoRecorrenciaPagarmeService,
+    private cartaoClienteRecorrenciaPagarmeService: CartaoClienteRecorrenciaPagarmeService,
+    private notificacaoTransacaoRecorrenciaPagarmeService: NotificacaoTransacaoRecorrenciaPagarmeService,
+
     private enderecoService: EnderecoService,
     private dependenteTitularService: DependenteTitularService,
     private voucherService: VoucherService,
@@ -162,9 +144,7 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
 
   ngOnInit() {
     const tipoPlano = this.activatedRoute.snapshot.queryParams['plano'];
-    if(tipoPlano === 'mensal') {this.idTipoPlanoEscolhido = "2";}
-    if(tipoPlano === 'anual') {this.idTipoPlanoEscolhido = "1";}
-
+    if(tipoPlano === 'recorrencia') {this.idTipoPlanoEscolhido = "4";}
 
     const path = this.activatedRoute.snapshot.routeConfig.path;
     if(path.includes("pagamento")) {
@@ -181,23 +161,15 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
       }
     }
 
-
     this.titular = new Titular();
     this.titular.pessoaFisica = new PessoaFisica();
     this.planoEscolhido = new TipoPlano();
 
-    this.planoAnual  = new TipoPlano();
-    this.planoMensal = new TipoPlano();
-
-    this.pagamentoCR = new CheckoutTransparenteCartaoCredito();
     this.dadosCartaoCredito = new DadosCartaoCredito();
     this.retornoPagamento = new RetornoPagamento();
 
     this.tipoPlanoService.getAllAtivos().subscribe((tipos: TipoPlano[]) => {
       this.tipoPlanos = tipos;
-
-      this.planoAnual  = this.tipoPlanos.find(tp => tp.id === 1);
-      this.planoMensal = this.tipoPlanos.find(tp => tp.id === 2);
 
       if(this.idTipoPlanoEscolhido) {
         this.planoEscolhido = this.tipoPlanos.find(tp => tp.id === Number(this.idTipoPlanoEscolhido));
@@ -207,15 +179,6 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
     this.enderecoService.getAllEstados().subscribe((ufs: any)=> {
       this.ufs = ufs;
     });
-
-    this.sessaoSplitService.get().pipe(
-      switchMap((sessao: any) => {
-        return of(sessao);;
-      })
-    ).subscribe((sessao: any) => {
-      this.idSessao = sessao.id;
-    });
-
 
   }
   
@@ -262,28 +225,6 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
       this.toastService.showAlerta('O número do cartão deve ter 16 dígitos.');
       return;
     }
-
-    const binCartao = numeroCartao.substring(0,6);
-    this.bandeiraSplitService.get(this.idSessao, binCartao).subscribe((bandeira: any) => {
-      if(bandeira.bin.statusMessage === 'Error') {
-        this.toastService.showAlerta('O número do cartão está inválido.');
-      } else {
-        this.binTO = bandeira;
-      }
-    });
-  }
-
-  private preencherParansTokenCartao(): ParansTokenCartao {
-    const parans = new ParansTokenCartao();
-    parans.idSessao            = this.idSessao;
-    parans.valor               = this.planoEscolhido.valor;
-    parans.numeroCartao        = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.numeroCartao);
-    parans.bandeiraCartao      = this.binTO?.bin?.brand?.name;
-    parans.cvv                 = this.dadosCartaoCredito.cvv;
-    parans.mesVencimentoCartao = this.dadosCartaoCredito.mesValidade;
-    parans.anoVencimentoCartao = this.dadosCartaoCredito.anoValidade;
-
-    return parans;
   }
 
   isSenhasInformadasValidas(formularioEtapa1) {
@@ -298,7 +239,7 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
   }
 
 
-  cadastrarUsuario(){
+  private cadastrarUsuario(){
     if(!this.titular.id) {
       this.formatar();    
       this.titular.dependentes = [];
@@ -328,113 +269,139 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
     }
   }
 
+
   realizarPagamentoBoleto() {
     this.loadingPopupService.mostrarMensagemDialog('Iniciando ....');
-    return PagSeguroDirectPayment.onSenderHashReady(
-      response => {
-        if(!response || response.status == 'error') {
-          this.toastService.showAlerta('Erro ao recuperar o sender hash, o pagamento não será realizado.');
-          return false;
-        }
-        this.senderHash = response.senderHash;
 
-        const dados = new CheckoutTransparenteBoleto();
-        dados.idPlano         = Number(this.idTipoPlanoEscolhido);
-        dados.cpfComprador    = this.funcoesUteisService.getApenasNumeros(this.titular.pessoaFisica.cpf);
-        dados.codigoCorretor  = this.codigoCorretor;
-        dados.senderHash      = this.senderHash;
-        dados.voucher         = this.codigoCupom
+    const novaAssinaturaPlano = new NovaAssinaturaPlano();
+    novaAssinaturaPlano.plan_id         = this.planoEscolhido.idPlanoPagarme;
+    novaAssinaturaPlano.idPlano         = this.planoEscolhido.id;
+    novaAssinaturaPlano.customer_id     = this.titular.idClientePagarMe;
+    novaAssinaturaPlano.codigoCorretor  = this.codigoCorretor;
+    novaAssinaturaPlano.voucher         = this.codigoCupom;
+    novaAssinaturaPlano.idTitular       = this.titular.id;
 
-        this.loadingPopupService.mostrarMensagemDialog('Processando pagamento....');
-        return this.pagamentoBoletoSplitService.pagar(dados).pipe(
-            catchError((retornoPagamento: RetornoPagamento) => {
-              this.loadingPopupService.closeDialog();
-              return of(null);
-            }),
-            tap((retornoPagamento: RetornoPagamento) => {
-              this.abrirBoleto(retornoPagamento);
-              this.retornoPagamento = retornoPagamento;
-            }),
-            switchMap((retornoPagamento: RetornoPagamento) => {
-              if(retornoPagamento && !_.isEmpty(retornoPagamento.codigoTransacao)) {
-                return this.notificacaoTransacalSplitService.buscarDadosNotificacao(retornoPagamento.codigoTransacao);
-              } else {
-                return new Observable(obs => obs.next()); 
-              }            
-            }),
-        ).subscribe((retornoNotificacao: NotificacaoTransacao) => {
-          if(retornoNotificacao && retornoNotificacao.status) {
-            this.retornoPagamento.statusTransacao          = String(retornoNotificacao.status.codigoTransacao);
-            this.retornoPagamento.descricaoStatusTransacao = retornoNotificacao.status.descricao;
-          }
-          this.loadingPopupService.closeDialog();
-        }).add( () => this.loadingPopupService.closeDialog() );        
+
+    this.loadingPopupService.mostrarMensagemDialog('Processando pagamento....');
+    this.assinaturaPlanoRecorrenciaPagarmeService.criarAssinaturaBoleto(novaAssinaturaPlano).pipe(
+      catchError((retornoPagamento: any) => {
+        this.loadingPopupService.closeDialog();
+        return of(null);
+      }),
+      tap((retornoPagamento: any) => {
+        this.abrirBoleto(retornoPagamento);
+        this.retornoPagamento = retornoPagamento;
+      }),
+      switchMap((retornoPagamento: any) => {
+        if(retornoPagamento && !_.isEmpty(retornoPagamento.id)) {
+          return this.notificacaoTransacaoRecorrenciaPagarmeService.buscarDadosNotificacao(retornoPagamento.id);
+        } else {
+          return new Observable(obs => obs.next()); 
+        }            
+      }),
+
+    ).subscribe((retornoNotificacao: NotificacaoTransacao) => {
+      if(retornoNotificacao && retornoNotificacao.status) {
+        this.retornoPagamento.status                   = String(retornoNotificacao.status.codigoTransacao);
+        this.retornoPagamento.descricaoStatusTransacao = retornoNotificacao.status.descricao;
       }
-    )
+      this.loadingPopupService.closeDialog();
+    }).add( () => this.loadingPopupService.closeDialog() );    
+
   }
 
 
   realizarPagamentoCartao() {
     this.loadingPopupService.mostrarMensagemDialog('Iniciando ....');
-    return PagSeguroDirectPayment.onSenderHashReady(
-      response => {
-        if(!response || response.status == 'error') {
-          this.toastService.showAlerta('Erro ao recuperar o sender hash, o pagamento não será realizado.');
-          return false;
-        }
-        this.senderHash = response.senderHash;
 
-        const parans = this.preencherParansTokenCartao();
-        this.tokenCartaoSplitService.get(parans)
-        .pipe(
-          switchMap((tokenCartao: any) => {
-            const dados = new CheckoutTransparenteCartaoCredito();
-            dados.idPlano                       = Number(this.idTipoPlanoEscolhido);
-            dados.cpfComprador                  = this.funcoesUteisService.getApenasNumeros(this.titular.pessoaFisica.cpf);
-            dados.codigoCorretor                = this.codigoCorretor;
-            dados.senderHash                    = this.senderHash;
-            dados.tokenCartaoCredito            = tokenCartao.token;
-            dados.voucher                       = this.codigoCupom;
-            dados.idSessao                      = this.idSessao;
-            dados.bandeiraCartao                = parans.bandeiraCartao;
-            dados.nomeImpressoCartao            = this.dadosCartaoCredito.nomeImpressoCartao;
-            dados.cpfTitularCartao              = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.cpfTitularCartao);
-            dados.dataNascimentoTitularCartao   = this.dadosCartaoCredito.dataNascimentoTitularCartao;
+    //buscar os id do plano
+    if(this.idTipoPlanoEscolhido) {
+      this.planoEscolhido = this.tipoPlanos.find(tp => tp.id === Number(this.idTipoPlanoEscolhido));
+    }
 
-            /*
-            if(Number(this.idTipoPlanoEscolhido) === 2) {
-              dados.idPlano = 3; // plano anual parcelado
-            }
-            */
+    //buscar os cartões cadastrados do cliente
+    this.cartaoClienteRecorrenciaPagarmeService.listarCartoesCliente(this.titular.idClientePagarMe)
+    .pipe(
+      //verificar se o cartão informado pelo associado já está cadastrado        
+      switchMap((cartoes: ListaCartaoClientePagarme) => {
+        const numeroCartao      = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.numeroCartao);
+        const primeiros6digitos = numeroCartao.substring(0,6);
+        const ultimos6digitos   = numeroCartao.substring(numeroCartao.length - 6);
 
-            this.loadingPopupService.mostrarMensagemDialog('Processando pagamento....');
-            return this.pagamentoCartaoCreditoSplitService.pagar(dados)
-                .pipe(
-                  catchError((retornoPagamento: RetornoPagamento) => {
-                  this.loadingPopupService.closeDialog();
-                  return of(null);
-                }));
-          }),
-          tap((retornoPagamento: RetornoPagamento) => {
-            this.retornoPagamento = retornoPagamento;
-          }),
-          switchMap((retornoPagamento: RetornoPagamento) => {
-            if(retornoPagamento && !_.isEmpty(retornoPagamento.codigoTransacao)) {
-              return this.notificacaoTransacalSplitService.buscarDadosNotificacao(retornoPagamento.codigoTransacao);
-            } else {
-              return new Observable(obs => obs.next()); 
-            }            
-          })
-        ).subscribe((retornoNotificacao: NotificacaoTransacao) => {
-          if(retornoNotificacao && retornoNotificacao.status) {
-            this.retornoPagamento.statusTransacao          = String(retornoNotificacao.status.codigoTransacao);
-            this.retornoPagamento.descricaoStatusTransacao = retornoNotificacao.status.descricao;
-          }
-          this.loadingPopupService.closeDialog();
+        const cartaoEncontrado = cartoes.data.find( cartao => cartao.first_six_digits === primeiros6digitos && cartao.last_four_digits === ultimos6digitos);
 
-        }).add( () => this.loadingPopupService.closeDialog() );        
+        //se cartão não está cadastrado, então cadastra o cartão
+        if(!cartaoEncontrado) {
+          const novoCartaoCliente = new CriarCartaoCliente();
+          novoCartaoCliente.number          = numeroCartao;
+          novoCartaoCliente.holder_name     = this.dadosCartaoCredito.nomeImpressoCartao;
+          novoCartaoCliente.holder_document = this.dadosCartaoCredito.cpfTitularCartao;
+          novoCartaoCliente.exp_month       = Number(this.dadosCartaoCredito.mesValidade);
+          novoCartaoCliente.exp_year        = Number(this.dadosCartaoCredito.anoValidade);
+          novoCartaoCliente.cvv             = this.dadosCartaoCredito.cvv;
+          novoCartaoCliente.customer        = new ClientePagarme();
+          novoCartaoCliente.customer.id     = this.titular.idClientePagarMe;
+
+          return this.cartaoClienteRecorrenciaPagarmeService.criarCartao(novoCartaoCliente);
+        } else {
+          return of(cartaoEncontrado); 
+        }            
+      }),
+
+      //busca o token do cartão        
+      switchMap((cartao: CartaoClientePagarme) => {
+        const tokenCartao = new ParansTokenCartaoPagarme();
+        tokenCartao.numeroCartao        = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.numeroCartao);
+        tokenCartao.nomeImpresso        = this.dadosCartaoCredito.nomeImpressoCartao;
+        tokenCartao.cvv                 = this.dadosCartaoCredito.cvv;
+        tokenCartao.mesVencimentoCartao = String(cartao.exp_month);
+        tokenCartao.anoVencimentoCartao = String(cartao.exp_year);
+
+        return this.cartaoClienteRecorrenciaPagarmeService.gerarTokenCartao(tokenCartao);        
+      }),
+
+
+      //Realiza a assinatura do plano
+      switchMap((token: any) => {
+        this.loadingPopupService.mostrarMensagemDialog('Processando pagamento....');
+
+        const novaAssinaturaPlano = new NovaAssinaturaPlano();
+        novaAssinaturaPlano.plan_id         = this.planoEscolhido.idPlanoPagarme;
+        novaAssinaturaPlano.idPlano         = this.planoEscolhido.id;
+        novaAssinaturaPlano.customer_id     = this.titular.idClientePagarMe;
+        novaAssinaturaPlano.card_token      = token.id;
+        novaAssinaturaPlano.codigoCorretor  = this.codigoCorretor;
+        novaAssinaturaPlano.voucher         = this.codigoCupom;
+        novaAssinaturaPlano.idTitular       = this.titular.id;
+
+        return this.assinaturaPlanoRecorrenciaPagarmeService.criarAssinaturaCartao(novaAssinaturaPlano)
+            .pipe(
+              catchError((retornoPagamento: any) => {
+                this.loadingPopupService.closeDialog();
+                return of(null);
+            }));       
+      }),
+
+      tap((retornoPagamento: any) => {
+        this.retornoPagamento = retornoPagamento;
+      }),
+
+      switchMap((retornoPagamento: any) => {
+        if(retornoPagamento && !_.isEmpty(retornoPagamento.id)) {
+          return this.notificacaoTransacaoRecorrenciaPagarmeService.buscarDadosNotificacao(retornoPagamento.id);
+        } else {
+          return new Observable(obs => obs.next()); 
+        }            
+      }),
+
+    ).subscribe((retornoNotificacao: NotificacaoTransacao) => {
+      if(retornoNotificacao && retornoNotificacao.status) {
+        this.retornoPagamento.status                   = String(retornoNotificacao.status.codigoTransacao);
+        this.retornoPagamento.descricaoStatusTransacao = retornoNotificacao.status.descricao;
       }
-    );
+      this.loadingPopupService.closeDialog();
+    }).add( () => this.loadingPopupService.closeDialog() );
+    
   }
 
   private abrirBoleto(retornoPagamento: RetornoPagamento) {
@@ -454,17 +421,10 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
 
   tipoPagamentoEscolhido(tipo) {
     this.idTipoPagamentoEscolhido = String(tipo);
+  }
 
-    // cartão de crédito
-    if(this.idTipoPagamentoEscolhido === "2") {
-      this.pagamentoCR = new CheckoutTransparenteCartaoCredito();
-    }
-
-    // boleto
-    if(this.idTipoPagamentoEscolhido === "1") {
-      this.pagamentoCR = new CheckoutTransparenteCartaoCredito();
-    }
-
+  carregarTipoPagamentoEscolhido($event){
+    this.idTipoPagamentoEscolhido = $event.value;
   }
 
   getLogoCartaoAmigo() {
@@ -494,14 +454,6 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
   getImagemCVV() {
     return '../../../assets/imagens/cvv.png';
   }
-
-  getResumoCompraCartao() {
-    if(this.binTO && this.binTO.bin && this.dadosCartaoCredito && this.dadosCartaoCredito.numeroCartao) {
-      return 'CARTÃO DE CRÉDITO - ' + this.binTO.bin.brand.name.toUpperCase() + ' -  Final ' + this.dadosCartaoCredito.numeroCartao.substring(15);
-    }
-    return 'CARTÃO DE CRÉDITO';
-  }
-
 
   enderecoBuilder(endereco) {
     if (endereco && endereco.sucesso) {
@@ -540,10 +492,6 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
 
   carregarTipoPlanaEscolhido($event){
     this.idTipoPlanoEscolhido = $event.value;
-  }
-
-  carregarTipoPagamentoEscolhido($event){
-    this.idTipoPagamentoEscolhido = $event.value;
   }
 
   private getTipoBrowser(){
@@ -590,8 +538,8 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
   }
 
   isEtapaPreenchimentoDadosCartao(){
-    return this.isTitularNovoNoSistema 
-        && this.idTipoPagamentoEscolhido === '2' 
+    return this.idTipoPagamentoEscolhido === '2'
+        && this.isTitularNovoNoSistema 
         && this.isPodeUtilizarVoucherNoPagamento 
         && !this.isVoucher100Porcento;
   }

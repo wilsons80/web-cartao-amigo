@@ -24,7 +24,7 @@
                             <ng-template matStepLabel></ng-template>
                             <div  style="margin-bottom: 13px;">
                                 <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
-                                    <span style="font-size: 20px; font-weight: bold; color: #f95f00;">Seleciona o plano da assinatura ?</span>    
+                                    <span style="font-size: 20px; font-weight: bold; color: #f95f00;">Escolha o tipo de assinatura</span>    
                                     <span style="font-size: 10px;">Permite até 4 dependentes inteiramente grátis</span>
                                 </div>                            
         
@@ -39,24 +39,6 @@
                                                     fxLayout.xs="column"
                                                     fxLayoutAlign="center center">
 
-                                        <div *ngIf="false" 
-                                             fxFlex="50%" fxFlex.xs="90%" fxLayoutAlign="center center" 
-                                            [ngStyle.xs]="{'width.%': 100}"
-                                            (click)="getPlanoEscolhido(1)"
-                                            fxLayout="column">
-
-                                            <div fxLayout="column" fxLayoutAlign="center center"
-                                                style="cursor: pointer; border: 0.66px solid #f95f00; border-radius: 15px;">
-                                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Opção 1: Plano Anual</span> </div>
-                                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">R$ 249,90</span></div>
-                                                <div style="width: 80%" fxLayoutAlign="center center">
-                                                    <img [src]='getImagemPlanoAnual()' style="width: 60%;">
-                                                </div>
-                                            </div>
-
-                                            <mat-radio-button style="padding-top: 3px;" value="1" fxLayoutAlign="center center">Eu quero</mat-radio-button>
-                                        </div>                                                  
-
                                         <div fxFlex="50%" fxFlex.xs="90%" fxLayoutAlign="center center"
                                             [ngStyle]="{'padding-left.px': 10}" 
                                             [ngStyle.xs]="{'width.%': 100, 'padding-top.px': 10}"
@@ -65,7 +47,7 @@
 
                                             <div fxLayout="column" fxLayoutAlign="center center"
                                                 style="cursor: pointer; border: 0.66px solid #f95f00; border-radius: 15px;">
-                                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Assinatura recorrente</span> </div>
+                                                <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">Assinatura Individual</span> </div>
                                                 <div><span style="font-size: 10px; font-weight: bold; color: #f95f00;">R$ 29,90 mensal</span></div>
                                                 <div style="width: 80%" fxLayoutAlign="center center">
                                                     <img [src]='getImagemPlanoMensal()' style="width: 60%;">
@@ -77,17 +59,17 @@
 
                                     </mat-radio-group>
                                 </div>
-        
+
                                 <div fxLayout="column" fxLayoutAlign="center center" style="padding-top: 20px;" *ngIf="idTipoPlanoEscolhido">
                                     <span style="font-size: 20px; font-weight: bold; color: #f95f00;">
                                         Escolha a forma de pagamento
                                     </span>    
                                 </div>
-                                
+
                                 <input matInput name="idTipoPagamentoEscolhido" [(ngModel)]="idTipoPagamentoEscolhido" required [fxHide]="true">  
                                 <div fxLayout="row" 
-                                    fxLayoutAlign="center center"
-                                    *ngIf="idTipoPlanoEscolhido">
+                                     fxLayoutAlign="center center"
+                                     *ngIf="idTipoPlanoEscolhido">
                                     
                                     <mat-radio-group  name="rdTipoPagamento" 
                                                     fxFlex="50%" 
@@ -127,7 +109,7 @@
                                         </div>
                                     </mat-radio-group>
                                 </div>
-
+                                
                                 <div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="idTipoPlanoEscolhido">
                                     <mat-form-field style="width: 150px;" fxFlexOffset="10px">
                                         <mat-label>Voucher (Opcional)</mat-label>
@@ -166,21 +148,15 @@
                     
                     <!-- Informe os dados do cartão -->
                     <mat-step [stepControl]="formularioEtapa3" *ngIf="isEtapaPreenchimentoDadosCartao()"
-                            errorMessage="Informe os dados do cartão">
+                              errorMessage="Informe os dados do cartão">
                         <div ngModelGroup="formularioEtapa3" #formularioEtapa3="ngModelGroup" >
                             <ng-template matStepLabel></ng-template>
                             
                             <div fxLayout="column" fxLayoutAlign="space-evenly center">
                                 <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
                                     <span style="font-size: 20px; font-weight: bold; color: #f95f00;">Informe os dados do cartão</span>    
-                                </div>                        
-            
-                                <div fxLayout="row" fxLayoutAlign="center center"  style="padding-bottom: 15px;">                                
-                                    <div fxFlex="100%" [ngStyle]="{'padding-left.px': 10}">
-                                        <label value="3" fxLayoutAlign="center center">R$ 29,90 mensal</label>
-                                    </div>
-                                </div>
-                                                            
+                                </div> 
+                                
                                 <!-- Dados para compra com CARTÃO DE CRÉDITO -->
                                 <div fxLayout="column" 
                                     style="padding-top: 30px; padding-bottom: 40px;"
@@ -359,7 +335,7 @@
                                         </mat-checkbox>
                                     </div>
             
-                                    <div fxLayout="row" fxFlex="100" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '2'" >
+                                    <div fxLayout="row" fxFlex="100" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '2'">
                                         <button mat-raised-button
                                                 fxFlex="50"
                                                 fxFlex.xs="95"
@@ -445,7 +421,7 @@
                                 class="mat-elevation-z6 w-100 mt-3"
                                 (click)="novoPagamento()"
                                 style="margin-top: 30px; border-radius: 10px;">
-                        NOVA ASSINATURA
+                            NOVA ASSINATURA
                         </button>
                     </div>
                 </div>

@@ -10,3 +10,8 @@
 .mat-cell {
    font-size: 11px;
 }
+
+.botaoCancelarAssinatura {
+    background-color: #f97212;
+    color: white;
+}

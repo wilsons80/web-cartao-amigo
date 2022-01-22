@@ -18,7 +18,7 @@ export class HistoricoPagamentoBuilder  {
     tela.linkPagamento                   = historicoPagamentoTO.linkPagamento;
     tela.statusTransacao                 = historicoPagamentoTO.statusTransacao.descricao;
     tela.numeroTransacaoGatewayPagamento = historicoPagamentoTO.numeroTransacaoGatewayPagamento;
-    tela.tipoPlano                       = historicoPagamentoTO.tipoPlano.descricao;
+    tela.tipoPlano                       = historicoPagamentoTO.tipoPlano;
     tela.valorPlano                      = historicoPagamentoTO.tipoPlano.valor;
     tela.dtPagamentoPlanoContratado      = historicoPagamentoTO.dtPagamentoPlanoContratado;
     tela.formaPagamento                  = historicoPagamentoTO.formaPagamento.descricao;
