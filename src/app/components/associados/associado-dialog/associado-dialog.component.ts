@@ -17,6 +17,8 @@ import { HistoricoPagamento } from 'src/app/core/historico-pagamento';
 import { HistoricoPagamentoBuilder } from 'src/app/services/builder/historico-pagamento-builder';
 import { ProcedimentoAssociadoClinicaService } from 'src/app/services/procedimento-associado-clinica/procedimento-associado-clinica.service';
 import { ProcedimentoAssociadoClinicaDto } from 'src/app/core/procedimento-associado-clinica-dto';
+import { Assinaturas } from 'src/app/core/assinaturas';
+import { AssinaturasService } from 'src/app/services/assinaturas/assinaturas.service';
 
 @Component({
   selector: 'associado-dialog',
@@ -37,7 +39,8 @@ export class AssociadoDialogComponent implements OnInit {
   isAtualizar = false;
 
   minDate = new Date();
-  
+  assinaturaAtiva:Assinaturas;
+
   associado: Associados;
   perfilAcessos: PerfilAcesso[];
   perfilAcesso: Acesso;
@@ -54,6 +57,7 @@ export class AssociadoDialogComponent implements OnInit {
               private loadingPopupService: LoadingPopupService,
               private historicoPagamentoBuilder: HistoricoPagamentoBuilder,
               private toastService: ToastService,
+              private assinaturasService: AssinaturasService,
               private funcoesUteisService: FuncoesUteisService,
               private dialogRef: MatDialogRef<AssociadoDialogComponent>,
               @Inject(MAT_DIALOG_DATA) data) {
@@ -77,8 +81,15 @@ export class AssociadoDialogComponent implements OnInit {
           this.titular = titular;
           this.titular.pessoaFisica.cpf  = this.funcoesUteisService.getApenasNumeros(this.titular.pessoaFisica.cpf)
         }),
+        
         switchMap((titular: Titular) => {
-          return this.historicoPagamentoService.getPagamentoByTitular(titular.id);
+          return this.assinaturasService.getAssinaturaAtivaDoTitular(titular.id)
+        }),
+        tap((assinaturaAtiva: Assinaturas) => {
+          this.assinaturaAtiva = assinaturaAtiva;
+        }),
+        switchMap(() => {
+          return this.historicoPagamentoService.getPagamentoByTitular(this.titular.id);
         }),
         tap((historicoPagamento: HistoricoPagamento[]) => {
           this.historicoPagamentos = historicoPagamento;
