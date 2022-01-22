@@ -26,7 +26,6 @@ export class CorretorDialogComponent implements OnInit {
   perfilAcesso: Acesso = new Acesso(); 
 
   isAtualizacao = false;
-  urlAutorizacao: string;
 
   constructor(private corretorService: CorretorService,
               private loadingPopupService: LoadingPopupService,
@@ -36,7 +35,6 @@ export class CorretorDialogComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) data) {
       this.idCorretor = data.idCorretor;
       this.perfilAcesso = data.perfilAcesso;
-      this.urlAutorizacao = data.urlAutorizacao;
   }
 
   ngOnInit() {

@@ -1,12 +1,4 @@
 <mat-toolbar><div style="width: 100%; text-align: center;">Corretor</div></mat-toolbar>
-
-<div fxLayout="row" fxLayoutAlign="center center">
-    <div fxFlex="100%" class="autorizacao">
-        <div>URL de Autorização</div>
-        <div>{{autorizacao.urlAutorizacao}}</div>
-    </div> 
-</div>
-
 <div class="painel-principal" style="padding: 10px;">
     <div class="painel-consultar">
         <form #formulario="ngForm">            
@@ -119,11 +111,6 @@
             <ng-container matColumnDef="email">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
                 <td mat-cell *matCellDef="let element"> {{element.email}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="codigoAutorizacao">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Chave Pagseguro </th>
-                <td mat-cell *matCellDef="let element"> {{element.codigoAutorizacao}} </td>
             </ng-container>
 
             <ng-container matColumnDef="ativo">

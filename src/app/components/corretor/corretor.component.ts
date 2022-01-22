@@ -50,7 +50,7 @@ export class CorretorComponent implements OnInit {
   corretores: CorretorDto[];
   
 
-  displayedColumns: string[] = ['nome','cpf','email', 'ativo', 'dataCadastro','codigoAutorizacao', 'acoes'];
+  displayedColumns: string[] = ['nome','cpf','email', 'ativo', 'dataCadastro', 'acoes'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   msg: string;
 
@@ -58,8 +58,6 @@ export class CorretorComponent implements OnInit {
     {tipo: 'Sim', flag: 'S'},
     {tipo: 'Não', flag: 'N'}
   ];  
-
-  autorizacao: Autorizacao;
 
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
@@ -69,7 +67,6 @@ export class CorretorComponent implements OnInit {
               changeDetectorRef: ChangeDetectorRef,
               private dataUtilService: DataUtilService,
               private corretorService: CorretorService,
-              private autorizacaoService: AutorizacaoService,
               private loadingPopupService: LoadingPopupService,
               private dialog: MatDialog,
               private activatedRoute: ActivatedRoute,
@@ -88,7 +85,6 @@ export class CorretorComponent implements OnInit {
 
     this.filtro = new Filtro();
     this.filtro.corretor = new CorretorCombo();
-    this.autorizacao = new Autorizacao();
 
     this.corretorService.getAllCombo().subscribe((corretoresCombo: CorretorCombo[]) => {
       this.corretoresCombo = corretoresCombo;
@@ -97,10 +93,6 @@ export class CorretorComponent implements OnInit {
         this.corretoresCombo.forEach(c => c.nome_codigo = c.nome + ' - ' + c.codigo);
       }
     })
-
-    this.autorizacaoService.getAll().subscribe((autorizacoes: Autorizacao[]) => {
-      this.autorizacao = !_.isEmpty(autorizacoes) ? autorizacoes[0] : null;
-    });
 
     this.consultar();
   }
@@ -180,7 +172,6 @@ export class CorretorComponent implements OnInit {
     dialogConfig.data = {
       idCorretor: corretor?.id,
       perfilAcesso: this.perfilAcesso,
-      urlAutorizacao: this.autorizacao.urlAutorizacao
     };
     dialogConfig.panelClass = 'configuracaoDialogClinica';
     
