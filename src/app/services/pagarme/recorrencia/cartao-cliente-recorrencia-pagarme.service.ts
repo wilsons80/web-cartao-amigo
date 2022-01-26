@@ -28,6 +28,10 @@ export class CartaoClienteRecorrenciaPagarmeService {
   getCartaeCliente(idCliente: string, idCartao: string){
 	  return this.http.get(`${path}/cartao/${idCliente}/${idCartao}`);
   }
+
+  getBandeiraCartao(numeroCartao){
+    return this.http.get(`${path}/bandeira/cartao/${numeroCartao}`);
+  }
   
   criarCartao(parans: CriarCartaoCliente) {
     return this.http.post(`${path}`, parans);
