@@ -177,7 +177,6 @@
                                                 matInput maxlength="200"
                                                 [(ngModel)]="titular.pessoaFisica.endereco"
                                                 name="endereco"
-                                                readonly
                                                 placeholder="Endereço"
                                                 [required]="obrigatorio">
                                         <mat-hint align="end">{{campoEndereco.value.length}} / 200</mat-hint>
@@ -193,7 +192,6 @@
                                                 matInput maxlength="200"
                                                 [(ngModel)]="titular.pessoaFisica.cidade"
                                                 [required]="obrigatorio"
-                                                readonly
                                                 name="cidade"
                                                 placeholder="Cidade">
                                         <mat-hint align="end">{{campoCidade.value.length}} / 200</mat-hint>
@@ -208,7 +206,6 @@
                                                 matInput maxlength="200"
                                                 [(ngModel)]="titular.pessoaFisica.bairro"
                                                 [required]="obrigatorio"
-                                                readonly
                                                 name="bairro"
                                                 placeholder="Bairro">
                                         <mat-hint align="end">{{campoBairro.value.length}} / 200</mat-hint>
