@@ -50,7 +50,7 @@ export class VoucherComponent implements OnInit {
   perfilAcesso: Acesso = new Acesso();
   carregarPerfil: CarregarPerfil;
 
-  displayedColumns: string[] = ['select', 'codigo','descricaoPromocao','porcentagem','dataCriacao', 'dataValidade', 'ativo', 'utilizado', 'dataUtilizacao','nomePessoaUlilizacao', 'acoes'];
+  displayedColumns: string[] = ['select', 'codigo','descricaoPromocao','porcentagem','dataCriacao', 'dataValidade', 'ativo', 'utilizado', 'dataUtilizacao','nomePessoaUlilizacao', 'qtdMesesDesconto', 'acoes'];
   dataSource: MatTableDataSource<VoucherDto> = new MatTableDataSource();
   mostrarTabela: boolean = false;
   msg: string;

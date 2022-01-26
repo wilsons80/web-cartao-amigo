@@ -4,4 +4,5 @@ export class ProcedimentoAssociadoClinicaDto{
 	nomeClinica: string;
 	especialidade: string;
 	dataConsulta: Date;
+	assinaturaAtiva: boolean;
 }

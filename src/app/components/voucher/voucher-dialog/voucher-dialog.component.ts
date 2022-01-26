@@ -31,6 +31,7 @@ export class VoucherDialogComponent implements OnInit {
   isAtualizar = false;
 
   quantidade = 0;
+  qtdMesesDesconto = 0;
 
   minDate = new Date();
   
@@ -91,10 +92,11 @@ export class VoucherDialogComponent implements OnInit {
   gerarVoucher() {
     this.vouchers = [];
     for (var i=0; i<this.quantidade; i++) {
-      const voucher        = new Voucher();
-      voucher.descricao    = this.voucher.descricao;
-      voucher.dataValidade = this.voucher.dataValidade;
-      voucher.porcentagem  = this.voucher.porcentagem;
+      const voucher            = new Voucher();
+      voucher.descricao        = this.voucher.descricao;
+      voucher.dataValidade     = this.voucher.dataValidade;
+      voucher.porcentagem      = this.voucher.porcentagem;
+      voucher.qtdMesesDesconto = this.voucher.qtdMesesDesconto;
       this.vouchers.push(voucher);
     }
 
@@ -102,6 +104,7 @@ export class VoucherDialogComponent implements OnInit {
     textoAuxiliar.push('Quantidade:  ' + this.vouchers.length);
     textoAuxiliar.push('Validade: ' + this.dataSimplesPipe.transform(this.voucher.dataValidade));
     textoAuxiliar.push('Porcentagem: ' + this.voucher.porcentagem);
+    textoAuxiliar.push('Quantidade meses com desconto: ' + this.voucher.qtdMesesDesconto);
      
 
     const dialogConfig = new MatDialogConfig();

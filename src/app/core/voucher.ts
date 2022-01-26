@@ -10,5 +10,6 @@ export class Voucher{
 	utilizado: boolean;
 	dataUtilizacao: Date;
 	idPessoaFisica: number;
+	qtdMesesDesconto: number;
 
 }

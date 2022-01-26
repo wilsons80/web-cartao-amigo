@@ -23,6 +23,11 @@
         <mat-cell *matCellDef="let element" data-label="Data da consulta"> {{element.dataConsulta | dataComHora}} </mat-cell>
     </ng-container>
 
+    <ng-container matColumnDef="assinaturaAtiva">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Assinatura ativa ?</mat-header-cell>
+        <mat-cell *matCellDef="let element" data-label="Assinatura ativa ?"> {{element.assinaturaAtiva ? 'Sim' : 'Não'}} </mat-cell>
+    </ng-container>
+
     <mat-header-row *matHeaderRowDef="displayedColumns" class="corLaranzaPadrao"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>

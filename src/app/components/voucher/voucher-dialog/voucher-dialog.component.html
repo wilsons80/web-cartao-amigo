@@ -53,15 +53,26 @@
                        placeholder="Quantidade de voucher"
                        matInput/>
             </mat-form-field>
+
+            <mat-form-field [ngStyle]="{'width.px': 220}" 
+                            [ngStyle.xs]="{'width.%': 100}" 
+                            fxFlexOffset="20px">
+                <input [(ngModel)]="voucher.qtdMesesDesconto" 
+                       name="qtdMesesDesconto"
+                       placeholder="Quantidade meses com desconto"
+                       matInput/>
+            </mat-form-field>
+
         </div>
 
 
         <!-- APARECE QUANDO FOR ATUALIZAÇÃO -->
-        <div *ngIf="isAtualizar" fxLayout="row" fxLayout.xs="column" 
+        <div *ngIf="isAtualizar" 
+             fxLayout="row" fxLayout.xs="column" 
              fxLayoutAlign="center center" 
              style="margin-top: 10px; margin-bottom: 10px; width: 100%;" fxFlexOffset="20px">
 
-            <mat-form-field [ngStyle]="{'width.px': 200}" 
+            <mat-form-field [ngStyle]="{'width.px': 170}" 
                             [ngStyle.xs]="{'width.%': 100}">
                 <input matInput maxlength="45" 
                        name="codigo" 
@@ -70,7 +81,7 @@
                        [(ngModel)]="voucher.codigo">
             </mat-form-field>
         
-            <mat-form-field [ngStyle]="{'width.px': 400}" 
+            <mat-form-field [ngStyle]="{'width.px': 370}" 
                             [ngStyle.xs]="{'width.%': 100}" 
                             fxFlexOffset="20px">
                 <input matInput
@@ -81,21 +92,20 @@
                        required>
             </mat-form-field>
 
-            <mat-form-field [ngStyle]="{'width.px': 200}" 
+            <mat-form-field [ngStyle]="{'width.px': 170}" 
                             [ngStyle.xs]="{'width.%': 100}"  
                             fxFlexOffset="20px">
                 <input matInput 
                        name="dataValidade" 
                        [matDatepicker]="pickerDataValidade"
                        placeholder="Data Validade" 
-                       maxlength="10"
                        (input)="onMascaraDataInput($event)"
                        [(ngModel)]="voucher.dataValidade" >
                 <mat-datepicker-toggle matSuffix [for]="pickerDataValidade"></mat-datepicker-toggle>
                 <mat-datepicker #pickerDataValidade></mat-datepicker>
             </mat-form-field>
 
-            <mat-form-field [ngStyle]="{'width.px': 200}" 
+            <mat-form-field [ngStyle]="{'width.px': 170}" 
                             [ngStyle.xs]="{'width.%': 100}" 
                             fxFlexOffset="20px">
                 <input [(ngModel)]=voucher.porcentagem 
@@ -111,6 +121,15 @@
                        maxlength="5"
                        [options]="{ prefix: '', thousands: '.', decimal: ',' }" />
                 <span matSuffix style="padding-left: 5px;">%&nbsp;</span>
+            </mat-form-field>
+
+            <mat-form-field [ngStyle]="{'width.px': 220}" 
+                            [ngStyle.xs]="{'width.%': 100}" 
+                            fxFlexOffset="20px">
+                <input [(ngModel)]="voucher.qtdMesesDesconto" 
+                       name="qtdMesesDesconto"
+                       placeholder="Quantidade meses com desconto"
+                       matInput/>
             </mat-form-field>
 
             <div fxLayout="row">

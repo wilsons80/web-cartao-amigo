@@ -38,4 +38,8 @@ export class AssinaturaPlanoRecorrenciaPagarmeService {
   listarAssinaturasCliente(idCliente: string){
 	  return this.http.get(`${path}cliente/${idCliente}`);
   }
+
+  temAssinaturasVigente(idCliente: string){
+	  return this.http.get(`${path}vigente/cliente/${idCliente}`);
+  }
 }

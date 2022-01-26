@@ -9,5 +9,6 @@ export class VoucherDto{
 	utilizado: boolean;
 	dataUtilizacao: Date;
 	nomePessoaUlilizacao: string;
+	qtdMesesDesconto: number;
 
 }

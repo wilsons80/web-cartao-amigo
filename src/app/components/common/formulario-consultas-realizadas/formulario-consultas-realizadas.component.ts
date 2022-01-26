@@ -27,7 +27,7 @@ export class FormularioConsultasRealizadasComponent implements OnInit {
 	mobileQuery: MediaQueryList;
 	private _mobileQueryListener: () => void;
 
-  displayedColumns: string[] = ['nomeImpresso', 'nomeClinica','especialidade','dataConsulta'];
+  displayedColumns: string[] = ['nomeImpresso', 'nomeClinica','especialidade','dataConsulta', 'assinaturaAtiva'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   msg: string;
   

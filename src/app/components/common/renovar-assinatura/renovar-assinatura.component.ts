@@ -107,7 +107,6 @@ export class RenovarAssinaturaComponent implements OnInit {
   codigoCupom: string;
   dadosCartaoCredito: DadosCartaoCredito;
 
-
   retornoPagamento: any;
 
   mobileQuery: MediaQueryList;
@@ -157,6 +156,7 @@ export class RenovarAssinaturaComponent implements OnInit {
         this.planoEscolhido = this.tipoPlanos.find(tp => tp.id === Number(this.idTipoPlanoEscolhido));
       }
     });
+
 
     this.enderecoService.getAllEstados().subscribe((ufs: any)=> {
       this.ufs = ufs;
@@ -428,7 +428,15 @@ export class RenovarAssinaturaComponent implements OnInit {
 
 
   iniciarPagamentoAssinatura() {
-    this.iniciarPagamento = true;
+    this.loadingPopupService.mostrarMensagemDialog('Preparando, aguarde...');
+    this.assinaturaPlanoRecorrenciaPagarmeService.temAssinaturasVigente(this.titular.idClientePagarMe)
+    .subscribe((temAssinaturaVigente: boolean) => {
+      if(!!temAssinaturaVigente){
+        this.toastService.showAlerta('Já existe uma assinatura vigente no momento.');  
+      } else{
+        this.novoPagamento();
+      }
+    }).add( () => this.loadingPopupService.closeDialog()  );
   }
 
   cancelarPagamento(stepper){
@@ -443,7 +451,7 @@ export class RenovarAssinaturaComponent implements OnInit {
     return this.perfilAcesso.consulta && !this.perfilAcesso.altera && !this.perfilAcesso.deleta && !this.perfilAcesso.insere;
   }
 
-  novoPagamento() {
+  private novoPagamento() {
     this.retornoPagamento   = new RetornoPagamento(); 
     this.dadosCartaoCredito = new DadosCartaoCredito();
     this.iniciarPagamento              = true;

@@ -174,6 +174,11 @@
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>Quem utilizou</th>
                 <td mat-cell *matCellDef="let element"> {{element.nomePessoaUlilizacao}} </td>
             </ng-container>
+
+            <ng-container matColumnDef="qtdMesesDesconto">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Quantidade Meses Desconto</th>
+                <td mat-cell *matCellDef="let element"> {{element.qtdMesesDesconto}} </td>
+            </ng-container>
             
             <ng-container matColumnDef="acoes" stickyEnd>
                 <th mat-header-cell *matHeaderCellDef> Ações </th>
