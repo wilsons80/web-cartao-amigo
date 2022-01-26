@@ -64,7 +64,7 @@ export class VoucherDialogComponent implements OnInit {
       this.isAtualizar = true;
       this.loadingPopupService.mostrarMensagemDialog('Buscando, aguarde....');
       this.voucherService.getById(this.idVoucher).subscribe((voucher: Voucher) => {
-        this.voucher = voucher;
+        this.voucher = voucher;        
       }).add( () => this.loadingPopupService.closeDialog()  )
     }
 
