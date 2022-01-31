@@ -79,7 +79,6 @@ export class MudarCartaoAssinaturaDialogComponent implements OnInit {
     const parans = new EditarCartaoAssinaturaPagarme();
     parans.card_id            = this.cartaoEscolhido.id;
     parans.idTitular          = this.idTitular;
-    parans.idAsinaturaPagarMe = this.assinaturaAtiva.codigoAssinatura;
 
     this.loadingPopupService.mostrarMensagemDialog('Processando, aguarde....');
     this.assinaturaPlanoRecorrenciaPagarmeService.editarCartaoAssinatura(this.assinaturaAtiva.codigoAssinatura, parans)

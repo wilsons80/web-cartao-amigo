@@ -108,12 +108,11 @@ export class FormularioCarteirasComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(confirma => {
       if (confirma) {
-        this.cartoes.splice(index, 1);
-        this.setStep(0);
-
         this.loadingPopupService.mostrarMensagemDialog('Processando, aguarde...');
         this.cartaoClienteRecorrenciaPagarmeService.excluirCartaoCliente(this.titular.id, this.titular.idClientePagarMe, cartao.id)
         .subscribe((cartaoRemovido: CartaoClientePagarme) => {
+          this.cartoes.splice(index, 1);
+          this.setStep(0);
           this.toastService.showSucesso(`O Cartao terminando com ${cartaoRemovido.last_four_digits} foi removido com sucesso.`);
         }).add( () => this.loadingPopupService.closeDialog()  );
       } else {

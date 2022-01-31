@@ -222,6 +222,12 @@ export class MinhaContaComponent implements OnInit {
           this.assinaturaAtiva = assinaturaAtiva;
         }),
         switchMap(() => {
+          return this.cartaoClienteRecorrenciaPagarmeService.listarCartoesCliente(this.titular.idClientePagarMe);
+        }),
+        tap((cartoes: CartaoClientePagarme[]) => {
+          this.cartoes = cartoes;
+        }),
+        switchMap(() => {
           return this.historicoPagamentoService.getPagamentoByTitular(this.titular.id)
         }),
       )

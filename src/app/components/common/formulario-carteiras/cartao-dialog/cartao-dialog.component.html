@@ -111,8 +111,7 @@
                     class="corAzulPadrao"
                     [ngStyle]="{'width.%': 60}"
                     [ngStyle.xs]="{'width.%': 80}"
-                    [disabled]="formulario.invalid"
-                    *ngIf="isPermiteEditar()"
+                    [disabled]="formulario.invalid || !isPermiteEditar()"
                     (click)="salvar()"  
                     matTooltip="Fechar">
                 {{getLabelBotao()}}
