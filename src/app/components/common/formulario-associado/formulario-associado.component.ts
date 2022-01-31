@@ -102,6 +102,7 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
   dadosCartaoCredito: DadosCartaoCredito;
 
   retornoPagamento: any;
+  cartaoEncontrado:CartaoClientePagarme = null;
 
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
@@ -328,10 +329,10 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
         const primeiros6digitos = numeroCartao.substring(0,6);
         const ultimos6digitos   = numeroCartao.substring(numeroCartao.length - 6);
 
-        const cartaoEncontrado = cartoes.find( cartao => cartao.first_six_digits === primeiros6digitos && cartao.last_four_digits === ultimos6digitos);
+        this.cartaoEncontrado = cartoes.find( cartao => cartao.first_six_digits === primeiros6digitos && cartao.last_four_digits === ultimos6digitos);
 
         //se cartão não está cadastrado, então cadastra o cartão
-        if(!cartaoEncontrado) {
+        if(!this.cartaoEncontrado) {
           const novoCartaoCliente = new CriarCartaoCliente();
           novoCartaoCliente.number          = numeroCartao;
           novoCartaoCliente.holder_name     = this.dadosCartaoCredito.nomeImpressoCartao;
@@ -344,8 +345,12 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
 
           return this.cartaoClienteRecorrenciaPagarmeService.criarCartao(novoCartaoCliente);
         } else {
-          return of(cartaoEncontrado); 
+          return of(this.cartaoEncontrado); 
         }            
+      }),
+
+      tap((cartaoEncontrado: CartaoClientePagarme) => {
+        this.cartaoEncontrado = cartaoEncontrado;
       }),
 
       //busca o token do cartão        
@@ -373,6 +378,7 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
         novaAssinaturaPlano.codigoCorretor  = this.codigoCorretor;
         novaAssinaturaPlano.voucher         = this.codigoCupom;
         novaAssinaturaPlano.idTitular       = this.titular.id;
+        novaAssinaturaPlano.idCartaoPagarMe = this.cartaoEncontrado.id;
 
         return this.assinaturaPlanoRecorrenciaPagarmeService.criarAssinaturaCartao(novaAssinaturaPlano)
             .pipe(

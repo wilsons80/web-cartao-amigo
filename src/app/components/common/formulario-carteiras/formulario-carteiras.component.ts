@@ -112,7 +112,7 @@ export class FormularioCarteirasComponent implements OnInit {
         this.setStep(0);
 
         this.loadingPopupService.mostrarMensagemDialog('Processando, aguarde...');
-        this.cartaoClienteRecorrenciaPagarmeService.excluirCartaoCliente(this.titular.idClientePagarMe, cartao.id)
+        this.cartaoClienteRecorrenciaPagarmeService.excluirCartaoCliente(this.titular.id, this.titular.idClientePagarMe, cartao.id)
         .subscribe((cartaoRemovido: CartaoClientePagarme) => {
           this.toastService.showSucesso(`O Cartao terminando com ${cartaoRemovido.last_four_digits} foi removido com sucesso.`);
         }).add( () => this.loadingPopupService.closeDialog()  );

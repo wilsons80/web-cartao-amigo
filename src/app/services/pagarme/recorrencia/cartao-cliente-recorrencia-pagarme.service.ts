@@ -17,8 +17,8 @@ export class CartaoClienteRecorrenciaPagarmeService {
     return this.http.post(`${path}token`, parans);
   }
 
-  excluirCartaoCliente(idCliente: string, idCartao: string){
-	  return this.http.delete(`${path}cartao/${idCliente}/${idCartao}`);
+  excluirCartaoCliente(idTitular:number, idCliente: string, idCartao: string){
+	  return this.http.delete(`${path}titular/${idTitular}/cartao/${idCliente}/${idCartao}`);
   }
 
   listarCartoesCliente(idCliente: string){

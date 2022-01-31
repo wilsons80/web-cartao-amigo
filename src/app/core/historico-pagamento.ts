@@ -25,4 +25,5 @@ export class HistoricoPagamento{
 	valorPago: number;
 	valorCorretor: number;
 	cartaoPagamento: CarteiraCartaoPagamentoAssociado;
+	idAssinatura: number;
 }
