@@ -14,6 +14,15 @@ import { HistoricoPagamentoService } from 'src/app/services/historico-pagamento/
 import { switchMap, tap } from 'rxjs/operators';
 import { Assinaturas } from 'src/app/core/assinaturas';
 import { HistoricoPagamentoBuilder } from 'src/app/services/builder/historico-pagamento-builder';
+import { CarteiraCartaoPagamentoAssociado } from 'src/app/core/carteira-cartao-pagamento-associado';
+import { FormaPagamentoEnum } from 'src/app/core/forma_pagamento_enum';
+import { EditarCartaoAssinaturaPagarme } from 'src/app/services/pagarme/editar-cartao-assinatura-pagarme';
+import { CartaoDialogComponent } from '../formulario-carteiras/cartao-dialog/cartao-dialog.component';
+import { LoadingPopupService } from 'src/app/services/loadingPopup/loading-popup.service';
+import { CartaoClientePagarme } from 'src/app/services/pagarme/cartao-cliente-pagarme';
+import { MudarCartaoAssinaturaDialogComponent } from './mudar-cartao-assinatura-dialog/mudar-cartao-assinatura-dialog.component';
+import { Acesso } from 'src/app/core/acesso';
+import { BroadcastEventService } from 'src/app/services/broadcast-event/broadcast-event.service';
 
 @Component({
   selector: 'formulario-historico-pagamento',
@@ -26,9 +35,12 @@ import { HistoricoPagamentoBuilder } from 'src/app/services/builder/historico-pa
 })
 export class FormularioHistoricoPagamentoComponent implements OnInit {
 
-  @Input() historicoPagamento: HistoricoPagamento[];
+  @Input() historicoPagamentos: HistoricoPagamento[];
   @Input() ocultarColunas = false;
   @Input() assinaturaAtiva:Assinaturas;
+  @Input() cartoes: CartaoClientePagarme[];
+  @Input() perfilAcesso: Acesso;
+  @Input() titular;
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -48,6 +60,7 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
               private dialog: MatDialog,
               private historicoPagamentoService: HistoricoPagamentoService,
               private historicoPagamentoBuilder: HistoricoPagamentoBuilder,
+              private loadingPopupService: LoadingPopupService,
               private assinaturaPlanoRecorrenciaPagarmeService: AssinaturaPlanoRecorrenciaPagarmeService,
               media: MediaMatcher,
               private drc: ChangeDetectorRef,) {
@@ -61,7 +74,7 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
     this.dataSource.connect();
     this.onMostrarColunas();
 
-    if (_.isEmpty(this.historicoPagamento)) {
+    if (_.isEmpty(this.historicoPagamentos)) {
       this.mostrarTabela = false;
       this.msg = '';
       this.msg = 'Nenhum pagamento efetuado.';
@@ -79,19 +92,19 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['historicoPagamento'] && this.historicoPagamento && this.historicoPagamento.length > 0) {
+    if (changes['historicoPagamentos'] && this.historicoPagamentos && this.historicoPagamentos.length > 0) {
       this.carregarListaHistoricoPagamento();
     }
   }
 
   private carregarListaHistoricoPagamento(){
-    this.dataSource.data      = this.historicoPagamento;
+    this.dataSource.data      = this.historicoPagamentos;
     this.dataSource.sort      = this.sort;  
     this.mostrarTabela        = true; 
   }
 
   ngAfterViewInit() {
-    this.dataSource.data      = this.historicoPagamento || [];
+    this.dataSource.data      = this.historicoPagamentos || [];
     this.dataSource.sort      = this.sort;
   }
 
@@ -103,13 +116,43 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
     return this.dataUtilService.onMascaraDataInput(event);
   }
 
-  isHabilitaBotaoCancelarAssinatura(){
+  isAssinaturaVigente(){
     return !!this.assinaturaAtiva;
+  }
+
+  isAssivaturaVigenteAndPagamentoCartao(){
+    return this.isAssinaturaVigente && this.assinaturaAtiva?.formaPagamento?.id === FormaPagamentoEnum.CARTAO_CREDITO
   }
 
   cancelarAssinatura(){
     this.chamaCaixaDialogoCancelarAssinatura(this.assinaturaAtiva);
   }
+
+  mudarCartaoAssinaturaVigente(){
+    this.showDialogMudarCartaoAssinatura(this.assinaturaAtiva)
+  }
+
+  
+  showDialogMudarCartaoAssinatura(assinaturaAtiva: Assinaturas) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = {
+      assinaturaAtiva: assinaturaAtiva,
+      cartoes: this.cartoes,
+      perfilAcesso: this.perfilAcesso,
+      idTitular : this.titular.id
+    };
+    dialogConfig.panelClass = 'configuracaoDialogMudarCartaoAssinatura';
+
+    const dialogRef = this.dialog.open(MudarCartaoAssinaturaDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(confirma => {
+      if(confirma) {
+        BroadcastEventService.get('ATUALIZAR_HISTORICO_PAGAMENTO').emit(true);
+      } else {
+        dialogRef.close();
+      }
+    });
+  }
+
 
   private chamaCaixaDialogoCancelarAssinatura(assinaturaAtiva: Assinaturas) {
     const dialogConfig = new MatDialogConfig();
@@ -127,10 +170,10 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
           switchMap(() => {
             return this.historicoPagamentoService.getPagamentoByTitular(assinaturaAtiva.idTitular);
           }),
-          tap((historicoPagamento: HistoricoPagamento[]) => {
-            this.historicoPagamento = historicoPagamento || [];
-            if(!_.isEmpty(this.historicoPagamento)) {
-              this.historicoPagamento = this.historicoPagamento.map(h => this.historicoPagamentoBuilder.build(h));
+          tap((historicoPagamentos: HistoricoPagamento[]) => {
+            this.historicoPagamentos = historicoPagamentos || [];
+            if(!_.isEmpty(this.historicoPagamentos)) {
+              this.historicoPagamentos = this.historicoPagamentos.map(h => this.historicoPagamentoBuilder.build(h));
             }
           }),
         )
@@ -145,4 +188,23 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
     });
   }
 
+
+  getDescricaoCartao(cartaoPagamento: CarteiraCartaoPagamentoAssociado){
+    if(!!cartaoPagamento){
+      const primeiros6digitos    = cartaoPagamento.primeiros6digitos;
+      const ultimos4digitos      = cartaoPagamento.ultimos4digitos;
+      return `(${primeiros6digitos} **** ${ultimos4digitos}) - ${this.expira(cartaoPagamento)}`;
+    }
+  }
+
+  private expira(cartaoPagamento: CarteiraCartaoPagamentoAssociado){
+    if(cartaoPagamento.expirado){
+      return `Expirado em ${cartaoPagamento.mesValidade}/${cartaoPagamento.anoValidade}`
+    }
+    return `Expira em ${cartaoPagamento.mesValidade}/${cartaoPagamento.anoValidade}`;
+  }
+
+  isCartaoExpirado(cartaoPagamento: CarteiraCartaoPagamentoAssociado){
+    return !!cartaoPagamento? cartaoPagamento.expirado: false;
+  }
 }

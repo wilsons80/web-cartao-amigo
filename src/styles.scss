@@ -49,6 +49,18 @@
   color: #ffffff;
 }
 
+.cartaoExpirado{
+  color: red;
+  font-weight: bold;
+}
+
+.textoLaranjado{
+  font-size: 20px; 
+  font-weight: bold; 
+  color: #f95f00;
+  text-align: center;
+}
+
 /*
 #rodape {
   align-self: flex-end;
@@ -103,6 +115,8 @@ mat-toolbar.mat-toolbar.mat-toolbar-single-row.titulopartes{
 button.mat-raised-button.mat-button-base{
   text-transform: uppercase;
   color: white;
+  cursor: pointer;
+  border-radius: 50px;
 
   font-size: 11px;  
   width: 200px ;
@@ -276,6 +290,23 @@ cdk-virtual-scroll-viewport {
   padding: 5px;
 }
 
+
+.configuracaoDialogCartao mat-dialog-container {
+  width: 440px !important;
+  max-height: 1300px;
+  overflow: hidden;
+  padding: 0px;
+  border-radius: 10px;
+}
+
+.configuracaoDialogMudarCartaoAssinatura mat-dialog-container {
+  width: 700px !important;
+  max-height: 1300px;
+  overflow: hidden;
+  padding: 0px;
+  border-radius: 10px;
+}
+
 .configuracaoDialogVoucher mat-dialog-container {
   width: 1500px !important;
   max-height: 1300px;
@@ -309,12 +340,22 @@ cdk-virtual-scroll-viewport {
 }
 
 
-
+/*
 .mat-horizontal-stepper-header-container {
   height: 40px;
 }
+*/
 
-
+.imagemBandeiraCartao{
+  height: 27px;
+  margin: 12px;
+  width: 50px;
+  padding: 0px;
+}
+.fonteCartaoExpirado {
+  color: red;
+  font-weight: 600;
+}
 
 /****************************************************************************************/
 /* INICIO: Responsável por deixar os data-table responsible */

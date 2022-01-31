@@ -78,6 +78,7 @@ export class RenovarAssinaturaComponent implements OnInit {
   @Input() titular: Titular;
   @Input() historicoPagamentos = [];
   @Input() perfilAcesso: Acesso;
+  @Input() cartoes: CartaoClientePagarme[];
 
 
   maskCNPJ = [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/];
@@ -105,12 +106,15 @@ export class RenovarAssinaturaComponent implements OnInit {
 
   codigoCorretor: string;
   codigoCupom: string;
-  dadosCartaoCredito: DadosCartaoCredito;
+  dadosCartaoCredito: DadosCartaoCredito = null;
 
   retornoPagamento: any;
 
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
+
+  cartaoEncontrado:CartaoClientePagarme = null;
+  numeroCartaoDigitado = null;
 
   ufs: any[] =[
     {nome:  'DF'}
@@ -146,7 +150,6 @@ export class RenovarAssinaturaComponent implements OnInit {
 
   ngOnInit() {
     this.planoEscolhido = new TipoPlano();
-    this.dadosCartaoCredito = new DadosCartaoCredito();
     this.retornoPagamento   = new RetornoPagamento();    
 
     this.tipoPlanoService.getAllAtivos().subscribe((tipos: TipoPlano[]) => {
@@ -251,17 +254,17 @@ export class RenovarAssinaturaComponent implements OnInit {
     this.cartaoClienteRecorrenciaPagarmeService.listarCartoesCliente(this.titular.idClientePagarMe)
     .pipe(
       //verificar se o cartão informado pelo associado já está cadastrado        
-      switchMap((cartoes: ListaCartaoClientePagarme) => {
-        const numeroCartao      = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.numeroCartao);
-        const primeiros6digitos = numeroCartao.substring(0,6);
-        const ultimos6digitos   = numeroCartao.substring(numeroCartao.length - 6);
+      switchMap((cartoes: CartaoClientePagarme[]) => {
 
-        const cartaoEncontrado = cartoes.data.find( cartao => cartao.first_six_digits === primeiros6digitos && cartao.last_four_digits === ultimos6digitos);
+        this.numeroCartaoDigitado  = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.numeroCartao);
+        const primeiros6digitos    = this.numeroCartaoDigitado.substring(0,6);
+        const ultimos4digitos      = this.numeroCartaoDigitado.substring(this.numeroCartaoDigitado.length - 4);
+        this.cartaoEncontrado      = cartoes.find(cartao => cartao.first_six_digits === primeiros6digitos && cartao.last_four_digits === ultimos4digitos);
 
         //se cartão não está cadastrado, então cadastra o cartão
-        if(!cartaoEncontrado) {
+        if(!this.cartaoEncontrado) {
           const novoCartaoCliente = new CriarCartaoCliente();
-          novoCartaoCliente.number          = numeroCartao;
+          novoCartaoCliente.number          = this.numeroCartaoDigitado;
           novoCartaoCliente.holder_name     = this.dadosCartaoCredito.nomeImpressoCartao;
           novoCartaoCliente.holder_document = this.dadosCartaoCredito.cpfTitularCartao;
           novoCartaoCliente.exp_month       = Number(this.dadosCartaoCredito.mesValidade);
@@ -269,11 +272,16 @@ export class RenovarAssinaturaComponent implements OnInit {
           novoCartaoCliente.cvv             = this.dadosCartaoCredito.cvv;
           novoCartaoCliente.customer        = new ClientePagarme();
           novoCartaoCliente.customer.id     = this.titular.idClientePagarMe;
+          novoCartaoCliente.idTitular       = this.titular.id;
 
           return this.cartaoClienteRecorrenciaPagarmeService.criarCartao(novoCartaoCliente);
         } else {
-          return of(cartaoEncontrado); 
-        }            
+          return of(this.cartaoEncontrado); 
+        }
+      }),
+
+      tap((cartaoEncontrado: CartaoClientePagarme) => {
+        this.cartaoEncontrado = cartaoEncontrado;
       }),
 
       //busca o token do cartão        
@@ -288,7 +296,6 @@ export class RenovarAssinaturaComponent implements OnInit {
         return this.cartaoClienteRecorrenciaPagarmeService.gerarTokenCartao(tokenCartao);        
       }),
 
-
       //Realiza a assinatura do plano
       switchMap((token: any) => {
         this.loadingPopupService.mostrarMensagemDialog('Processando pagamento....');
@@ -301,6 +308,7 @@ export class RenovarAssinaturaComponent implements OnInit {
         novaAssinaturaPlano.codigoCorretor  = this.codigoCorretor;
         novaAssinaturaPlano.voucher         = this.codigoCupom;
         novaAssinaturaPlano.idTitular       = this.titular.id;
+        novaAssinaturaPlano.idCartaoPagarMe = this.cartaoEncontrado.id;
 
         return this.assinaturaPlanoRecorrenciaPagarmeService.criarAssinaturaCartao(novaAssinaturaPlano)
             .pipe(
@@ -355,6 +363,7 @@ export class RenovarAssinaturaComponent implements OnInit {
 
   tipoPagamentoEscolhido(tipo) {
     this.idTipoPagamentoEscolhido = String(tipo);
+    this.dadosCartaoCredito = new DadosCartaoCredito();
   }
 
   carregarTipoPagamentoEscolhido($event){
@@ -451,15 +460,17 @@ export class RenovarAssinaturaComponent implements OnInit {
     return this.perfilAcesso.consulta && !this.perfilAcesso.altera && !this.perfilAcesso.deleta && !this.perfilAcesso.insere;
   }
 
+
   private novoPagamento() {
     this.retornoPagamento   = new RetornoPagamento(); 
-    this.dadosCartaoCredito = new DadosCartaoCredito();
     this.iniciarPagamento              = true;
     this.codigoCupom                   = null;
     this.codigoCorretor                = null;
     this.idTipoPlanoEscolhido          = "";
     this.idTipoPagamentoEscolhido      = null;
     this.aceitoAssinatiraCartaoAmigo   = false;
+    this.cartaoEncontrado              = null;
+    this.numeroCartaoDigitado          = null;
   }
 
 
@@ -533,4 +544,18 @@ export class RenovarAssinaturaComponent implements OnInit {
   desabilitarBotao(formulario) {
     return formulario.invalid
   }
+
+  getDescricaoCartao(){
+    if(!!this.dadosCartaoCredito && !!this.dadosCartaoCredito.numeroCartao){
+      this.numeroCartaoDigitado  = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.numeroCartao);
+      const primeiros6digitos    = this.numeroCartaoDigitado.substring(0,6);
+      const ultimos4digitos      = this.numeroCartaoDigitado.substring(this.numeroCartaoDigitado.length - 4);
+      return `${primeiros6digitos} **** ${ultimos4digitos} ${this.expira()}`;
+    }
+  }
+
+  private expira(){
+    return `Expira em ${this.dadosCartaoCredito.mesValidade}/${this.dadosCartaoCredito.anoValidade}`;
+  }
+
 }

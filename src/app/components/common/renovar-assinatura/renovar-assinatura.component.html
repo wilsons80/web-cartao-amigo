@@ -24,7 +24,7 @@
                             <ng-template matStepLabel></ng-template>
                             <div  style="margin-bottom: 13px;">
                                 <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
-                                    <span style="font-size: 20px; font-weight: bold; color: #f95f00;">Escolha o tipo de assinatura</span>    
+                                    <span class="textoLaranjado">Escolha o tipo de assinatura</span>    
                                     <span style="font-size: 10px;">Permite até 4 dependentes inteiramente grátis</span>
                                 </div>                            
         
@@ -61,7 +61,7 @@
                                 </div>
 
                                 <div fxLayout="column" fxLayoutAlign="center center" style="padding-top: 20px;" *ngIf="idTipoPlanoEscolhido">
-                                    <span style="font-size: 20px; font-weight: bold; color: #f95f00;">
+                                    <span class="textoLaranjado">
                                         Escolha a forma de pagamento
                                     </span>    
                                 </div>
@@ -153,13 +153,14 @@
                             <ng-template matStepLabel></ng-template>
                             
                             <div fxLayout="column" fxLayoutAlign="space-evenly center">
-                                <div fxLayout="column" fxLayoutAlign="center center" style="padding-bottom: 15px;">
-                                    <span style="font-size: 20px; font-weight: bold; color: #f95f00;">Informe os dados do cartão</span>    
+                            
+                                <div fxLayout="column" fxLayoutAlign="center center">
+                                    <span class="textoLaranjado">Informe os dados do cartão</span>    
                                 </div> 
                                 
                                 <!-- Dados para compra com CARTÃO DE CRÉDITO -->
                                 <div fxLayout="column" 
-                                    style="padding-top: 30px; padding-bottom: 40px;"
+                                    style="padding-top: 10px; padding-bottom: 40px;"
                                     [ngStyle]="{'width.px': 423}"
                                     [ngStyle.xs]="{'width.%': 100}"
                                     *ngIf="idTipoPagamentoEscolhido === '2'">
@@ -194,11 +195,11 @@
                                         <mat-form-field class="w-100" fxFlexOffset="10px" appearance="outline">
                                             <mat-label>Data nascimento do titular do cartão</mat-label>
                                             <input matInput name="dataNascimentoTitularCartao"
-                                                   [matDatepicker]="pickerDataNascimento" 
-                                                   placeholder="Data de Nascimento" 
-                                                   required
-                                                   [(ngModel)]="dadosCartaoCredito.dataNascimentoTitularCartao"
-                                                   (input)="onMascaraDataInput($event)">
+                                                    [matDatepicker]="pickerDataNascimento" 
+                                                    placeholder="Data de Nascimento" 
+                                                    required
+                                                    [(ngModel)]="dadosCartaoCredito.dataNascimentoTitularCartao"
+                                                    (input)="onMascaraDataInput($event)">
                                             <mat-datepicker-toggle matSuffix [for]="pickerDataNascimento"></mat-datepicker-toggle>
                                             <mat-datepicker #pickerDataNascimento></mat-datepicker>
                                         </mat-form-field>                                    
@@ -264,23 +265,26 @@
                                             <img [src]="getImagemCVV()" style="width: 60%; padding-top: 7px;"/>                    
                                         </div>
                                     </div>
-                                    
-                                    <div fxLayout="row" fxLayout.xs="column" style="margin-top: 30px; margin-bottom: 25px;" fxLayoutAlign="center center">
-                                        <button mat-button matStepperPrevious 
-                                                class="corAzulPadrao" 
-                                                [ngStyle]="{'width.%': 35}"
-                                                [ngStyle.xs]="{'width.%': 100}"
-                                                style="color: white; border-radius: 15px;">VOLTAR</button>
-    
-                                        <button mat-button matStepperNext 
-                                                [disabled]="formularioEtapa3.invalid" 
-                                                style="border-radius: 15px;"
-                                                [ngClass]="{'estiloBotaoHabilidado': habilitarBotao(formularioEtapa3), 'estiloBotaoDesabilidado': desabilitarBotao(formularioEtapa3)  }"
-                                                [ngStyle]="{'width.%': 35, 'margin-left.px': 20}"
-                                                [ngStyle.xs]="{'width.%': 100, 'margin-top.px': 20}">PRÓXIMO</button>                                            
-    
-                                    </div>
-                                </div>   
+                                </div>  
+
+                                <div fxLayout="row" fxLayout.xs="column" 
+                                     style="margin-top: 30px; margin-bottom: 25px; width: 100%;" 
+                                     fxLayoutAlign="center center">
+                                    <button mat-button matStepperPrevious 
+                                            class="corAzulPadrao" 
+                                            [ngStyle]="{'width.%': 20}"
+                                            [ngStyle.xs]="{'width.%': 100}"
+                                            style="color: white; border-radius: 15px;">VOLTAR</button>
+
+                                    <button mat-button matStepperNext 
+                                            [disabled]="formularioEtapa3.invalid" 
+                                            style="border-radius: 15px;"
+                                            [ngClass]="{'estiloBotaoHabilidado': habilitarBotao(formularioEtapa3), 'estiloBotaoDesabilidado': desabilitarBotao(formularioEtapa3)  }"
+                                            [ngStyle]="{'width.%': 20, 'margin-left.px': 20}"
+                                            [ngStyle.xs]="{'width.%': 100, 'margin-top.px': 20}">PRÓXIMO</button>                                            
+
+                                </div>
+
                             </div>            
                         </div>                      
                     </mat-step>
@@ -311,6 +315,10 @@
                                     </div>                            
                                     <div fxLayout="column" fxLayoutAlign="center center" *ngIf="idTipoPagamentoEscolhido === '2'">
                                         <div><span>Cartão de Crédito</span></div>  
+
+                                        <div>
+                                            {{getDescricaoCartao()}}
+                                        </div>  
                                     </div>
                                 </div>
 
@@ -386,11 +394,11 @@
         
                 <div *ngIf="retornoPagamento?.status" style="border-radius: 15px;">
                     <div fxLayout="row" fxLayoutAlign="center center" style="padding-top: 20px;">
-                        <span style="font-size: 20px; font-weight: bold; color: #f95f00;">Obrigado!</span>    
+                        <span class="textoLaranjado">Obrigado!</span>    
                     </div>
         
                     <div fxLayout="row" fxLayoutAlign="center center" style="padding-bottom: 40px;">
-                        <span style="font-size: 20px; font-weight: bold; color: #f95f00; text-align: center;">
+                        <span class="textoLaranjado">
                             Você receberá um e-mail com os dados da sua conta.
                         </span>    
                     </div>
@@ -407,9 +415,9 @@
                     </div>
 
                     <div fxLayout="row" fxLayoutAlign="center center" style="padding-bottom: 60px;">
-                        <span style="font-size: 20px; font-weight: bold; color: #f95f00;">
+                        <span class="textoLaranjado">
                             <span style="font-size: 20px; font-weight: bold; color: #08003c;">
-                                Sua assinatura está: <span style="font-size: 20px; font-weight: bold; color: #f95f00;">{{retornoPagamento.descricaoStatusTransacao}}</span>    
+                                Sua assinatura está: <span class="textoLaranjado">{{retornoPagamento.descricaoStatusTransacao}}</span>    
                             </span>
                         </span>    
                     </div>

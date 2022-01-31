@@ -1,0 +1,20 @@
+::-webkit-scrollbar {
+    width: 8px;
+    height: 0px !important;
+}
+
+.mat-dialog-actions {
+    padding: 29px 0 !important;
+}    
+
+
+.example-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    align-items: flex-start;
+}
+
+.example-radio-button {
+    margin: 5px;
+}

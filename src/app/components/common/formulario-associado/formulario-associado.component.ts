@@ -323,12 +323,12 @@ export class FormularioAssociadoComponent implements OnInit, AfterContentChecked
     this.cartaoClienteRecorrenciaPagarmeService.listarCartoesCliente(this.titular.idClientePagarMe)
     .pipe(
       //verificar se o cartão informado pelo associado já está cadastrado        
-      switchMap((cartoes: ListaCartaoClientePagarme) => {
+      switchMap((cartoes: CartaoClientePagarme[]) => {
         const numeroCartao      = this.funcoesUteisService.getApenasNumeros(this.dadosCartaoCredito.numeroCartao);
         const primeiros6digitos = numeroCartao.substring(0,6);
         const ultimos6digitos   = numeroCartao.substring(numeroCartao.length - 6);
 
-        const cartaoEncontrado = cartoes.data.find( cartao => cartao.first_six_digits === primeiros6digitos && cartao.last_four_digits === ultimos6digitos);
+        const cartaoEncontrado = cartoes.find( cartao => cartao.first_six_digits === primeiros6digitos && cartao.last_four_digits === ultimos6digitos);
 
         //se cartão não está cadastrado, então cadastra o cartão
         if(!cartaoEncontrado) {

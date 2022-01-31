@@ -1,0 +1,85 @@
+<mat-toolbar><div style="width: 100%; text-align: center;">{{titulo}}</div></mat-toolbar>
+<mat-dialog-content fxLayout="column" style="border-radius: 10px; margin: 10px">
+    <form #formulario="ngForm">    
+
+        <div fxLayout="column" fxLayoutAlign="space-between center"
+             style="padding-bottom: 40px; width: 100%;">
+
+             <label class="textoLaranjado">Seus cartões cadastrados</label>
+             <label class="textoLaranjado" style="font-size: 12px; color: #08003c !important;">
+                 *Cartões novos devem ser cadastrados na aba 'Carteira'
+             </label>
+             <mat-radio-group class="example-radio-group"
+                              [(ngModel)]="cartaoEscolhido"
+                              name="cartaoEscolhido">
+               <mat-radio-button class="example-radio-button" 
+                                 style="width: 100%;"
+                                 *ngFor="let cartao of cartoes" 
+                                 [disabled]="!isCartaoAtivo(cartao)"
+                                 [value]="cartao">
+                <div fxLayout="row" fxLayoutAlign="start center" >
+                    <img [src]="cartao.bandeiraCartaoTO.brandImage" class="imagem" style="width: 40px;"/>
+                    <span style="padding-top: 4px;">{{getNumeroCartao(cartao)}}</span>
+                </div>                                 
+                <span>{{getDescExpiradoAndStatus(cartao)}}</span> 
+               </mat-radio-button>
+             </mat-radio-group>            
+        </div> 
+        
+        <div fxLayout="row" fxLayout.xs="column" style="width: 100%;"
+             *ngIf="!!cartaoEscolhido">
+            <div fxLayout="column" fxFlex="50%">
+                <span style="font-weight: bold;">Cartão</span><br>
+                <div fxLayout="row" fxLayoutAlign="start center" >
+                    <img [src]="cartaoEscolhido.bandeiraCartaoTO.brandImage" class="imagem" style="width: 40px;"/>
+                    <span style="padding-top: 4px;">{{getDescricaoCartao(cartaoEscolhido)}}</span>
+                </div>
+
+                <span style="font-weight: bold; padding-top: 10px;">Nome no cartão</span><br>
+                <span>{{cartaoEscolhido.holder_name}}</span>
+            </div>
+
+            <div fxLayout="column" fxFlex="50%" style="width: 100%;" [ngStyle.xs]="{'padding-top.px': 10}">
+                <span style="font-weight: bold;">Endereço de cobrança</span><br>
+                {{cartaoEscolhido.billing_address?.line_1}}   <br>
+                {{cartaoEscolhido.billing_address?.line_2}}   <br>
+                {{cartaoEscolhido.billing_address?.zip_code}} <br>
+                {{cartaoEscolhido.billing_address?.city}}     <br>
+                {{cartaoEscolhido.billing_address?.state}}    <br>
+                {{cartaoEscolhido.billing_address?.country}}  <br>
+            </div>
+        </div>
+
+    </form>    
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="50px" 
+         style="margin-top: 30px; margin-bottom: 10px;" 
+         fxFlexFill>
+
+        <div fxFlex="80%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    [ngStyle]="{'width.%': 60}"
+                    [ngStyle.xs]="{'width.%': 80}"
+                    [disabled]="formulario.invalid"
+                    *ngIf="!!cartaoEscolhido && isPermiteEditar()"
+                    (click)="salvar()"  
+                    matTooltip="Fechar">
+                Salvar
+            </button>
+        </div>
+        
+        <div fxFlex="80%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    [ngStyle]="{'width.%': 60}"
+                    [ngStyle.xs]="{'width.%': 80}"
+                    (click)="cancelar()"  
+                    matTooltip="Fechar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

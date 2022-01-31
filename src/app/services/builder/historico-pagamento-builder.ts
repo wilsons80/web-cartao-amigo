@@ -25,6 +25,7 @@ export class HistoricoPagamentoBuilder  {
     tela.valorPago                       = historicoPagamentoTO.valorPago || 0;
     tela.valorCorretor                   = historicoPagamentoTO.valorCorretor || 0;
     tela.titular                         = historicoPagamentoTO.titular;
+    tela.cartaoPagamento                 = historicoPagamentoTO.cartaoPagamento;
     return tela;
   }
 

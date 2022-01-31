@@ -1,3 +1,5 @@
+import { FormaPagamento } from "./forma-pagamento";
+
 export class Assinaturas {
 	id: number;
 	codigoAssinatura: string;
@@ -6,4 +8,5 @@ export class Assinaturas {
 	dataCancelamento: Date;
 	idTitular: number;
 	idPlano: number;
+	formaPagamento: FormaPagamento;
 }

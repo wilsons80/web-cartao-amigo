@@ -14,7 +14,8 @@ export class CriarCartaoCliente {
 	brand: string;
 	label: string; // "Sua bandeira"
 	status: string;
-
+	idTitular: number;
+	
 	customer: ClientePagarme;
 	billing_address: EnderecoCobrancaCartaoClientePagarme;
 

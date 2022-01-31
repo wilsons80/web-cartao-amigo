@@ -1,54 +1,77 @@
-<button mat-button class="botaoCancelarAssinatura"
-       (click)="cancelarAssinatura()" 
-       *ngIf="isHabilitaBotaoCancelarAssinatura()"
-       title="Cancela a assinatura vigente">
-    Cancelar Assinatura
-</button>
+<div fxLayout="column" fxFlex="100" fxLayoutAlign="space-around center">
 
-<mat-table [hidden]="!mostrarTabela" 
-                 [dataSource]="dataSource" 
-                 class="mat-elevation-z6"
-                 matSort style="margin-top: 20px;">
+    <div fxLayout="row" fxLayout.xs="column" style="width: 100%;" fxLayoutAlign="space-around center">
+        <button mat-button class="botaoCancelarAssinatura"
+                (click)="cancelarAssinatura()" 
+                *ngIf="isAssinaturaVigente()"
+                [ngStyle.xs]="{'width.%': 100, 'margin-bottom.px': 10}"
+                title="Cancela a assinatura vigente">
+            Cancelar Assinatura
+        </button>
 
-    <ng-container matColumnDef="statusTransacao">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Status </mat-header-cell>
-        <mat-cell *matCellDef="let element" data-label="Status"> {{element.statusTransacao}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="tipoPlano">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Plano</mat-header-cell>
-        <mat-cell *matCellDef="let element" data-label="Plano">{{element.tipoPlano.descricao}}</mat-cell>
-    </ng-container>    
-    
-    <ng-container matColumnDef="valorPago">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Valor Pago</mat-header-cell>
-        <mat-cell *matCellDef="let element" data-label="Valor">{{element.valorPago | currency:'BRL'}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="valorCorretor">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Valor do Corretor</mat-header-cell>
-        <mat-cell *matCellDef="let element" data-label="Valor do Corretor">{{element.valorCorretor | currency:'BRL'}}</mat-cell>
-    </ng-container>    
-
-    <ng-container matColumnDef="dtPagamentoPlanoContratado">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Data do Pagamento</mat-header-cell>
-        <mat-cell *matCellDef="let element" data-label="Data Pagamento"> {{element.dtPagamentoPlanoContratado | dataComHoraResumido}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="formaPagamento">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Forma de Pagamento</mat-header-cell>
-        <mat-cell *matCellDef="let element" data-label="Pagamento"> {{element.formaPagamento}} </mat-cell>
-    </ng-container>
-
-    <mat-header-row *matHeaderRowDef="displayedColumns" class="corLaranzaPadrao"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-</mat-table>
-
-<div [hidden]="mostrarTabela">
-    <div fxLayout="row" 
-            [ngClass]="{'mat-elevation-z6': mostrarTabela}" 
-            fxLayoutAlign="center center" 
-            style="padding-top: 20px">
-        {{msg}}
+        <button mat-button class="botaoCancelarAssinatura"
+                (click)="mudarCartaoAssinaturaVigente()" 
+                [ngStyle.xs]="{'width.%': 100}"
+                *ngIf="isAssivaturaVigenteAndPagamentoCartao()"
+                title="Muda o cartão da sua assina vigente">
+            Mudar cartão da assinatura
+        </button>
     </div>
+
+    <div fxLayout="row" style="width: 100%;" fxLayoutAlign="space-around center">
+        <mat-table [hidden]="!mostrarTabela" 
+                   [dataSource]="dataSource" 
+                   class="mat-elevation-z6"
+                   matSort style="margin-top: 20px; width: 100%;">
+
+            <ng-container matColumnDef="statusTransacao">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Status </mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Status"> {{element.statusTransacao}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="tipoPlano">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Plano</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Plano">{{element.tipoPlano.descricao}}</mat-cell>
+            </ng-container>    
+            
+            <ng-container matColumnDef="valorPago">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Valor Pago</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Valor">{{element.valorPago | currency:'BRL'}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="valorCorretor">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Valor do Corretor</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Valor do Corretor">{{element.valorCorretor | currency:'BRL'}}</mat-cell>
+            </ng-container>    
+
+            <ng-container matColumnDef="dtPagamentoPlanoContratado">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Data do Pagamento</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Data Pagamento"> {{element.dtPagamentoPlanoContratado | dataComHoraResumido}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="formaPagamento">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Forma de Pagamento</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Pagamento"> 
+                    <span>{{element.formaPagamento}}</span>  
+                    <span [ngClass]="{'cartaoExpirado': isCartaoExpirado(element.cartaoPagamento)}">
+                        {{ getDescricaoCartao(element.cartaoPagamento)}}
+                    </span> 
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns" class="corLaranzaPadrao"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+
+        <div [hidden]="mostrarTabela">
+            <div fxLayout="row" 
+                    [ngClass]="{'mat-elevation-z6': mostrarTabela}" 
+                    fxLayoutAlign="center center" 
+                    style="padding-top: 20px">
+                {{msg}}
+            </div>
+        </div>
+
+    </div>
+
 </div>

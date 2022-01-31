@@ -25,6 +25,9 @@ import { ProcedimentoAssociadoClinicaService } from 'src/app/services/procedimen
 import { ProcedimentoAssociadoClinicaDto } from 'src/app/core/procedimento-associado-clinica-dto';
 import { AssinaturasService } from 'src/app/services/assinaturas/assinaturas.service';
 import { Assinaturas } from 'src/app/core/assinaturas';
+import { CartaoClienteRecorrenciaPagarmeService } from 'src/app/services/pagarme/recorrencia/cartao-cliente-recorrencia-pagarme.service';
+import { CartaoClientePagarme } from 'src/app/services/pagarme/cartao-cliente-pagarme';
+import { BroadcastEventService } from 'src/app/services/broadcast-event/broadcast-event.service';
 
 
 @Component({
@@ -34,6 +37,8 @@ import { Assinaturas } from 'src/app/core/assinaturas';
   providers:[SessaoService]
 })
 export class MinhaContaComponent implements OnInit {
+
+  loadingComplete = false;
 
   @ViewChild('formulario') formulario;
 
@@ -53,6 +58,7 @@ export class MinhaContaComponent implements OnInit {
   historicoPagamentos: HistoricoPagamento[];
   procedimentos: ProcedimentoAssociadoClinicaDto[];
   assinaturaAtiva:Assinaturas;
+  cartoes: CartaoClientePagarme[];
 
   sim_nao: any[] = [
     {tipo: 'Sim', flag: 'S'},
@@ -81,6 +87,7 @@ export class MinhaContaComponent implements OnInit {
               public sessaoService: SessaoService,
               private assinaturasService: AssinaturasService,
               private procedimentoAssociadoClinicaService: ProcedimentoAssociadoClinicaService,
+              private cartaoClienteRecorrenciaPagarmeService: CartaoClienteRecorrenciaPagarmeService,
               public autenticadorService: AutenticadorService,
               private funcoesUteisService: FuncoesUteisService) {
     this.carregarPerfil = new CarregarPerfil();                
@@ -100,6 +107,10 @@ export class MinhaContaComponent implements OnInit {
     this.historicoPagamentos = null;
 
     this.onCarregarDadosTitular();
+
+    BroadcastEventService.get('ATUALIZAR_HISTORICO_PAGAMENTO').subscribe((valor) => {
+      this.onCarregarHistoricoPagamento();
+    })
   }
 
 
@@ -125,10 +136,17 @@ export class MinhaContaComponent implements OnInit {
             }
           }),
           switchMap(() => {
+            return this.cartaoClienteRecorrenciaPagarmeService.listarCartoesCliente(this.titular.idClientePagarMe);
+          }),
+          tap((cartoes: CartaoClientePagarme[]) => {
+            this.cartoes = cartoes;
+          }),
+          switchMap(() => {
             return this.procedimentoAssociadoClinicaService.getAllTitular(this.titular.id);
           }),
         ).subscribe((procedimentos: ProcedimentoAssociadoClinicaDto[]) =>{
           this.procedimentos = procedimentos || [];
+          this.loadingComplete = true;
         }).add( () => {
           this.loadingPopupService.closeDialog(); 
         });
@@ -181,7 +199,7 @@ export class MinhaContaComponent implements OnInit {
 
 
   tabChange(evento: MatTabChangeEvent) {
-    if(evento.index === 2 || evento.index === 3 || evento.index === 4) {
+    if(evento.index === 2 || evento.index === 3 || evento.index === 4 || evento.index === 5) {
       this.showBotaoSalvar = false;
     } else {
       this.showBotaoSalvar = true;

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -10,14 +9,15 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { PipesModule } from 'src/app/theme/pipes/pipes.module';
 import { SharedDirectivesModule } from 'src/app/directives/shared-directives.module';
 import { ComboPesquisavelModule } from '../combo-pesquisavel/combo-pesquisavel.module';
-import { CadastroEnderecoModule } from '../cadastro-endereco/cadastro-endereco.module';
-import { FormularioHistoricoPagamentoComponent } from './formulario-historico-pagamento.component';
-import { MudarCartaoAssinaturaDialogComponent } from './mudar-cartao-assinatura-dialog/mudar-cartao-assinatura-dialog.component';
+import { FormularioCarteirasComponent } from './formulario-carteiras.component';
+import { CartaoDialogComponent } from './cartao-dialog/cartao-dialog.component';
 
 
 @NgModule({
-  declarations: [FormularioHistoricoPagamentoComponent, MudarCartaoAssinaturaDialogComponent],
-  exports:[FormularioHistoricoPagamentoComponent, MudarCartaoAssinaturaDialogComponent],
+  declarations: [FormularioCarteirasComponent,
+                CartaoDialogComponent
+                ],
+  exports:[FormularioCarteirasComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -29,8 +29,7 @@ import { MudarCartaoAssinaturaDialogComponent } from './mudar-cartao-assinatura-
     PipesModule,
     MatTabsModule,
     MatExpansionModule,
-    ComboPesquisavelModule,
-    CadastroEnderecoModule
+    ComboPesquisavelModule
   ]
 })
-export class FormularioHistoricoPagamentoModule { }
+export class FormularioCarteirasModule { }

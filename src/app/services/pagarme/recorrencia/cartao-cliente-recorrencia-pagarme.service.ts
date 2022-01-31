@@ -36,4 +36,9 @@ export class CartaoClienteRecorrenciaPagarmeService {
   criarCartao(parans: CriarCartaoCliente) {
     return this.http.post(`${path}`, parans);
   }
+
+  editarCartao(parans: CriarCartaoCliente) {
+    return this.http.post(`${path}editar`, parans);
+  }
+
 }

@@ -1,0 +1,79 @@
+<span style="font-weight: bold;">Seus Cartões de crédito</span> 
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let cartao of cartoes; let index = index" [expanded]="step === index" (opened)="setStep(index)" hideToggle>
+        <mat-expansion-panel-header style="background-color: #f3f3f3;">
+            <mat-panel-title style="padding-top: 7px; width: 100%;" 
+                             fxLayout="row" fxLayoutAlign="space-between center">
+                <img [src]="cartao.bandeiraCartaoTO.brandImage" class="imagemBandeiraCartao">
+                
+                <label>
+                    {{cartao.bandeiraCartaoTO.brandName}} terminando em {{cartao.last_four_digits}}
+                </label>
+                <label [ngClass]="{'fonteCartaoExpirado': cartao.expirado}">
+                    {{expira(cartao)}}
+                </label>
+                
+            </mat-panel-title>
+
+            <mat-panel-description>
+              <button mat-icon-button aria-label="Remover" 
+                      *ngIf="!cartao.id" 
+                      (click)="remover(index); $event.stopPropagation()" 
+                      matTooltip="Remover cartão" 
+                      matTooltipPosition="left">
+                  <mat-icon>person_remove</mat-icon>
+              </button>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+      
+        <div fxLayout="row" fxLayout.xs="column">
+            <div fxLayout="column" fxFlex="50%">
+                <span style="font-weight: bold;">Nome no cartão</span><br>
+                {{cartao.holder_name}}
+            </div>
+
+            <div fxLayout="column" fxFlex="50%" [ngStyle.xs]="{'padding-top.px': 10}">
+                <span style="font-weight: bold;">Endereço de cobrança</span><br>
+                {{cartao.billing_address?.line_1}}   <br>
+                {{cartao.billing_address?.line_2}}   <br>
+                {{cartao.billing_address?.zip_code}} <br>
+                {{cartao.billing_address?.city}}     <br>
+                {{cartao.billing_address?.state}}    <br>
+                {{cartao.billing_address?.country}}  <br>
+            </div>
+        </div>
+
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="end center">
+            <button mat-raised-button
+                    (click)="remover(index, cartao)"
+                    class="botaoTransparente"> 
+                Remover
+            </button>
+
+            <button mat-raised-button
+                    (click)="editar(cartao)"
+                    class="botaoTransparente"> 
+                Editar
+            </button>
+        </div>
+
+    </mat-expansion-panel>
+
+    <div [hidden]="cartoes?.length">
+        <div fxLayout="row" 
+             class="mat-elevation-z6" 
+             fxLayoutAlign="center center" 
+             style="padding-top: 20px; padding-bottom: 20px">
+            Não há cartões.
+        </div>
+    </div>
+
+</mat-accordion>
+
+<div fxLayoutAlign="end end" [ngStyle]="{'margin-top': '16px'}">
+    <button mat-raised-button arial-label="Novo cartão" 
+            (click)="adicionar()"
+            *ngIf="isPermiteAdicionar()"> 
+        <mat-icon matTolltip="Novo cartão" matTooltipPosition="left">add_card</mat-icon>&nbsp;&nbsp;Novo cartão&nbsp;&nbsp;
+    </button>
+</div>

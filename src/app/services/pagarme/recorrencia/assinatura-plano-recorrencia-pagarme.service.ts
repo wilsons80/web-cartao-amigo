@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { EditarCartaoAssinaturaPagarme } from '../editar-cartao-assinatura-pagarme';
 
 const path = 'api/pagarme/recorrencia/assinaturas/';
 
@@ -7,6 +8,7 @@ export class NovaAssinaturaPlano {
 	plan_id: string;
 	customer_id: string;
 	card_token: string;
+  idCartaoPagarMe: string;
 
 	codigoCorretor: string;
 	voucher:string;
@@ -29,6 +31,10 @@ export class AssinaturaPlanoRecorrenciaPagarmeService {
 
   criarAssinaturaBoleto(parans: NovaAssinaturaPlano) {
     return this.http.post(`${path}criar/boleto`, parans);
+  }
+
+  editarCartaoAssinatura(idAssinatura: string, parans: EditarCartaoAssinaturaPagarme) {
+    return this.http.put(`${path}editar/${idAssinatura}/cartao`, parans);
   }
 
   cancelarAssinatura(codigoAssinaturaPagarme: string){

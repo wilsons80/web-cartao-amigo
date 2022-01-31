@@ -19,6 +19,8 @@ import { FormularioTitularModule } from '../common/formulario-titular/formulario
 import { FormularioDependenteModule } from '../common/formulario-dependente/formulario-dependente.module';
 import { FormularioHistoricoPagamentoModule } from '../common/formulario-historico-pagamento/formulario-historico-pagamento.module';
 import { FormularioConsultasRealizadasModule } from '../common/formulario-consultas-realizadas/formulario-consultas-realizadas.module';
+import { FormularioCarteirasComponent } from '../common/formulario-carteiras/formulario-carteiras.component';
+import { FormularioCarteirasModule } from '../common/formulario-carteiras/formulario-carteiras.module';
 
 @NgModule({
   declarations: [AssociadosComponent, 
@@ -40,7 +42,8 @@ import { FormularioConsultasRealizadasModule } from '../common/formulario-consul
     FormularioTitularModule,
     FormularioDependenteModule,
     FormularioHistoricoPagamentoModule,
-    FormularioConsultasRealizadasModule
+    FormularioConsultasRealizadasModule,
+    FormularioCarteirasModule
   ]
 })
 export class AssociadosModule { }

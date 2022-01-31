@@ -1,0 +1,133 @@
+<mat-toolbar><div style="width: 100%; text-align: center;">{{titulo}}</div></mat-toolbar>
+<mat-dialog-content fxLayout="column" style="border-radius: 10px;">
+    <form #formulario="ngForm">    
+
+        <div fxLayout="column" fxLayoutAlign="space-between center"
+             style="padding-top: 30px; padding-bottom: 40px; width: 100%;">
+
+            <div *ngIf="!cartao.id" fxLayout="row" style="width: 100%; padding-right: 10px;">
+                <mat-form-field class="w-100" fxFlexOffset="10px" appearance="outline">
+                    <mat-label>Número do cartão</mat-label>
+                    <input matInput 
+                        name="numeroCartao" 
+                        required
+                        [textMask]="{mask: maskCartao}"
+                        [(ngModel)]="cartao.number" 
+                        placeholder="Número do Cartão">                    
+                    <mat-error>Número inválido</mat-error>
+                </mat-form-field>
+            </div>
+            <div *ngIf="!!cartao.id" fxLayout="row" fxLayoutAlign="center center" 
+                 style="width: 100%; padding-right: 10px; padding-bottom: 10px; font-weight: bold;">
+                <label>Cartão {{cartao.first_six_digits}} **** {{cartao.last_four_digits}}</label>
+            </div>
+
+
+            <div fxLayout="row" style="width: 100%; padding-right: 10px;">
+                <mat-form-field class="w-100" fxFlexOffset="10px" appearance="outline">
+                    <mat-label>Nome impresso no cartão</mat-label>
+                    <input matInput 
+                            required
+                            name="nomeImpresso" 
+                            [(ngModel)]="cartao.holder_name" 
+                            placeholder="Nome impresso no cartão">                    
+                    <mat-error>Campo obrigatório</mat-error>
+                </mat-form-field>
+            </div>  
+
+            <div fxLayout="row" style="width: 100%; padding-right: 10px;">
+                <mat-form-field class="w-100" fxFlexOffset="10px" appearance="outline">
+                    <mat-label>CPF Titular do cartão</mat-label>
+                    <input matInput 
+                        [(ngModel)]="cartao.holder_document" 
+                        name="cpfTitularCartao" 
+                        placeholder="CPF Titular do cartão"
+                        [textMask]="{mask: mascaraCpf}"
+                        required
+                        [cpfValidator]>
+                    <mat-error >CPF inválido</mat-error>  
+                </mat-form-field>                                    
+            </div>
+
+            <div fxLayout="row" fxLayout.xs="column" style="width: 100%; padding-right: 10px;">                              
+                <div fxFlex="100">
+                    <div fxLayout="column" fxFlex="200px" fxFlex.xs="50%">
+                        <mat-form-field appearance="outline" style="padding-left: 10px;">
+                            <mat-label>Mês vencimento</mat-label>
+                            <mat-select name="uf" required [(ngModel)]="cartao.exp_month">
+                                <mat-option *ngFor="let e of meses" [value]="e">
+                                    {{e}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Mês inválido</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="column" fxFlex="220px" fxFlex.xs="50%" [ngStyle]="{'padding-left.px': 10}">                                    
+                        <mat-form-field appearance="outline">
+                            <mat-label>Ano Vencimento (AAAA)</mat-label>
+                            <input matInput 
+                                    required
+                                    name="anoValidade" 
+                                    pattern="^\d{4}$"
+                                    maxlength="4"
+                                    [(ngModel)]="cartao.exp_year" 
+                                    placeholder="Ano vencimento (AAAA)">                    
+                            <mat-error>Ano inválido</mat-error>
+                        </mat-form-field>                                    
+                    </div>
+                </div>    
+            </div>
+
+            <div *ngIf="!cartao.id" fxLayout="row" style="width: 100%; padding-right: 10px;">
+                <div fxFlex="200px">
+                    <mat-form-field appearance="outline" style="padding-left: 10px;">
+                        <mat-label>Código de segurança</mat-label>
+                        <input matInput 
+                                name="cvv" 
+                                pattern="^\d{3}$"
+                                required
+                                maxlength="3"
+                                [(ngModel)]="cartao.cvv" 
+                                placeholder="Código de segurança">                    
+                        <mat-error>Código inválido</mat-error>
+                    </mat-form-field>                                    
+                </div>
+                <div fxFlex="138px" style="padding-left: 20px; padding-top: 5px;">
+                    <img [src]="getImagemCVV()" style="width: 60%; padding-top: 7px;"/>                    
+                </div>
+            </div>
+        </div>  
+
+    </form>    
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="50px" 
+         style="margin-top: 30px; margin-bottom: 10px;" 
+         fxFlexFill>
+
+        <div fxFlex="80%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    [ngStyle]="{'width.%': 60}"
+                    [ngStyle.xs]="{'width.%': 80}"
+                    [disabled]="formulario.invalid"
+                    *ngIf="isPermiteEditar()"
+                    (click)="salvar()"  
+                    matTooltip="Fechar">
+                {{getLabelBotao()}}
+            </button>
+        </div>
+        
+        <div fxFlex="80%" fxLayoutAlign="center center">
+            <button mat-raised-button 
+                    class="corAzulPadrao"
+                    [ngStyle]="{'width.%': 60}"
+                    [ngStyle.xs]="{'width.%': 80}"
+                    (click)="cancelar()"  
+                    matTooltip="Fechar">
+                Cancelar
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

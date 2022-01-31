@@ -12,6 +12,7 @@ import { FormularioDependenteModule } from '../common/formulario-dependente/form
 import { FormularioHistoricoPagamentoModule } from '../common/formulario-historico-pagamento/formulario-historico-pagamento.module';
 import { RenovarAssinaturaModule } from '../common/renovar-assinatura/renovar-assinatura.module';
 import { FormularioConsultasRealizadasModule } from '../common/formulario-consultas-realizadas/formulario-consultas-realizadas.module';
+import { FormularioCarteirasModule } from '../common/formulario-carteiras/formulario-carteiras.module';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { FormularioConsultasRealizadasModule } from '../common/formulario-consul
     FormularioDependenteModule,
     FormularioHistoricoPagamentoModule,
     RenovarAssinaturaModule,
-    FormularioConsultasRealizadasModule
+    FormularioConsultasRealizadasModule,
+    FormularioCarteirasModule
   ]
 })
 export class MinhaContaModule { }

@@ -1,4 +1,5 @@
 import { ArquivoMetadados } from './arquivo-metadado';
+import { CarteiraCartaoPagamentoAssociado } from './carteira-cartao-pagamento-associado';
 import { FormaPagamento } from './forma-pagamento';
 import { GatewayPagamento } from './gateway-pagamento';
 import { PessoaFisica } from './pessoa-fisica';
@@ -23,5 +24,5 @@ export class HistoricoPagamento{
 	publicKeyPrimaryReceiver: string;
 	valorPago: number;
 	valorCorretor: number;
-
+	cartaoPagamento: CarteiraCartaoPagamentoAssociado;
 }

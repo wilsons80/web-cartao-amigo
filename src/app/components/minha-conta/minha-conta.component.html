@@ -1,6 +1,6 @@
 <mat-toolbar><div style="width: 100%; text-align: center;">Minha Conta</div></mat-toolbar>
 <div class="painel-principal" style="padding: 10px;">
-    <div>
+    <div *ngIf="loadingComplete">
         <form #formulario="ngForm" >
             <mat-tab-group animationDuration="1000ms" (selectedTabChange)="tabChange($event)">
                 <mat-tab label="Dados Titular">
@@ -15,15 +15,15 @@
                     </div>
                 </mat-tab>
 
-                <mat-tab label="Renovar Assinatura">
+                <mat-tab label="Nova Assinatura">
                     <div ngModelGroup="mgRenovarAssinatura" class="espaco">
-                        <renovar-assinatura [titular]="titular" [historicoPagamentos]="historicoPagamentos" [perfilAcesso]="perfilAcesso"></renovar-assinatura>
+                        <renovar-assinatura [cartoes]="cartoes" [titular]="titular" [historicoPagamentos]="historicoPagamentos" [perfilAcesso]="perfilAcesso"></renovar-assinatura>
                     </div>
                 </mat-tab>
     
                 <mat-tab label="Histórico de Assinaturas">
                     <div ngModelGroup="mgHistoricoPagamento" class="espaco">
-                        <formulario-historico-pagamento [assinaturaAtiva]="assinaturaAtiva" [historicoPagamento]="historicoPagamentos" [ocultarColunas]="true"></formulario-historico-pagamento>
+                        <formulario-historico-pagamento [titular]="titular" [cartoes]="cartoes" [perfilAcesso]="perfilAcesso" [assinaturaAtiva]="assinaturaAtiva" [historicoPagamentos]="historicoPagamentos" [ocultarColunas]="true"></formulario-historico-pagamento>
                     </div>
                 </mat-tab>
 
@@ -33,10 +33,16 @@
                     </div>
                 </mat-tab>
 
+                <mat-tab label="Carteira">
+                    <div ngModelGroup="mgCarteira" class="espaco">
+                        <formulario-carteiras [titular]="titular" [cartoes]="cartoes" [perfilAcesso]="perfilAcesso"></formulario-carteiras>                        
+                    </div>
+                </mat-tab>
             </mat-tab-group>
         </form>
 
-        <div fxLayout="row" fxLayout.xs="column" style="margin-top: 30px; margin-bottom: 10px;" *ngIf="showBotaoSalvar">
+        <div fxLayout="row" fxLayout.xs="column" style="margin-top: 30px; margin-bottom: 10px;" 
+             *ngIf="showBotaoSalvar">
             <div fxFlex="100%" fxLayoutAlign="start start" style="padding-top: 20px;">
                 <button mat-raised-button 
                         fxFlexOffset="20px"
@@ -50,7 +56,5 @@
                 </button>
             </div>
         </div>
-             
-
     </div>
 </div>
