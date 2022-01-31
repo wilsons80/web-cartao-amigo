@@ -35,7 +35,7 @@ import { BroadcastEventService } from 'src/app/services/broadcast-event/broadcas
 })
 export class FormularioHistoricoPagamentoComponent implements OnInit {
 
-  @Input() historicoPagamentos: HistoricoPagamento[];
+  @Input() historicoPagamentos: HistoricoPagamento[] = [];
   @Input() ocultarColunas = false;
   @Input() assinaturaAtiva:Assinaturas;
   @Input() cartoes: CartaoClientePagarme[];

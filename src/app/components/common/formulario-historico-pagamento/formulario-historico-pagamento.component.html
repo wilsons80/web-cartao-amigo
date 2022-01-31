@@ -1,6 +1,7 @@
 <div fxLayout="column" fxFlex="100" fxLayoutAlign="space-around center">
 
-    <div fxLayout="row" fxLayout.xs="column" style="width: 100%;" fxLayoutAlign="space-around center">
+    <div fxLayout="row" fxLayout.xs="column" style="width: 100%;" fxLayoutAlign="space-around center"
+         *ngIf="!!historicoPagamentos && historicoPagamentos.length > 0">
         <button mat-button class="botaoCancelarAssinatura"
                 (click)="cancelarAssinatura()" 
                 *ngIf="isAssinaturaVigente()"
@@ -19,7 +20,7 @@
     </div>
 
     <div fxLayout="row" style="width: 100%;" fxLayoutAlign="space-around center">
-        <mat-table [hidden]="!mostrarTabela" 
+        <mat-table [hidden]="!historicoPagamentos || historicoPagamentos.length === 0" 
                    [dataSource]="dataSource" 
                    class="mat-elevation-z6"
                    matSort style="margin-top: 20px; width: 100%;">
@@ -63,11 +64,11 @@
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
         </mat-table>
 
-        <div [hidden]="mostrarTabela">
+        <div [hidden]="!!historicoPagamentos && historicoPagamentos.length > 0">
             <div fxLayout="row" 
-                    [ngClass]="{'mat-elevation-z6': mostrarTabela}" 
-                    fxLayoutAlign="center center" 
-                    style="padding-top: 20px">
+                 [ngClass]="{'mat-elevation-z6': mostrarTabela}" 
+                 fxLayoutAlign="center center" 
+                 style="padding-top: 20px">
                 {{msg}}
             </div>
         </div>

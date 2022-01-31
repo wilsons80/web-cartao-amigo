@@ -19,6 +19,8 @@ import { ProcedimentoAssociadoClinicaService } from 'src/app/services/procedimen
 import { ProcedimentoAssociadoClinicaDto } from 'src/app/core/procedimento-associado-clinica-dto';
 import { Assinaturas } from 'src/app/core/assinaturas';
 import { AssinaturasService } from 'src/app/services/assinaturas/assinaturas.service';
+import { CartaoClientePagarme } from 'src/app/services/pagarme/cartao-cliente-pagarme';
+import { CartaoClienteRecorrenciaPagarmeService } from 'src/app/services/pagarme/recorrencia/cartao-cliente-recorrencia-pagarme.service';
 
 @Component({
   selector: 'associado-dialog',
@@ -48,11 +50,13 @@ export class AssociadoDialogComponent implements OnInit {
   titular: Titular;
   historicoPagamentos: HistoricoPagamento[];
   procedimentos: ProcedimentoAssociadoClinicaDto[];
+  cartoes: CartaoClientePagarme[];
 
   constructor(private dataUtilService: DataUtilService,
               public titularService: TitularService,
               private historicoPagamentoService: HistoricoPagamentoService,
               private procedimentoAssociadoClinicaService: ProcedimentoAssociadoClinicaService,
+              private cartaoClienteRecorrenciaPagarmeService: CartaoClienteRecorrenciaPagarmeService,
               private drc: ChangeDetectorRef,
               private loadingPopupService: LoadingPopupService,
               private historicoPagamentoBuilder: HistoricoPagamentoBuilder,
@@ -87,6 +91,12 @@ export class AssociadoDialogComponent implements OnInit {
         }),
         tap((assinaturaAtiva: Assinaturas) => {
           this.assinaturaAtiva = assinaturaAtiva;
+        }),
+        switchMap(() => {
+          return this.cartaoClienteRecorrenciaPagarmeService.listarCartoesCliente(this.titular.idClientePagarMe);
+        }),
+        tap((cartoes: CartaoClientePagarme[]) => {
+          this.cartoes = cartoes;
         }),
         switchMap(() => {
           return this.historicoPagamentoService.getPagamentoByTitular(this.titular.id);
