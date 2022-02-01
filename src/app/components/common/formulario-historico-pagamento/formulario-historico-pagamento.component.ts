@@ -23,6 +23,10 @@ import { CartaoClientePagarme } from 'src/app/services/pagarme/cartao-cliente-pa
 import { MudarCartaoAssinaturaDialogComponent } from './mudar-cartao-assinatura-dialog/mudar-cartao-assinatura-dialog.component';
 import { Acesso } from 'src/app/core/acesso';
 import { BroadcastEventService } from 'src/app/services/broadcast-event/broadcast-event.service';
+import { AutenticadorService } from 'src/app/services/autenticador/autenticador.service';
+import { UsuarioLogado } from 'src/app/core/usuario-logado';
+import { TiposUsuariosSistema } from 'src/app/core/tipos-usuarios-sistema';
+
 
 @Component({
   selector: 'formulario-historico-pagamento',
@@ -45,6 +49,8 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   mostrarTabela = false;
+  usuarioLogado: UsuarioLogado;
+  tiposUsuariosSistema: TiposUsuariosSistema;
 
 	mobileQuery: MediaQueryList;
 	private _mobileQueryListener: () => void;
@@ -60,6 +66,7 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
               private dialog: MatDialog,
               private historicoPagamentoService: HistoricoPagamentoService,
               private historicoPagamentoBuilder: HistoricoPagamentoBuilder,
+              public autenticadorService: AutenticadorService,
               private loadingPopupService: LoadingPopupService,
               private assinaturaPlanoRecorrenciaPagarmeService: AssinaturaPlanoRecorrenciaPagarmeService,
               media: MediaMatcher,
@@ -73,6 +80,9 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
     this.dataSource.sort = this.sort;
     this.dataSource.connect();
     this.onMostrarColunas();
+
+    this.tiposUsuariosSistema = new TiposUsuariosSistema();
+    this.usuarioLogado = this.autenticadorService.usuarioLogado;
 
     if (_.isEmpty(this.historicoPagamentos)) {
       this.mostrarTabela = false;
@@ -114,6 +124,18 @@ export class FormularioHistoricoPagamentoComponent implements OnInit {
 
   onMascaraDataInput(event) {
     return this.dataUtilService.onMascaraDataInput(event);
+  }
+
+  private isShowPermissaoSistema() {
+    const tipoUsuarioLogado    = this.usuarioLogado?.tipoUsuario;
+    const isTipoAdministrativo = this.tiposUsuariosSistema.isUsuarioTipoAdministrativo(tipoUsuarioLogado?.id);
+    const isTipoRoot           = this.tiposUsuariosSistema.isUsuarioTipoRoot(tipoUsuarioLogado?.id);
+
+    return isTipoAdministrativo || isTipoRoot;
+  }
+
+  isUsuarioPodeCancelarAssinatura(){
+    return this.isAssinaturaVigente() && this.perfilAcesso?.altera && this.isShowPermissaoSistema();
   }
 
   isAssinaturaVigente(){

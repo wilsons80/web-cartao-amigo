@@ -16,9 +16,9 @@
                 </div>
             </mat-tab>
 
-            <mat-tab label="Histórico de Assinaturas">
+            <mat-tab label="Histórico de Pagamentos">
                 <div ngModelGroup="mgHistoricoPagamento" class="espaco">
-                    <formulario-historico-pagamento [assinaturaAtiva]="assinaturaAtiva" [historicoPagamentos]="historicoPagamentos"></formulario-historico-pagamento>
+                    <formulario-historico-pagamento [titular]="titular" [cartoes]="cartoes" [perfilAcesso]="perfilAcesso" [assinaturaAtiva]="assinaturaAtiva" [historicoPagamentos]="historicoPagamentos" [ocultarColunas]="true"></formulario-historico-pagamento>
                 </div>
             </mat-tab>
 
@@ -28,7 +28,7 @@
                 </div>
             </mat-tab>
 
-            <mat-tab label="Carteira">
+            <mat-tab label="Carteira de Cartões">
                 <div ngModelGroup="mgCarteira" class="espaco">
                     <formulario-carteiras [titular]="titular" [cartoes]="cartoes" [perfilAcesso]="perfilAcesso"></formulario-carteiras>                        
                 </div>

@@ -4,7 +4,7 @@
          *ngIf="!!historicoPagamentos && historicoPagamentos.length > 0">
         <button mat-button class="botaoCancelarAssinatura"
                 (click)="cancelarAssinatura()" 
-                *ngIf="isAssinaturaVigente()"
+                *ngIf="isUsuarioPodeCancelarAssinatura()"
                 [ngStyle.xs]="{'width.%': 100, 'margin-bottom.px': 10}"
                 title="Cancela a assinatura vigente">
             Cancelar Assinatura
