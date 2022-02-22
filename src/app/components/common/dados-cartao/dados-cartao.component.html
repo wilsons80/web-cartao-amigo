@@ -33,7 +33,7 @@
                                   [ngStyle.xs]="{'margin-bottom.px': 20}"
                                   matTooltip="Informa se o cartão está ativo ou inativo."
                                   name="ativo_{{pinCartao}}" 
-                                  [disabled]="true"
+                                  [disabled]="desabilitarCampos"
                                   [(ngModel)]="cartao.ativo">{{cartao.ativo ? 'Ativo' : 'Inativo'}}
                 </mat-slide-toggle>
     

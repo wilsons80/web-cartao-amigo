@@ -79,7 +79,7 @@
     </div>
 
     <div ngModelGroup="dadosCartao" fxFlex="100%" class="espaco" *ngIf="cartao">
-        <dados-cartao [cartao]="cartao" [nomeImpresso]="titular.pessoaFisica.nome" [idPessoaFisica]="titular.pessoaFisica.id"></dados-cartao>
+        <dados-cartao [cartao]="cartao" [nomeImpresso]="titular.pessoaFisica.nome" [idPessoaFisica]="titular.pessoaFisica.id" [desabilitarCampos]></dados-cartao>
     </div>
     
     <div ngModelGroup="dadosEndereco" fxFlex="100%" class="espaco">
