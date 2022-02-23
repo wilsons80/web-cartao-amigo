@@ -22,6 +22,7 @@ export class DadosCartaoComponent implements OnInit {
   @Input() idPessoaFisica;
   @Input() cartao = new Cartao();
   @Input() nomeImpresso: string;
+  @Input() desabilitarCampos = false;
 
   pinCartao = Date.now();
 
