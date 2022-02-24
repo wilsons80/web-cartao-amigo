@@ -1,5 +1,5 @@
-<div fxLayout="column" fxLayoutAlign="space-around stretch" *ngIf="cartao?.id">
-    <div fxFlex="100%" class="espaco" *ngIf="cartao">
+<div fxLayout="column" fxLayoutAlign="space-around stretch">
+    <div fxFlex="100%" class="espaco">
         <fieldset class="styleFieldSet" fxFlex="100%">
             <legend class="styleLegenda">Dados Pessoais</legend>
     
@@ -78,8 +78,12 @@
         </fieldset>
     </div>
 
-    <div ngModelGroup="dadosCartao" fxFlex="100%" class="espaco" *ngIf="cartao">
-        <dados-cartao [cartao]="cartao" [nomeImpresso]="titular.pessoaFisica.nome" [idPessoaFisica]="titular.pessoaFisica.id" [desabilitarCampos]></dados-cartao>
+    <div ngModelGroup="dadosCartao" fxFlex="100%" class="espaco">
+        <dados-cartao [cartao]="titular.cartao" 
+                      [nomeImpresso]="titular.pessoaFisica.nome" 
+                      [idPessoaFisica]="titular.pessoaFisica.id" 
+                      [desabilitarCampos]="desabilitarCampos">
+        </dados-cartao>
     </div>
     
     <div ngModelGroup="dadosEndereco" fxFlex="100%" class="espaco">

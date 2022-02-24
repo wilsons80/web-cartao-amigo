@@ -1,3 +1,4 @@
+import { Cartao } from "./cartao";
 import { DependentesTitular } from "./dependentes-titular";
 import { PessoaFisica } from "./pessoa-fisica";
 
@@ -10,4 +11,5 @@ export class Titular {
 	codigoCorretor: string;
 	senha?:string;
 	senhaConfirmada?:string;
+	cartao: Cartao;
 }
